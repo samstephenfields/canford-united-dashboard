@@ -68,7 +68,7 @@ def parse_date(value):
     if not value:
         raise ValueError('Missing fixture date')
     text = str(value).strip()
-    for spec in ('%d/%m/%y %H:%M','%d/%m/%Y %H:%M','%a %d %b %y %H:%M','%d %b %y %H:%M','%Y-%m-%dT%H:%M:%S','%Y-%m-%dT%H:%M:%SZ','%d/%m/%y','%d/%m/%Y','%a %d %b %y','%d %b %y','%d %B %Y','%Y-%m-%d'):
+    for spec in ('%d/%m/%y %H:%M','%d/%m/%Y %H:%M','%a %d %b %y %H:%M','%a %d %b %Y %H:%M','%a %d %B %Y %H:%M','%d %b %y %H:%M','%d %b %Y %H:%M','%Y-%m-%dT%H:%M:%S','%Y-%m-%dT%H:%M:%SZ','%d/%m/%y','%d/%m/%Y','%a %d %b %y','%a %d %b %Y','%a %d %B %Y','%d %b %y','%d %b %Y','%d %B %Y','%Y-%m-%d'):
         try:
             date = dt.datetime.strptime(text,spec)
             return date.strftime('%Y-%m-%d'), date.strftime('%H:%M') if ':' in text else None
