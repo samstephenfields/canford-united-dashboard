@@ -242,8 +242,7 @@
     '<div class="scout-metrics">'+
     [['Points',row.points],['Points / game',ppg],['Goals scored',gf],['Goals conceded',ga]].map(([label,value])=>
      '<div class="scout-metric"><span>'+label+'</span><strong>'+value+'</strong></div>').join('')+
-    '</div><div class="scout-insights scout-insights-single"><div class="scout-insight"><strong>PREVIOUS CANFORD MEETING</strong><p>'+past+'</p></div></div>'+
-    '<p class="scout-footnote">Figures come from the latest saved league snapshot. A dash means a goal total could not be verified.</p>';
+    '</div><div class="scout-insights scout-insights-single"><div class="scout-insight"><strong>PREVIOUS CANFORD MEETING</strong><p>'+past+'</p></div></div>';
   renderScoutingTimeline();
  }
  function openScout(name){
