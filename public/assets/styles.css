@@ -271,3 +271,16 @@
 @media(min-width:721px) and (max-width:920px){
  .header-link{display:none}
 }
+
+/* Opponent match history mirrors Canford's chronological form controls. */
+.scout-history-card{margin-top:15px}
+.scout-history-card .form-timeline{gap:10px}
+.scout-history-card .form-match-detail{min-height:154px}
+.scout-insights-single{grid-template-columns:1fr}
+.scout-results-coverage{margin:0;padding:12px 24px;background:#f8faf7;border-top:1px solid var(--line);color:#758779;font-size:11px;line-height:1.55}
+@media(max-width:720px){
+ .scout-history-card{margin-top:10px}
+ .scout-history-card .form-timeline{gap:8px}
+ .scout-history-card .form-match-detail{min-height:145px}
+ .scout-results-coverage{padding:12px 15px}
+}
