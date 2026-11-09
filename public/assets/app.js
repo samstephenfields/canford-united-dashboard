@@ -1,7 +1,7 @@
 (function(){
  'use strict';
  const F=window.CanfordForecast;
- const STATE={data:null,picks:{},mode:'actual',formIndex:null,sharedMode:false,scoutOpponent:null};
+ const STATE={data:null,picks:{},mode:'actual',formIndex:null,sharedMode:false,scoutOpponent:null,scoutMatchIndex:null};
  const STORAGE='canford-predictions:2026-27:v1';
  const $=id=>document.getElementById(id);
  const text=(id,value)=>{const el=$(id);if(el)el.textContent=value};
@@ -141,12 +141,92 @@
   $('scout-opponent').value=STATE.scoutOpponent||'';
   renderScoutingCard();
  }
+
+ function opponentResults(name){
+  return STATE.data.results
+   .filter(r=>r.home===name||r.away===name)
+   .slice().sort((a,b)=>a.date.localeCompare(b.date)||a.home.localeCompare(b.home));
+ }
+ function renderScoutingMatchDetail(){
+  const name=STATE.scoutOpponent,results=opponentResults(name);
+  const detail=$('scout-match-detail');
+  if(!results.length){
+   detail.innerHTML='<p class="form-empty">No completed league results are available for this opponent in the current snapshot.</p>';
+   return;
+  }
+  const index=STATE.scoutMatchIndex==null?results.length-1:
+   Math.min(Math.max(STATE.scoutMatchIndex,0),results.length-1);
+  STATE.scoutMatchIndex=index;
+  document.querySelectorAll('#scout-form-badges .form-badge').forEach(button=>{
+   const selected=Number(button.dataset.scoutMatchIndex)===index;
+   button.classList.toggle('selected',selected);
+   button.setAttribute('aria-pressed',String(selected));
+  });
+  const match=results[index];
+  const goals=match.home===name?match.homeScore:match.awayScore;
+  const against=match.home===name?match.awayScore:match.homeScore;
+  const outcome=goals>against?'W':goals===against?'D':'L';
+  const resultName=outcome==='W'?'Win':outcome==='D'?'Draw':'Loss';
+  const venue=match.home===name?'Home':'Away';
+  const date=new Date(match.date+'T12:00:00Z')
+   .toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+  detail.innerHTML='<div class="form-detail-heading">'+
+   '<span class="form-detail-label">MATCH '+(index+1)+' OF '+results.length+' · '+esc(name)+'</span>'+
+   '<span class="form-detail-outcome '+outcome+'">'+resultName+'</span>'+
+   '</div><div class="form-detail-score">'+
+   '<span class="form-detail-club '+(match.home===name?'canford':'')+'">'+esc(match.home)+'</span>'+
+   '<strong>'+match.homeScore+' <span>–</span> '+match.awayScore+'</strong>'+
+   '<span class="form-detail-club '+(match.away===name?'canford':'')+'">'+esc(match.away)+'</span>'+
+   '</div><div class="form-detail-meta">'+esc(date)+' · '+venue+' for '+esc(name)+' · League match</div>';
+ }
+ function renderScoutingTimeline(){
+  const name=STATE.scoutOpponent;
+  const tableRow=STATE.data.standings.find(t=>t.name===name);
+  const results=opponentResults(name);
+  const played=tableRow?.played??0;
+  const complete=results.length===played;
+  const rail=$('scout-form-badges');
+  const summary=results.reduce((tot,r)=>{
+   const gf=r.home===name?r.homeScore:r.awayScore,ga=r.home===name?r.awayScore:r.homeScore;
+   tot[gf>ga?'W':gf===ga?'D':'L']++;
+   return tot;
+  },{W:0,D:0,L:0});
+  text('scout-form-summary',results.length+' results · '+summary.W+'W · '+summary.D+'D · '+summary.L+'L');
+  rail.innerHTML=results.length?results.map((r,index)=>{
+   const gf=r.home===name?r.homeScore:r.awayScore,ga=r.home===name?r.awayScore:r.homeScore;
+   const type=gf>ga?'W':gf===ga?'D':'L',label=type==='W'?'Win':type==='D'?'Draw':'Loss';
+   const opponent=F.opponent(r,name);
+   return '<div class="form-match"><button type="button" class="form-badge '+type+
+    '" data-scout-match-index="'+index+'" aria-pressed="false"'+
+    ' aria-label="Match '+(index+1)+' of '+results.length+': '+esc(label)+
+    ' against '+esc(opponent)+', '+esc(shortDate(r.date))+'">'+type+'</button>'+
+    '<span class="form-match-date">'+esc(shortDate(r.date))+'</span></div>';
+  }).join(''):'<span class="form-empty">No recorded matches yet</span>';
+  text('scout-results-coverage',complete?
+   'All '+played+' league results currently shown in the standings are available.':
+   'Partial record: '+results.length+' of '+played+' completed league matches are available in this snapshot. Missing results are not shown.');
+  if(STATE.scoutMatchIndex===null||STATE.scoutMatchIndex>=results.length){
+   STATE.scoutMatchIndex=Math.max(0,results.length-1);
+  }
+  renderScoutingMatchDetail();
+  rail.scrollLeft=rail.scrollWidth;
+ }
  function renderScoutingCard(){
   const name=STATE.scoutOpponent,data=STATE.data;
   const card=$('scout-card');
-  if(!name){card.innerHTML='<p class="form-empty">No remaining league opponents.</p>';return;}
+  if(!name){
+   card.innerHTML='<p class="form-empty">No remaining league opponents.</p>';
+   $('scout-form-badges').innerHTML='';
+   $('scout-match-detail').innerHTML='';
+   text('scout-form-summary','No results');
+   text('scout-results-coverage','');
+   return;
+  }
   const row=data.standings.find(t=>t.name===name);
-  if(!row){card.innerHTML='<p class="form-empty">No verified standings for this opponent.</p>';return;}
+  if(!row){
+   card.innerHTML='<p class="form-empty">No verified standings for this opponent.</p>';
+   return;
+  }
   const rank=teamRank(name),ppg=(row.points/Math.max(1,row.played)).toFixed(2);
   const headToHead=data.results.filter(r=>[r.home,r.away].includes(data.team)&&[r.home,r.away].includes(name))
    .sort((a,b)=>b.date.localeCompare(a.date));
@@ -155,15 +235,6 @@
   const past=recentHead?esc(shortDate(recentHead.date))+' · '+esc(prev.gf+'–'+prev.ga)+' '+prev.type+
    ' for Canford ('+(recentHead.home===data.team?'home':'away')+')'
    :'No recorded meeting between the clubs this season.';
-  const recorded=data.results.filter(r=>r.home===name||r.away===name).sort((a,b)=>a.date.localeCompare(b.date));
-  const coverage=recorded.length===row.played;
-  const form=coverage&&recorded.length?recorded.slice(-5).map(r=>{
-   const goals=r.home===name?r.homeScore:r.awayScore,conceded=r.home===name?r.awayScore:r.homeScore;
-   return goals>conceded?'W':goals===conceded?'D':'L';
-  }):[];
-  const formHtml=form.length?
-    '<div class="form-inline" aria-label="Opponent recent results, earliest to latest">'+form.map(v=>'<span class="'+v+'">'+v+'</span>').join('')+'</div>':
-    '<p>Recent form unavailable: only '+recorded.length+' of '+row.played+' league results are recorded in this snapshot.</p>';
   const gf=Number.isFinite(row.gf)?row.gf:'—',ga=Number.isFinite(row.ga)?row.ga:'—';
   const fixtures=F.remainingFixtures(data).filter(f=>f.opponent===name);
   const nextFixture=fixtures.find(f=>f.date);
@@ -176,12 +247,13 @@
     '<div class="scout-metrics">'+
     [['Points',row.points],['Points / game',ppg],['Goals scored',gf],['Goals conceded',ga]].map(([label,value])=>
      '<div class="scout-metric"><span>'+label+'</span><strong>'+value+'</strong></div>').join('')+
-    '</div><div class="scout-insights"><div class="scout-insight"><strong>RECENT FORM</strong>'+formHtml+
-    '</div><div class="scout-insight"><strong>PREVIOUS CANFORD MEETING</strong><p>'+past+'</p></div></div>'+
-    '<p class="scout-footnote">Figures come from the latest saved league snapshot. A dash means the goals total could not be verified.</p>';
+    '</div><div class="scout-insights scout-insights-single"><div class="scout-insight"><strong>PREVIOUS CANFORD MEETING</strong><p>'+past+'</p></div></div>'+
+    '<p class="scout-footnote">Figures come from the latest saved league snapshot. A dash means a goal total could not be verified.</p>';
+  renderScoutingTimeline();
  }
  function openScout(name){
   STATE.scoutOpponent=name;
+  STATE.scoutMatchIndex=null;
   $('scout-opponent').value=name;
   renderScoutingCard();
   $('scouting').scrollIntoView({behavior:'smooth',block:'start'});
@@ -300,7 +372,13 @@
   });
   $('reset-predictions').addEventListener('click',()=>{STATE.picks={};persist();rerender()});
   $('target-rank').addEventListener('change',renderPointsTarget);
-  $('scout-opponent').addEventListener('change',ev=>{STATE.scoutOpponent=ev.target.value;renderScoutingCard()});
+  $('scout-opponent').addEventListener('change',ev=>{STATE.scoutOpponent=ev.target.value;STATE.scoutMatchIndex=null;renderScoutingCard()});
+  $('scout-form-badges').addEventListener('click',ev=>{
+   const chip=ev.target.closest('button[data-scout-match-index]');
+   if(!chip)return;
+   STATE.scoutMatchIndex=Number(chip.dataset.scoutMatchIndex);
+   renderScoutingMatchDetail();
+  });
   $('fixtures-list').addEventListener('click',ev=>{const b=ev.target.closest('button[data-scout]');if(b)openScout(b.dataset.scout)});
   $('briefing-match').addEventListener('click',ev=>{if(ev.target.closest('#briefing-scout-link')){const next=nextScheduledFixture();if(next)openScout(F.opponent(next,STATE.data.team));}});
   $('share-predictions').addEventListener('click',sharePredictions);
