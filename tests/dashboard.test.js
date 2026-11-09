@@ -24,12 +24,16 @@ assert.equal(social.readUInt32BE(16),1200,'OG image width must be 1200');
 assert.equal(social.readUInt32BE(20),630,'OG image height must be 630');
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);
 assert.equal(ids.length,new Set(ids).size,'All HTML IDs should be unique');
-for(const id of ['form-badges','form-summary','form-match-detail','stats-ppg','data-status-text','data-stamp',
+for(const id of ['form-badges','form-summary','form-match-detail','stats-ppg','data-status-text',
   'target-rank','target-total','target-needed','target-plan','briefing-match','briefing-scenarios',
   'scout-opponent','scout-card','scout-form-badges','scout-match-detail','scout-form-summary','scout-results-coverage','share-predictions','share-url','share-tools','shared-mode-banner',
   'copy-share','restore-personal','save-shared']){
   assert(ids.includes(id),'Missing interactive UI element '+id);
 }
+assert(!html.includes('class="scenario-block"'),'Redundant What if panel should be removed');
+assert(!html.includes('id="data-stamp"'),'Long last-checked timestamp should be removed');
+assert(!app.includes("text('best-case'")&&!app.includes("text('worst-case'"),'Removed scenarios must not be rendered');
+assert(html.includes('id="official-fixtures"'),'Official fixture link must remain');
 for(const id of ['season-results-list','canford-results-mode','division-results-mode','recent-results']){
   assert(!ids.includes(id),'Obsolete results table remains: '+id);
 }

@@ -56,7 +56,7 @@
   $('fixtures-list').innerHTML=list.length?list.map(fixtureMarkup).join(''):'<div class="loading-state">No remaining league matches.</div>';
  }
  function renderProjection(){
-   const data=STATE.data,result=F.forecast(data,STATE.picks),best=F.forecast(data,STATE.picks,'best'),worst=F.forecast(data,STATE.picks,'worst');
+   const data=STATE.data,result=F.forecast(data,STATE.picks);
    text('forecast-rank',result.position);text('forecast-suffix',F.ordinal(result.position));
    text('forecast-desc',result.selected?'Based on your scores + form for unpicked fixtures':'If current form continues');
    text('forecast-points',fmt(result.points));
@@ -66,8 +66,6 @@
    text('forecast-selected',`${result.selected} of ${result.totalFixtures} predicted`);
    text('forecast-wdl',`${result.selectedWins}W · ${result.selectedDraws}D · ${result.selectedLosses}L`);
    $('forecast-progress').style.width=(result.totalFixtures?100*result.selected/result.totalFixtures:100)+'%';
-   text('best-case',`${best.position}${F.ordinal(best.position).toLowerCase()} · ${Math.round(best.points)} pts`);
-   text('worst-case',`${worst.position}${F.ordinal(worst.position).toLowerCase()} · ${Math.round(worst.points)} pts`);
    renderPointsTarget();
    renderBriefing();
    if(STATE.mode==='projected')renderTable();
@@ -284,12 +282,10 @@
   renderSeasonForm();
   const officialTeam=$('official-fixtures'),officialTable=$('official-table');
   officialTeam.href=data.officialTeamUrl;officialTable.href=data.officialTableUrl;
-  const lastCheck=data.lastCheckedAt?new Date(data.lastCheckedAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}):null;
-  text('data-stamp',(lastCheck?'Checked '+lastCheck+' UK · ':'')+'Results through '+shortDate(data.dataAsOf));
   const checkedOk=data.lastCheckStatus==='ok';
-  const manualComplete=!!data.manualVerifiedAt&&data.results.length===data.standings.reduce((sum,r)=>sum+r.played,0)/2;
-  const manualLabel=manualComplete?'Complete results verified '+new Date(data.manualVerifiedAt+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}):null;
-  text('data-status-text',data.lastCheckStatus==='failed'?(manualLabel?manualLabel+' · Automatic FA refresh unavailable':'Latest automatic check failed — showing last verified results'):checkedOk?'Source checked — latest verified snapshot':manualLabel||'Starter results — automatic refresh not yet verified');
+  const verifiedDate=shortDate(data.dataAsOf);
+  const checkStatus=data.lastCheckStatus==='failed'?' · Auto-refresh unavailable':'';
+  text('data-status-text','Results to '+verifiedDate+checkStatus);
   $('data-light').classList.toggle('online',checkedOk);
  }
 
@@ -466,8 +462,7 @@
    updateSharedMode();
    renderStats();renderScoutingSelector();rerender();
   }catch(err){
-   text('data-status-text','Could not load data. Serve the site through GitHub Pages or a local web server.');
-   text('data-stamp','');
+   text('data-status-text','Results unavailable');
    $('fixtures-list').innerHTML='<div class="loading-state">Season data is temporarily unavailable. Please try again later.</div>';
    console.error('Dashboard data error',err);
   }
