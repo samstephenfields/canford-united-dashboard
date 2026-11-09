@@ -6,7 +6,7 @@
   "totalMatchesPerTeam": 20,
   "dataAsOf": "2026-11-07",
   "lastSuccessfulSync": null,
-  "sourceNote": "Verified 9 November 2026 against FA Full-Time and NonLeagueMatters; latest match results dated 7 November.",
+  "sourceNote": "All 37 Dorset Senior League results through 7 November 2026 transcribed from NonLeagueMatters and reconciled to the FA Full-Time league standings (including Poole Borough's one-point deduction). Automatic direct FA Full-Time refresh remains blocked (HTTP 403).",
   "officialTableUrl": "https://fulltime.thefa.com/index.html?league=3520598",
   "officialTeamUrl": "https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&teamID=208163315",
   "standings": [
@@ -135,9 +135,65 @@
   "results": [
     {
       "date": "2026-09-05",
+      "home": "Bournemouth Sports Reserves",
+      "away": "Westland Sports Reserves",
+      "homeScore": 2,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-09-05",
       "home": "Canford United",
       "away": "Poole Borough",
       "homeScore": 8,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-09-05",
+      "home": "Cobham Sports Reserves",
+      "away": "Shaftesbury Reserves",
+      "homeScore": 3,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-09-05",
+      "home": "Parley",
+      "away": "Bournemouth Poppies Reserves",
+      "homeScore": 1,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-09-05",
+      "home": "Stars FC",
+      "away": "Tisbury United",
+      "homeScore": 0,
+      "awayScore": 2
+    },
+    {
+      "date": "2026-09-12",
+      "home": "Bournemouth Poppies Reserves",
+      "away": "Shaftesbury Reserves",
+      "homeScore": 1,
+      "awayScore": 5
+    },
+    {
+      "date": "2026-09-12",
+      "home": "Bournemouth Sports Reserves",
+      "away": "Poole Borough",
+      "homeScore": 4,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-09-12",
+      "home": "Maiden Newton & Cattistock",
+      "away": "Westland Sports Reserves",
+      "homeScore": 3,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-09-12",
+      "home": "Parley",
+      "away": "Cobham Sports Reserves",
+      "homeScore": 3,
       "awayScore": 1
     },
     {
@@ -149,10 +205,52 @@
     },
     {
       "date": "2026-09-19",
+      "home": "Bournemouth Sports Reserves",
+      "away": "Bournemouth Poppies Reserves",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "date": "2026-09-19",
       "home": "Canford United",
       "away": "Parley",
       "homeScore": 0,
       "awayScore": 4
+    },
+    {
+      "date": "2026-09-19",
+      "home": "Maiden Newton & Cattistock",
+      "away": "Cobham Sports Reserves",
+      "homeScore": 1,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-09-19",
+      "home": "Stars FC",
+      "away": "Poole Borough",
+      "homeScore": 3,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-09-19",
+      "home": "Tisbury United",
+      "away": "Shaftesbury Reserves",
+      "homeScore": 3,
+      "awayScore": 3
+    },
+    {
+      "date": "2026-09-26",
+      "home": "Bournemouth Poppies Reserves",
+      "away": "Maiden Newton & Cattistock",
+      "homeScore": 2,
+      "awayScore": 4
+    },
+    {
+      "date": "2026-09-26",
+      "home": "Cobham Sports Reserves",
+      "away": "Westland Sports Reserves",
+      "homeScore": 4,
+      "awayScore": 1
     },
     {
       "date": "2026-09-26",
@@ -162,11 +260,39 @@
       "awayScore": 4
     },
     {
+      "date": "2026-09-26",
+      "home": "Tisbury United",
+      "away": "Bournemouth Sports Reserves",
+      "homeScore": 5,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-10-03",
+      "home": "Bournemouth Poppies Reserves",
+      "away": "Westland Sports Reserves",
+      "homeScore": 5,
+      "awayScore": 5
+    },
+    {
       "date": "2026-10-03",
       "home": "Canford United",
       "away": "Bournemouth Sports Reserves",
       "homeScore": 1,
       "awayScore": 2
+    },
+    {
+      "date": "2026-10-03",
+      "home": "Cobham Sports Reserves",
+      "away": "Poole Borough",
+      "homeScore": 8,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-10-03",
+      "home": "Stars FC",
+      "away": "Parley",
+      "homeScore": 2,
+      "awayScore": 3
     },
     {
       "date": "2026-10-10",
@@ -176,6 +302,55 @@
       "awayScore": 1
     },
     {
+      "date": "2026-10-10",
+      "home": "Maiden Newton & Cattistock",
+      "away": "Shaftesbury Reserves",
+      "homeScore": 1,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-10-10",
+      "home": "Stars FC",
+      "away": "Westland Sports Reserves",
+      "homeScore": 7,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-10-10",
+      "home": "Tisbury United",
+      "away": "Poole Borough",
+      "homeScore": 3,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-10-17",
+      "home": "Parley",
+      "away": "Maiden Newton & Cattistock",
+      "homeScore": 2,
+      "awayScore": 2
+    },
+    {
+      "date": "2026-10-17",
+      "home": "Shaftesbury Reserves",
+      "away": "Bournemouth Sports Reserves",
+      "homeScore": 3,
+      "awayScore": 2
+    },
+    {
+      "date": "2026-10-17",
+      "home": "Stars FC",
+      "away": "Bournemouth Poppies Reserves",
+      "homeScore": 6,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-10-17",
+      "home": "Tisbury United",
+      "away": "Cobham Sports Reserves",
+      "homeScore": 2,
+      "awayScore": 4
+    },
+    {
       "date": "2026-10-17",
       "home": "Westland Sports Reserves",
       "away": "Canford United",
@@ -183,10 +358,38 @@
       "awayScore": 4
     },
     {
+      "date": "2026-10-24",
+      "home": "Maiden Newton & Cattistock",
+      "away": "Stars FC",
+      "homeScore": 4,
+      "awayScore": 5
+    },
+    {
+      "date": "2026-10-31",
+      "home": "Maiden Newton & Cattistock",
+      "away": "Bournemouth Sports Reserves",
+      "homeScore": 6,
+      "awayScore": 0
+    },
+    {
       "date": "2026-11-07",
       "home": "Canford United",
       "away": "Westland Sports Reserves",
       "homeScore": 0,
+      "awayScore": 0
+    },
+    {
+      "date": "2026-11-07",
+      "home": "Maiden Newton & Cattistock",
+      "away": "Parley",
+      "homeScore": 2,
+      "awayScore": 1
+    },
+    {
+      "date": "2026-11-07",
+      "home": "Stars FC",
+      "away": "Shaftesbury Reserves",
+      "homeScore": 1,
       "awayScore": 0
     }
   ],
@@ -215,5 +418,8 @@
   ],
   "lastCheckedAt": "2026-11-09T14:46:28Z",
   "lastCheckStatus": "failed",
-  "lastCheckIssue": "The latest data could not be verified; results may be out of date."
+  "lastCheckIssue": "The latest data could not be verified; results may be out of date.",
+  "manualVerifiedAt": "2026-11-09",
+  "resultsSourceUrl": "https://www.nonleaguematters.co.uk/divisions/117/",
+  "officialResultsUrl": "https://fulltime.thefa.com/results/2/25.html?selectedSeason=242517082&selectedFixtureGroupAgeGroup=0&previousSelectedFixtureGroupAgeGroup=&selectedFixtureGroupKey=1_293688393&previousSelectedFixtureGroupKey=1_293688393&selectedDateCode=&selectedRelatedFixtureOption=3&selectedClub=&previousSelectedClub=&selectedTeam="
 }
