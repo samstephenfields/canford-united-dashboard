@@ -12,7 +12,7 @@ const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);
 assert.equal(ids.length,new Set(ids).size,'All HTML IDs should be unique');
 for(const id of ['form-badges','form-summary','form-match-detail','stats-ppg','data-status-text','data-stamp',
   'target-rank','target-total','target-needed','target-plan','briefing-match','briefing-scenarios',
-  'scout-opponent','scout-card','share-predictions','share-url','share-tools','shared-mode-banner',
+  'scout-opponent','scout-card','scout-form-badges','scout-match-detail','scout-form-summary','scout-results-coverage','share-predictions','share-url','share-tools','shared-mode-banner',
   'copy-share','restore-personal','save-shared']){
   assert(ids.includes(id),'Missing interactive UI element '+id);
 }
@@ -25,6 +25,11 @@ assert(own,'Canford United must appear in standings');
 assert.equal(matches.length,own.played,'Canford result history must match games played');
 assert(app.includes('function renderSeasonForm()'));
 assert(app.includes('function renderScoutingCard()'));
+assert(app.includes('function renderScoutingTimeline()'));
+assert(app.includes('function renderScoutingMatchDetail()'));
+assert(app.includes('data-scout-match-index'));
+assert(app.includes('a.date.localeCompare(b.date)'));
+assert(!app.includes('Opponent recent results, earliest to latest'));
 assert(app.includes('function renderBriefing()'));
 assert(app.includes('function renderPointsTarget()'));
 assert(app.includes('function sharePredictions()'));
@@ -89,6 +94,22 @@ async function run(){
   assert.match(personal.el('target-total').textContent.toString(),/^\d+$/);
   assert.match(personal.el('target-needed').textContent.toString(),/^\d+$/);
   assert(personal.el('scout-card').innerHTML.length>80,'Scouting details should load');
+  personal.el('scout-opponent').listeners.change({target:{value:'Westland Sports Reserves'}});
+  const westlandChips=personal.el('scout-form-badges').innerHTML;
+  assert.equal((westlandChips.match(/data-scout-match-index=/g)||[]).length,2,'Show both known Westland matches');
+  assert.match(westlandChips,/17 Oct/);
+  assert.match(westlandChips,/7 Nov/);
+  assert.match(personal.el('scout-match-detail').innerHTML,/7 November/,'Latest opponent match selected by default');
+  personal.el('scout-form-badges').listeners.click({
+    target:{closest:()=>({dataset:{scoutMatchIndex:'0'}})}
+  });
+  assert.match(personal.el('scout-match-detail').innerHTML,/17 October/,'Clicking earlier W chip shows selected game');
+  assert.match(personal.el('scout-match-detail').innerHTML,/1 <span>–<\/span> 4/,'Show correct home/away score');
+  personal.el('scout-opponent').listeners.change({target:{value:'Stars FC'}});
+  assert.equal((personal.el('scout-form-badges').innerHTML.match(/data-scout-match-index=/g)||[]).length,1);
+  assert.match(personal.el('scout-results-coverage').textContent,/Partial record: 1 of 8/);
+  assert.match(personal.el('scout-match-detail').innerHTML,/12 September/);
+
   assert(personal.el('briefing-match').innerHTML.length>50,'Next-match briefing should load');
   if(remaining.length){
     assert(personal.el('scout-opponent').innerHTML.includes('option'));
