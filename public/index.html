@@ -104,23 +104,24 @@
         </section>
 
         <section class="section form-section" id="form" aria-labelledby="form-title">
-          <div class="section-topline"><span class="section-label">04 / FORM & STATS</span><span class="tiny-note">LEAGUE MATCHES ONLY</span></div>
-          <h2 id="form-title">How we're performing</h2>
-          <div class="form-grid">
-            <article class="form-card form-large"><span class="card-overline">LAST FIVE RESULTS</span><div id="form-badges" class="form-badges"></div><div class="form-summary" id="form-summary">Loading form…</div><div class="recent-results" id="recent-results"></div></article>
-            <article class="form-card"><span class="card-overline">POINTS PER GAME</span><strong class="form-big" id="stats-ppg">1.25</strong><span class="submetric">Across league matches played</span><div class="form-divider"></div><span class="card-overline">GOALS FOR / MATCH</span><strong class="form-big" id="stats-gf">2.50</strong></article>
-            <article class="form-card"><span class="card-overline">GOALS AGAINST / MATCH</span><strong class="form-big" id="stats-ga">2.13</strong><span class="submetric">Defensive average</span><div class="form-divider"></div><span class="card-overline">GOAL DIFFERENCE</span><strong class="form-big" id="stats-gd">+3</strong></article>
-          </div>
-          <div class="season-results" aria-labelledby="season-results-title">
-            <div class="results-heading">
-              <div><h3 id="season-results-title">Every league result this season</h3><p id="results-summary">Loading completed matches…</p></div>
-              <div class="mode-toggle" role="group" aria-label="Results filter">
-                <button type="button" id="canford-results-mode" class="active" aria-pressed="true">Canford</button>
-                <button type="button" id="division-results-mode" aria-pressed="false">Whole league</button>
-              </div>
+          <div class="section-topline"><span class="section-label">04 / SEASON FORM</span><span class="tiny-note">CANFORD LEAGUE MATCHES ONLY</span></div>
+          <h2 id="form-title">Results across the season</h2>
+          <p class="section-intro form-intro">Every completed league match, in date order. Select a W, D or L to view that result.</p>
+          <div class="form-history-card">
+            <div class="form-history-top">
+              <span class="card-overline">MATCH-BY-MATCH FORM <span class="form-direction">EARLIEST → LATEST</span></span>
+              <strong id="form-summary" class="form-history-summary">Loading form…</strong>
             </div>
-            <div id="season-results-list" class="season-results-list" aria-live="polite"><div class="loading-state">Loading results…</div></div>
-            <p id="results-coverage-note" class="results-coverage-note"></p>
+            <div id="form-badges" class="form-badges form-timeline" role="group" aria-label="Select a Canford United match result"></div>
+            <div id="form-match-detail" class="form-match-detail" aria-live="polite" aria-atomic="true">
+              <div class="loading-state">Select a result to see match details.</div>
+            </div>
+          </div>
+          <div class="form-stat-strip" aria-label="League statistics">
+            <div class="form-stat"><span>Points per match</span><strong id="stats-ppg">1.25</strong></div>
+            <div class="form-stat"><span>Goals scored / match</span><strong id="stats-gf">2.50</strong></div>
+            <div class="form-stat"><span>Goals conceded / match</span><strong id="stats-ga">2.13</strong></div>
+            <div class="form-stat"><span>Goal difference</span><strong id="stats-gd">+3</strong></div>
           </div>
         </section>
       </div>
