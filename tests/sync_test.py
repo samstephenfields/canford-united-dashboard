@@ -31,4 +31,15 @@ class SyncTests(unittest.TestCase):
         self.assertEqual(sync.parse_date('14/11/26 14:00'),('2026-11-14','14:00'))
         self.assertEqual(sync.canonical('Parley Football Club'),'Parley')
         with self.assertRaises(ValueError):sync.canonical('Unknown club')
+    def test_preserve_past_results_if_provider_only_returns_recent_games(self):
+        table=sync.standings_from_api([
+            {'teamName':'Canford United','gamesPlayed':2,'gamesWon':1,'gamesDrawn':0,'gamesLost':1,'goalDifference':-2,'points':3},
+            {'teamName':'Stars FC','gamesPlayed':2,'gamesWon':1,'gamesDrawn':0,'gamesLost':1,'goalDifference':2,'points':3}
+        ],self.previous)
+        older=[{'date':'2026-09-01','home':'Canford United','away':'Stars FC','homeScore':2,'awayScore':1}]
+        newest=[{'fixtureDateTime':'10/09/26 14:00','homeTeam':'Stars FC','awayTeam':'Canford United','homeScore':3,'awayScore':0}]
+        results=sync.results_from_api(newest,table,older)
+        self.assertEqual(len(results),2)
+        canford=next(t for t in table if t['name']=='Canford United')
+        self.assertEqual((canford['gf'],canford['ga']),(2,4))
 if __name__=='__main__':unittest.main()
