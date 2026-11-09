@@ -109,7 +109,7 @@ def standings_from_api(raw,previous):
         raise ValueError('Table membership mismatch; manual review needed')
     return sorted(normalized,key=lambda r:(-r['points'],-r['gd'],r['name']))
 
-def results_from_api(raw,standings):
+def results_from_api(raw,standings,previous_results=None):
     rows=raw if isinstance(raw,list) else pick(raw,'results','matches')
     if not isinstance(rows,list):
         raise ValueError('Missing results array')
@@ -128,26 +128,36 @@ def results_from_api(raw,standings):
         hs,ass=number(hs),number(ass)
         if hs<0 or ass<0:raise ValueError('Negative score')
         output.append({'date':date,'home':home,'away':away,'homeScore':hs,'awayScore':ass})
-    unique={}
+    # Some Full-Time views expose a limited recent-results window.
+    # Merge newly fetched pairings with previously verified matches, so a
+    # partial response cannot erase the season history.
+    unique={(r['home'],r['away']):dict(r) for r in (previous_results or [])}
     for row in output:
-        key=(row['home'],row['away'])
-        if key in unique:raise ValueError('Duplicate completed pairing: '+str(key))
-        unique[key]=row
-    output.sort(key=lambda r:(r['date'],r['home'],r['away']))
-    # The complete division record is essential to consistency checks.
+        unique[(row['home'],row['away'])]=row
+    output=sorted(unique.values(),key=lambda r:(r['date'],r['home'],r['away']))
     counts={x['name']:0 for x in standings}
     totals={x['name']:[0,0] for x in standings}
     for r in output:
+        if r['home'] not in counts or r['away'] not in counts:
+            raise ValueError('Result includes a team outside this league')
         counts[r['home']]+=1;counts[r['away']]+=1
         totals[r['home']][0]+=r['homeScore'];totals[r['home']][1]+=r['awayScore']
         totals[r['away']][0]+=r['awayScore'];totals[r['away']][1]+=r['homeScore']
-    if any(counts[r['name']]!=r['played'] for r in standings):
-        raise ValueError('API results do not cover all played matches; refusing inconsistent snapshot')
     for r in standings:
-        gf,ga=totals[r['name']]
-        if gf-ga!=r['gd']:
-            raise ValueError('Goals conflict with league GD for '+r['name'])
-        r['gf'],r['ga']=gf,ga
+        name=r['name']
+        if counts[name]>r['played']:
+            raise ValueError('More result rows than games played for '+name)
+        # Require every Canford match: otherwise the predictor would miscount
+        # the remaining fixtures and the captain's season view would be wrong.
+        if name==TEAM and counts[name]!=r['played']:
+            raise ValueError('Missing Canford league results; retaining previous snapshot')
+        if counts[name]==r['played']:
+            gf,ga=totals[name]
+            if gf-ga!=r['gd']:
+                raise ValueError('Goals conflict with league GD for '+name)
+            r['gf'],r['ga']=gf,ga
+        else:
+            r['gf'],r['ga']=None,None
     return output
 
 def fixtures_from_api(raw,results,previous):
@@ -179,7 +189,7 @@ def sync():
     fixtures=get_json(BASE+'/api/Fixtures/'+DIVISION_ID)
     next_data=copy.deepcopy(previous)
     next_data['standings']=standings_from_api(table,previous)
-    next_data['results']=results_from_api(results,next_data['standings'])
+    next_data['results']=results_from_api(results,next_data['standings'],previous.get('results'))
     next_data['scheduledFixtures']=fixtures_from_api(fixtures,next_data['results'],previous)
     current=next(r for r in next_data['standings'] if r['name']==TEAM)
     older=next(r for r in previous['standings'] if r['name']==TEAM)
