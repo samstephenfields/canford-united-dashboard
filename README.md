@@ -40,8 +40,8 @@ After the initial GitHub Actions run, website files are in `public/`, tests are 
 
 ## Official source integration
 
-- `scripts/official_fulltime.py` fetches the public official league table and complete results pages by league/division ID. It uses ordinary HTTPS requests and does not attempt to bypass blocks or authentication.
-- `scripts/sync.py` maps FA team names, validates scores and dates, and publishes only complete, internally consistent league snapshots.
-- `tests/official_fulltime_test.py` checks HTML parsing and confirms that county-cup fixtures are excluded.
-- `FA_FULLTIME_SEASON_ID` can optionally pin a season selector if the official website defaults to a different season. If the official site cannot be read, the dashboard retains its last verified scores and reports a failed refresh.
-- This updater refreshes **results and standings**. Previously saved fixture dates are retained until matches are completed; full fixture sourcing remains a separate integration.
+- `scripts/official_fulltime.py` uses the specific **2026/27 season ID `242517082`** and **Dorset Senior League fixture-group key `1_293688393`** from the [results page supplied by the club](https://fulltime.thefa.com/results/2/25.html?selectedSeason=242517082&selectedFixtureGroupKey=1_293688393). It requests the paginated results pages in order (25 per page) and the FA-linked official table; it does not attempt to bypass blocks or authentication.
+- `scripts/sync.py` maps FA team names, validates dates and scores, and publishes only a complete, consistent league snapshot. Missing pages or a mismatch with league games played leave the previous data untouched.
+- `tests/official_fulltime_test.py` checks the precise season/division URLs, pagination, HTML parsing and county-cup exclusion.
+- This updater refreshes **results and standings**. Previously saved fixture dates are retained until matches finish; full fixture sourcing remains separate.
+- **Live limitation:** direct FA Full-Time pages may return HTTP 403 from GitHub Actions. The URL correction is committed but cannot guarantee successful data collection or a new live snapshot. An authorised FA feed/export is the more reliable long-term option.
