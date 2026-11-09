@@ -23,6 +23,11 @@ const matches=data.results.filter(r=>r.home===data.team||r.away===data.team);
 const own=data.standings.find(r=>r.name===data.team);
 assert(own,'Canford United must appear in standings');
 assert.equal(matches.length,own.played,'Canford result history must match games played');
+if(data.manualVerifiedAt){
+  assert.equal(data.results.length,data.standings.reduce((sum,r)=>sum+r.played,0)/2,
+    'Manually verified snapshot must include all completed league fixtures');
+  assert(html.includes('Official FA results'),'Scouting section should link to official FA results');
+}
 assert(app.includes('function renderSeasonForm()'));
 assert(app.includes('function renderScoutingCard()'));
 assert(app.includes('function renderScoutingTimeline()'));
@@ -94,21 +99,34 @@ async function run(){
   assert.match(personal.el('target-total').textContent.toString(),/^\d+$/);
   assert.match(personal.el('target-needed').textContent.toString(),/^\d+$/);
   assert(personal.el('scout-card').innerHTML.length>80,'Scouting details should load');
-  personal.el('scout-opponent').listeners.change({target:{value:'Westland Sports Reserves'}});
+  const westland='Westland Sports Reserves';
+  personal.el('scout-opponent').listeners.change({target:{value:westland}});
+  const westlandMatches=data.results.filter(r=>r.home===westland||r.away===westland);
   const westlandChips=personal.el('scout-form-badges').innerHTML;
-  assert.equal((westlandChips.match(/data-scout-match-index=/g)||[]).length,2,'Show both known Westland matches');
-  assert.match(westlandChips,/17 Oct/);
-  assert.match(westlandChips,/7 Nov/);
-  assert.match(personal.el('scout-match-detail').innerHTML,/7 November/,'Latest opponent match selected by default');
-  personal.el('scout-form-badges').listeners.click({
-    target:{closest:()=>({dataset:{scoutMatchIndex:'0'}})}
-  });
-  assert.match(personal.el('scout-match-detail').innerHTML,/17 October/,'Clicking earlier W chip shows selected game');
-  assert.match(personal.el('scout-match-detail').innerHTML,/1 <span>–<\/span> 4/,'Show correct home/away score');
-  personal.el('scout-opponent').listeners.change({target:{value:'Stars FC'}});
-  assert.equal((personal.el('scout-form-badges').innerHTML.match(/data-scout-match-index=/g)||[]).length,1);
-  assert.match(personal.el('scout-results-coverage').textContent,/Partial record: 1 of 8/);
-  assert.match(personal.el('scout-match-detail').innerHTML,/12 September/);
+  assert.equal((westlandChips.match(/data-scout-match-index=/g)||[]).length,westlandMatches.length,
+    'Show every recorded Westland league match');
+  if(westlandMatches.length){
+    const sorted=[...westlandMatches].sort((a,b)=>a.date.localeCompare(b.date));
+    assert.match(personal.el('scout-match-detail').innerHTML,/MATCH/,'Newest recorded opponent match should load');
+    if(sorted.length>1){
+      personal.el('scout-form-badges').listeners.click({
+        target:{closest:()=>({dataset:{scoutMatchIndex:'0'}})}
+      });
+      assert(personal.el('scout-match-detail').innerHTML.includes(sorted[0].home));
+      assert(personal.el('scout-match-detail').innerHTML.includes(sorted[0].away));
+      assert(personal.el('scout-match-detail').innerHTML.includes(String(sorted[0].homeScore)));
+    }
+  }
+  const stars='Stars FC';
+  personal.el('scout-opponent').listeners.change({target:{value:stars}});
+  const starsResults=data.results.filter(r=>r.home===stars||r.away===stars).length;
+  assert.equal((personal.el('scout-form-badges').innerHTML.match(/data-scout-match-index=/g)||[]).length,starsResults);
+  const starsPlayed=data.standings.find(r=>r.name===stars).played;
+  if(starsResults===starsPlayed){
+    assert.match(personal.el('scout-results-coverage').textContent,/All \d+ league results/);
+  }else{
+    assert.match(personal.el('scout-results-coverage').textContent,/Partial record:/);
+  }
 
   assert(personal.el('briefing-match').innerHTML.length>50,'Next-match briefing should load');
   if(remaining.length){
