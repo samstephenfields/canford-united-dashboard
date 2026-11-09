@@ -82,5 +82,60 @@
     rows.sort((a,b)=>b.projPoints-a.projPoints||b.projGD-a.projGD||a.name.localeCompare(b.name));
     return {position:rows.findIndex(r=>r.name===team)+1,points:ownPoints,table:rows,totalFixtures:all.length,selected,unspecified,selectedWins,selectedDraws,selectedLosses,minPoints:ourselves.points,maxPoints:ourselves.points+all.length*3};
   }
-  return {key,opponent,remainingFixtures,validPick,outcome,forecast,ordinal};
+
+  // Target is the minimum integer points to finish ABOVE the projected
+  // n-th rival. Equal points may hinge on goal difference, so it is not used.
+  function pointsTarget(data,picks={},targetRank=6){
+    const all=remainingFixtures(data);
+    const rank=Math.min(Math.max(1,Math.trunc(Number(targetRank)||6)),data.standings.length);
+    const projection=forecast(data,picks);
+    const rivals=projection.table.filter(r=>r.name!==data.team).sort((a,b)=>b.projPoints-a.projPoints);
+    const team=data.standings.find(r=>r.name===data.team);
+    const estimatedThreshold=rank<=rivals.length?Math.floor(rivals[rank-1].projPoints+1e-8)+1:0;
+    const targetPoints=Math.max(team.points,estimatedThreshold);
+    let lockedPoints=team.points,chosen=0;
+    for(const fixture of all){
+      if(validPick(picks[fixture.id])){
+        chosen++;
+        lockedPoints+=outcome(picks[fixture.id],fixture,data.team).points;
+      }
+    }
+    const open=all.length-chosen,need=Math.max(0,targetPoints-lockedPoints);
+    const feasible=need<=3*open;
+    let plan=null;
+    if(feasible){
+      // Prefer reaching the target without overshooting, then simpler W/D mixes.
+      const possibilities=[];
+      for(let wins=0;wins<=open;wins++){
+        for(let draws=0;draws<=open-wins;draws++){
+          const gained=3*wins+draws;
+          if(gained>=need)possibilities.push({wins,draws,losses:open-wins-draws,points:gained});
+        }
+      }
+      possibilities.sort((a,b)=>(a.points-need)-(b.points-need)||a.draws-b.draws||b.losses-a.losses);
+      plan=possibilities[0]||null;
+    }
+    return {rank,targetPoints,lockedPoints,need,open,feasible,plan,maxPoints:lockedPoints+3*open,estimatedRivalCutoff:rank<=rivals.length?rivals[rank-1].projPoints:null};
+  }
+  function serializePredictions(data,picks={}){
+    const scores=remainingFixtures(data).filter(f=>validPick(picks[f.id])).map(f=>[f.id,picks[f.id].homeScore,picks[f.id].awayScore]);
+    return JSON.stringify({v:1,season:data.season,scores});
+  }
+  function parseSharedPredictions(data,encoded){
+    if(typeof encoded!=='string'||encoded.length>12000)return null;
+    try{
+      const payload=JSON.parse(encoded);
+      if(!payload||payload.v!==1||payload.season!==data.season||!Array.isArray(payload.scores))return null;
+      const allowed=new Set(remainingFixtures(data).map(f=>f.id));
+      if(payload.scores.length>data.standings.length*2)return null;
+      const picks={};
+      for(const row of payload.scores){
+        if(!Array.isArray(row)||row.length!==3||typeof row[0]!=='string')return null;
+        if(!allowed.has(row[0])||!isValidScore(row[1])||!isValidScore(row[2]))return null;
+        picks[row[0]]={homeScore:row[1],awayScore:row[2]};
+      }
+      return picks;
+    }catch{return null;}
+  }
+  return {key,opponent,remainingFixtures,validPick,outcome,forecast,ordinal,pointsTarget,serializePredictions,parseSharedPredictions};
 });
