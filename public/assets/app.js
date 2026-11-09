@@ -80,6 +80,9 @@
   $('season-progress').style.width=(100*cur.played/data.totalMatchesPerTeam)+'%';
   text('stat-points',cur.points);text('stat-remaining',data.totalMatchesPerTeam-cur.played);
   text('stat-maximum',cur.points+3*(data.totalMatchesPerTeam-cur.played));
+  const today=new Date().toISOString().slice(0,10);
+  const next=(data.scheduledFixtures||[]).filter(f=>f.date&&f.date>=today).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  text('hero-next-fixture',next?shortDate(next.date)+' · '+F.opponent(next,data.team)+' ('+(next.home===data.team?'Home':'Away')+')':'Check the fixture list for confirmed dates');
   text('stats-ppg',((cur.won*3+cur.drawn)/cur.played).toFixed(2));
   text('stats-gf',cur.gf!=null?(cur.gf/cur.played).toFixed(2):'—');text('stats-ga',cur.ga!=null?(cur.ga/cur.played).toFixed(2):'—');
   text('stats-gd',(cur.gd>0?'+':'')+cur.gd);
