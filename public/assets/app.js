@@ -54,12 +54,9 @@
   const list=F.remainingFixtures(STATE.data);
   text('fixture-count',`${list.length} MATCHES REMAINING`);
   $('fixtures-list').innerHTML=list.length?list.map(fixtureMarkup).join(''):'<div class="loading-state">No remaining league matches.</div>';
-  text('stat-remaining-sub',`${list.filter(f=>f.date).length} scheduled · ${list.filter(f=>!f.date).length} TBC`);
  }
  function renderProjection(){
    const data=STATE.data,result=F.forecast(data,STATE.picks),best=F.forecast(data,STATE.picks,'best'),worst=F.forecast(data,STATE.picks,'worst');
-   text('stat-projection',result.position);text('stat-suffix',F.ordinal(result.position));
-   text('stat-projection-sub',result.selected?`${result.selected} score${result.selected===1?'':'s'} entered`:'Based on current form');
    text('forecast-rank',result.position);text('forecast-suffix',F.ordinal(result.position));
    text('forecast-desc',result.selected?'Based on your scores + form for unpicked fixtures':'If current form continues');
    text('forecast-points',fmt(result.points));
@@ -279,8 +276,6 @@
   text('hero-left',(data.totalMatchesPerTeam-cur.played));
   text('season-progress-label',Math.round(100*cur.played/data.totalMatchesPerTeam)+'%');
   $('season-progress').style.width=(100*cur.played/data.totalMatchesPerTeam)+'%';
-  text('stat-points',cur.points);text('stat-remaining',data.totalMatchesPerTeam-cur.played);
-  text('stat-maximum',cur.points+3*(data.totalMatchesPerTeam-cur.played));
   const next=nextScheduledFixture();
   text('hero-next-fixture',next?shortDate(next.date)+' · '+F.opponent(next,data.team)+' ('+(next.home===data.team?'Home':'Away')+')':'Check the fixture list for confirmed dates');
   text('stats-ppg',((cur.won*3+cur.drawn)/cur.played).toFixed(2));
