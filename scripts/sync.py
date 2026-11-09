@@ -7,16 +7,13 @@ snapshot when the FA source cannot be fetched or has changed its markup.
 import copy
 import datetime as dt
 import json
-import os
 import re
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA_PATH = ROOT / 'public' / 'data' / 'season.json'
-BASE = os.environ.get('FULLTIME_API_URL', 'https://faapi.jwhsolutions.co.uk').rstrip('/')
 DIVISION_ID = '69783872'
 TEAM = 'Canford United'
 
@@ -77,11 +74,6 @@ def parse_date(value):
         except ValueError:
             pass
     raise ValueError('Unrecognized date: '+text)
-
-def get_json(url):
-    request=Request(url,headers={'User-Agent':'CanfordUnitedDashboard/1.0 (+GitHub Pages; public data)', 'Accept':'application/json'})
-    with urlopen(request,timeout=50) as resp:
-        return json.loads(resp.read().decode('utf-8'))
 
 def standings_from_api(raw,previous):
     rows = raw if isinstance(raw,list) else pick(raw,'table','standings','leagueTable')
@@ -193,6 +185,12 @@ def sync():
     next_data=copy.deepcopy(previous)
     next_data['standings']=standings_from_api(table,previous)
     next_data['results']=results_from_api(results,next_data['standings'],previous.get('results'))
+    expected_matches=sum(row['played'] for row in next_data['standings'])
+    if expected_matches%2 or len(next_data['results'])!=expected_matches//2:
+        raise ValueError(
+            f'Official results incomplete: {len(next_data["results"])} of '
+            f'{expected_matches//2} completed league matches supplied'
+        )
     next_data['scheduledFixtures']=fixtures_from_api(fixtures,next_data['results'],previous)
     current=next(r for r in next_data['standings'] if r['name']==TEAM)
     older=next(r for r in previous['standings'] if r['name']==TEAM)
