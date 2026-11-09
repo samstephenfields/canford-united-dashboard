@@ -292,7 +292,9 @@
   const lastCheck=data.lastCheckedAt?new Date(data.lastCheckedAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}):null;
   text('data-stamp',(lastCheck?'Checked '+lastCheck+' UK · ':'')+'Results through '+shortDate(data.dataAsOf));
   const checkedOk=data.lastCheckStatus==='ok';
-  text('data-status-text',data.lastCheckStatus==='failed'?'Latest automatic check failed — showing last verified results':checkedOk?'Source checked — latest verified snapshot':'Starter results — automatic refresh not yet verified');
+  const manualComplete=!!data.manualVerifiedAt&&data.results.length===data.standings.reduce((sum,r)=>sum+r.played,0)/2;
+  const manualLabel=manualComplete?'Complete results verified '+new Date(data.manualVerifiedAt+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}):null;
+  text('data-status-text',data.lastCheckStatus==='failed'?(manualLabel?manualLabel+' · Automatic FA refresh unavailable':'Latest automatic check failed — showing last verified results'):checkedOk?'Source checked — latest verified snapshot':manualLabel||'Starter results — automatic refresh not yet verified');
   $('data-light').classList.toggle('online',checkedOk);
  }
 
