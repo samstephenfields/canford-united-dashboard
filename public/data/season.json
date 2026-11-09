@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "season": "2026/27",
+  "league": "Dorset Senior League",
+  "team": "Canford United",
+  "totalMatchesPerTeam": 20,
+  "dataAsOf": "2026-11-07",
+  "lastSuccessfulSync": null,
+  "sourceNote": "Verified 9 November 2026 against FA Full-Time and NonLeagueMatters; latest match results dated 7 November.",
+  "officialTableUrl": "https://fulltime.thefa.com/index.html?league=3520598",
+  "officialTeamUrl": "https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&teamID=208163315",
+  "standings": [
+    {"name":"Stars FC","played":8,"won":6,"drawn":0,"lost":2,"gf":26,"ga":12,"gd":14,"points":18},
+    {"name":"Maiden Newton & Cattistock","played":8,"won":4,"drawn":3,"lost":1,"gf":23,"ga":12,"gd":11,"points":15},
+    {"name":"Cobham Sports Reserves","played":7,"won":4,"drawn":1,"lost":2,"gf":22,"ga":11,"gd":11,"points":13},
+    {"name":"Parley","played":6,"won":4,"drawn":1,"lost":1,"gf":14,"ga":7,"gd":7,"points":13},
+    {"name":"Bournemouth Sports Reserves","played":7,"won":4,"drawn":0,"lost":3,"gf":13,"ga":17,"gd":-4,"points":12},
+    {"name":"Shaftesbury Reserves","played":7,"won":3,"drawn":2,"lost":2,"gf":19,"ga":15,"gd":4,"points":11},
+    {"name":"Tisbury United","played":5,"won":3,"drawn":1,"lost":1,"gf":15,"ga":7,"gd":8,"points":10},
+    {"name":"Canford United","played":8,"won":3,"drawn":1,"lost":4,"gf":20,"ga":17,"gd":3,"points":10},
+    {"name":"Westland Sports Reserves","played":7,"won":0,"drawn":2,"lost":5,"gf":8,"ga":25,"gd":-17,"points":2},
+    {"name":"Bournemouth Poppies Reserves","played":6,"won":0,"drawn":1,"lost":5,"gf":10,"ga":24,"gd":-14,"points":1},
+    {"name":"Poole Borough","played":5,"won":0,"drawn":0,"lost":5,"gf":3,"ga":26,"gd":-23,"points":-1}
+  ],
+  "results": [
+    {"date":"2026-09-05","home":"Canford United","away":"Poole Borough","homeScore":8,"awayScore":1},
+    {"date":"2026-09-12","home":"Stars FC","away":"Canford United","homeScore":2,"awayScore":1},
+    {"date":"2026-09-19","home":"Canford United","away":"Parley","homeScore":0,"awayScore":4},
+    {"date":"2026-09-26","home":"Shaftesbury Reserves","away":"Canford United","homeScore":6,"awayScore":4},
+    {"date":"2026-10-03","home":"Canford United","away":"Bournemouth Sports Reserves","homeScore":1,"awayScore":2},
+    {"date":"2026-10-10","home":"Canford United","away":"Cobham Sports Reserves","homeScore":2,"awayScore":1},
+    {"date":"2026-10-17","home":"Westland Sports Reserves","away":"Canford United","homeScore":1,"awayScore":4},
+    {"date":"2026-11-07","home":"Canford United","away":"Westland Sports Reserves","homeScore":0,"awayScore":0}
+  ],
+  "scheduledFixtures": [
+    {"date":"2026-11-14","time":"14:00","home":"Bournemouth Sports Reserves","away":"Canford United","venue":"Chapel Gate"},
+    {"date":"2026-11-21","time":"14:00","home":"Canford United","away":"Tisbury United","venue":"Canford Park Sports Ltd"},
+    {"date":"2026-11-28","time":"14:00","home":"Parley","away":"Canford United","venue":"West Parley Community Hub"}
+  ]
+}
