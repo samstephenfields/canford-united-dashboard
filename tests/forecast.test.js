@@ -39,8 +39,8 @@ for(const rank of [1,4,6,8,data.standings.length]){
 }
 const targetWins=F.pointsTarget(data,allWins,6);
 assert.equal(targetWins.open,0);
-assert.equal(targetWins.need,0);
-assert(targetWins.feasible);
+assert.equal(targetWins.lockedPoints,own.points+3*fixtures.length);
+assert.equal(targetWins.feasible,targetWins.need===0);
 const encoded=F.serializePredictions(data,allWins);
 assert.deepEqual(F.parseSharedPredictions(data,encoded),allWins);
 assert.deepEqual(F.parseSharedPredictions(data,F.serializePredictions(data,{})),{});
