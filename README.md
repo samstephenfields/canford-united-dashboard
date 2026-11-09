@@ -22,15 +22,26 @@ These features depend on the latest verified data snapshot; where league results
 
 ## Data freshness
 
-Automatic checks use **UK local time** (GMT/BST): 07:15 and 19:15 daily, **Saturday 20:25 and 21:25**, and **Sunday 09:25**. The source is an **unofficial** FA Full-Time service, so these checks do not guarantee that scores have been published or that GitHub will start precisely on schedule. GitHub may disable scheduled workflows on public repositories after 60 days without activity.
+Automatic checks run on each push to `main` and on a **UK local time** schedule: 07:15 and 19:15 daily, **Saturday 20:25 and 21:25**, and **Sunday 09:25**.
+
+**The primary source for league results and standings is now the public FA Full-Time Dorset League website**, using its Dorset Senior League table and results pages (division ID `69783872`). The updater no longer calls an independent third-party API. It only accepts 2026/27 league matches and excludes county cup games. Before publishing it verifies that the collected number of results matches the games-played total in the standings. If any record is missing, a page is blocked, or the layout changes, the existing snapshot is kept and a failed-check notice is shown.
+
+**Important limitation:** Public FA Full-Time HTML is not a guaranteed machine-readable feed. Requests from GitHub Actions may be blocked or the page may change without warning. This direct-site integration has been coded and unit-tested with representative HTML, but has not yet completed a verified live refresh. For higher reliability the league can provide an authorised Full-Time data feed or export. GitHub can also delay scheduled jobs or disable them after 60 days of inactivity in public repositories.
 
 The dashboard shows **the date of the latest verified result** separately from **the time and status of the most recent check**. If the service is inaccessible or sends inconsistent data, existing verified results are preserved and the page displays a failed-check warning. The initial data covers results through 7 November 2026. Dates marked TBC are not confirmed fixtures. The forecast is based on points per game and is *not* a guaranteed finishing position.
 
-Section **04 / Season Form** shows every Canford league result in chronological order as a swipeable W/D/L strip. Select any result to see the date, home and away teams, final score and outcome. The separate results table and whole-division filter have been removed from this section; the main league standings table remains available in Section 03.
+Section **05 / Season Form** shows every Canford league result in chronological order as a swipeable W/D/L strip. Select any result to see the date, home and away teams, final score and outcome. The separate results table and whole-division filter have been removed from this section; the main league standings table remains available in Section 03.
 
 - [FA Full-Time Dorset League](https://fulltime.thefa.com/index.html?league=3520598)
-- [Independent FullTime API source](https://github.com/jwhughes-work/FullTimeAPI)
 
 ## Source files
 
 After the initial GitHub Actions run, website files are in `public/`, tests are in `tests/`, and the refresh script is `scripts/sync.py`. The original deploy bundle is `dashboard.zip`.
+
+## Official source integration
+
+- `scripts/official_fulltime.py` fetches the public official league table and complete results pages by league/division ID. It uses ordinary HTTPS requests and does not attempt to bypass blocks or authentication.
+- `scripts/sync.py` maps FA team names, validates scores and dates, and publishes only complete, internally consistent league snapshots.
+- `tests/official_fulltime_test.py` checks HTML parsing and confirms that county-cup fixtures are excluded.
+- `FA_FULLTIME_SEASON_ID` can optionally pin a season selector if the official website defaults to a different season. If the official site cannot be read, the dashboard retains its last verified scores and reports a failed refresh.
+- This updater refreshes **results and standings**. Previously saved fixture dates are retained until matches are completed; full fixture sourcing remains a separate integration.
