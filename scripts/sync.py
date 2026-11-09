@@ -189,25 +189,40 @@ def sync():
         raise ValueError('Results appear to be from the wrong season')
     latest=max((r['date'] for r in next_data['results']),default=previous['dataAsOf'])
     next_data['dataAsOf']=latest
-    # Only modify the checked timestamp when the underlying match data changes.
-    old_data={k:v for k,v in previous.items() if k not in ('lastSuccessfulSync','sourceNote')}
-    new_data={k:v for k,v in next_data.items() if k not in ('lastSuccessfulSync','sourceNote')}
-    if old_data==new_data:
-        print('League data unchanged.')
-        return
-    next_data['lastSuccessfulSync']=dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
-    next_data['sourceNote']='Automatic snapshot via independent unofficial FullTime API; source: FA Full-Time.'
+    # Record every successful check, even if scores have not changed.
+    now=dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+    ignored=('lastSuccessfulSync','sourceNote','lastCheckedAt','lastCheckStatus','lastCheckIssue')
+    old_data={k:v for k,v in previous.items() if k not in ignored}
+    new_data={k:v for k,v in next_data.items() if k not in ignored}
+    changed=(old_data!=new_data)
+    next_data['lastCheckedAt']=now
+    next_data['lastCheckStatus']='ok'
+    next_data.pop('lastCheckIssue',None)
+    if changed:
+        next_data['lastSuccessfulSync']=now
+        next_data['sourceNote']='Automatic snapshot via independent unofficial FullTime API; source: FA Full-Time.'
     tmp=DATA_PATH.with_suffix('.tmp')
     tmp.write_text(json.dumps(next_data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     tmp.replace(DATA_PATH)
-    print('Updated results, fixtures and standings through '+latest)
+    print(('Updated league data through ' if changed else 'Verified unchanged league data through ')+latest)
 
 if __name__=='__main__':
     try:
         sync()
     except (HTTPError,URLError,TimeoutError,ValueError,KeyError,TypeError, OSError, json.JSONDecodeError) as exc:
         print('Data refresh skipped; keeping last verified snapshot: '+str(exc),file=sys.stderr)
-        # Do not break GitHub Pages on upstream outages; the dashboard clearly
-        # shows the date of the last successfully verified data.
+        # Keep old verified football data; update only the freshness indicator.
+        # The workflow should still publish the static page rather than fail closed.
+        try:
+            previous=json.loads(DATA_PATH.read_text(encoding='utf-8'))
+            previous['lastCheckedAt']=dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
+            previous['lastCheckStatus']='failed'
+            previous['lastCheckIssue']='The latest data could not be verified; results may be out of date.'
+            tmp=DATA_PATH.with_suffix('.tmp')
+            tmp.write_text(json.dumps(previous,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
+            tmp.replace(DATA_PATH)
+        except (OSError,ValueError,json.JSONDecodeError) as stamp_error:
+            print('Could not record failure status: '+str(stamp_error),file=sys.stderr)
+        print('::warning::Upstream league data refresh failed; website is displaying last verified results.')
         if '--strict' in sys.argv:
             sys.exit(1)
