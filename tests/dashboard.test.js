@@ -8,6 +8,20 @@ const app=fs.readFileSync(path.join(root,'public/assets/app.js'),'utf8');
 const F=require('../public/assets/forecast.js');
 const data=JSON.parse(fs.readFileSync(path.join(root,'public/data/season.json'),'utf8'));
 new vm.Script(app,{filename:'app.js'});
+// WhatsApp/Instagram-style previews must be available to non-JavaScript crawlers.
+const canonical='https://samstephenfields.github.io/canford-united-dashboard/';
+assert(html.includes('<meta property="og:title"'),'Missing Open Graph title');
+assert(html.includes('<meta property="og:description"'),'Missing Open Graph description');
+assert(html.includes('<meta property="og:url" content="'+canonical+'"'),'Canonical OG URL mismatch');
+assert(html.includes('property="og:image" content="'+canonical+'assets/whatsapp-preview.png'),'Missing absolute share image URL');
+assert(html.includes('property="og:image:width" content="1200"'));
+assert(html.includes('property="og:image:height" content="630"'));
+assert(html.includes('name="twitter:card" content="summary_large_image"'));
+const social=fs.readFileSync(path.join(root,'public/assets/whatsapp-preview.png'));
+assert(social.length>10000 && social.length<600000,'Social preview should be a reasonably small image');
+assert.equal(social.subarray(0,8).toString('hex'),'89504e470d0a1a0a','Invalid PNG header');
+assert.equal(social.readUInt32BE(16),1200,'OG image width must be 1200');
+assert.equal(social.readUInt32BE(20),630,'OG image height must be 630');
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]);
 assert.equal(ids.length,new Set(ids).size,'All HTML IDs should be unique');
 for(const id of ['form-badges','form-summary','form-match-detail','stats-ppg','data-status-text','data-stamp',

@@ -10,6 +10,14 @@ In repository **Settings → Pages**, choose **GitHub Actions** as the Build and
 
 The site is static and needs no server or accounts. Your score predictions remain stored locally in your browser (not shared or uploaded).
 
+## Sharing a branded link on WhatsApp
+
+Share the clean URL **https://samstephenfields.github.io/canford-united-dashboard/** in the team group. WhatsApp and other social apps can use the page's Open Graph metadata to show the Canford FC crest, green-and-white season dashboard image, title and description.
+
+The 1200x630 PNG is generated from the club's existing crest by `scripts/build_social_preview.py` on **every GitHub Pages deployment**, without requiring a third-party image hosting service. The deployed asset is `public/assets/whatsapp-preview.png`, with an absolute HTTPS `og:image` URL and declared dimensions. A GitHub Actions test checks the metadata and the resulting image.
+
+Link previews are controlled and cached by WhatsApp; a new preview is **not guaranteed** to show immediately in an older conversation. Try pasting the address into a fresh message or using a query string such as `?share=20261109` if an old preview is cached. This does not change the underlying page.
+
 ## Using the dashboard
 
 - **Season objective:** Choose any target position (1st–11th). The tool estimates a whole-number points threshold from other clubs' projected totals and shows an example combination of wins, draws and losses across unpredicted games. This is an indicative target, not a guaranteed finish; rivals' results and goal difference matter.

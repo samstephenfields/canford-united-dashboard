@@ -42,8 +42,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install official Full-Time HTML parser
-        run: python -m pip install "beautifulsoup4>=4.12,<5"
+      - name: Install page build dependencies
+        run: python -m pip install "beautifulsoup4>=4.12,<5" "Pillow>=10,<13"
+      - name: Build branded WhatsApp preview
+        run: python scripts/build_social_preview.py
       - name: Run dashboard tests
         run: |
           node tests/forecast.test.js
