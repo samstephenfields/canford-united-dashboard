@@ -255,3 +255,19 @@
  .shared-mode-banner button{flex:1;white-space:normal}
  .share-url-row input{font-size:11px}
 }
+
+/* Five concise navigation links without squeezing tablet widths. */
+@media(min-width:721px) and (max-width:1100px){
+ .header-inner{gap:13px}
+ .site-header nav{gap:12px}
+ .site-header nav a{font-size:11px;white-space:nowrap}
+ .brand{gap:8px}
+ .brand strong{font-size:13px}
+ .brand small{font-size:8px}
+ .brand-mark{width:49px;height:49px}
+ .brand-mark img{width:47px;height:46px}
+ .header-link{padding-left:10px;font-size:10px}
+}
+@media(min-width:721px) and (max-width:920px){
+ .header-link{display:none}
+}
