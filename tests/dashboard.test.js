@@ -19,6 +19,15 @@ for(const id of ['form-badges','form-summary','form-match-detail','stats-ppg','d
 for(const id of ['season-results-list','canford-results-mode','division-results-mode','recent-results']){
   assert(!ids.includes(id),'Obsolete results table remains: '+id);
 }
+const scoutSection=html.indexOf('<section class="section scouting-section" id="scouting"');
+const summarySection=html.indexOf('<section class="section" aria-labelledby="picture-title"');
+assert(scoutSection>=0 && summarySection>scoutSection,'Opposition scouting should be first after the hero');
+assert(html.indexOf('01 / OPPOSITION SCOUTING')<html.indexOf('02 / SEASON SUMMARY'),
+  'Section numbers should match the displayed order');
+assert(html.includes('href="https://www.nonleaguematters.co.uk/divisions/117/"'),
+  'Footer should credit the NonLeagueMatters results source');
+const footer=html.slice(html.indexOf('<footer'));
+assert(footer.includes('NonLeagueMatters'),'NonLeagueMatters credit should appear in the footer');
 const matches=data.results.filter(r=>r.home===data.team||r.away===data.team);
 const own=data.standings.find(r=>r.name===data.team);
 assert(own,'Canford United must appear in standings');
