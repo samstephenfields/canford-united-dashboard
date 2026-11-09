@@ -72,13 +72,67 @@
             <article class="stat-card standout"><div class="stat-caption">PROJECTED FINISH</div><div class="stat-number"><span id="stat-projection">8</span><sup id="stat-suffix">TH</sup></div><div class="stat-footer" id="stat-projection-sub">At current form</div></article>
             <article class="stat-card"><div class="stat-caption">MAX POSSIBLE POINTS</div><div class="stat-number" id="stat-maximum">46</div><div class="stat-footer">If every remaining game is won</div></article>
           </div>
+          <div class="decision-grid" aria-label="Season planning tools">
+            <article class="decision-card briefing-card" id="briefing">
+              <div class="decision-kicker">NEXT MATCH · BRIEFING</div>
+              <h3>What does the next result change?</h3>
+              <div id="briefing-match" class="briefing-match"><div class="loading-state">Checking scheduled fixtures…</div></div>
+              <div id="briefing-scenarios" class="briefing-scenarios"></div>
+              <p class="decision-note">Win/draw/loss comparisons assume a one-goal win or defeat, or a 0–0 draw. Other unpicked fixtures use current points-per-game form.</p>
+            </article>
+            <article class="decision-card target-card" id="targets">
+              <div class="decision-kicker">SEASON OBJECTIVE</div>
+              <h3>What would a target finish require?</h3>
+              <label class="target-select-label" for="target-rank">Aim to finish at least</label>
+              <select id="target-rank" class="target-select">
+                <option value="1">1st — champions</option>
+                <option value="2">2nd</option>
+                <option value="3">3rd</option>
+                <option value="4">4th</option>
+                <option value="5">5th</option>
+                <option value="6" selected>6th</option>
+                <option value="7">7th</option>
+                <option value="8">8th</option>
+                <option value="9">9th</option>
+                <option value="10">10th</option>
+                <option value="11">11th</option>
+              </select>
+              <div class="target-numbers">
+                <div><span>Estimated final-points target</span><strong id="target-total">—</strong></div>
+                <div><span>Points still needed</span><strong id="target-needed">—</strong></div>
+              </div>
+              <div class="target-plan" id="target-plan">Calculating the results required…</div>
+              <p class="decision-note">Based on other clubs maintaining their current points-per-game rates, adjusted for your predicted matches. Not a guaranteed finishing position; goal difference and rivals' results may change the target.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section scouting-section" id="scouting" aria-labelledby="scouting-title">
+          <div class="section-topline"><span class="section-label">02 / OPPOSITION SCOUTING</span><span class="tiny-note">FROM THE VERIFIED LEAGUE SNAPSHOT</span></div>
+          <div class="section-heading-row">
+            <div><h2 id="scouting-title">Know the opposition</h2><p class="section-intro">Review the next opponent or choose another remaining fixture. Form is only shown when the results are available.</p></div>
+            <div class="scout-select-wrap"><label for="scout-opponent">Opponent</label><select id="scout-opponent" class="target-select"><option value="">Loading clubs…</option></select></div>
+          </div>
+          <div id="scout-card" class="scout-card"><div class="loading-state">Loading opponent statistics…</div></div>
         </section>
 
         <section class="section predictor-section" id="predictor" aria-labelledby="predict-title">
-          <div class="section-topline"><span class="section-label">02 / RUN-IN SIMULATOR</span><span class="tiny-note">PERSONAL PREDICTIONS · SAVED ON THIS DEVICE</span></div>
+          <div class="section-topline"><span class="section-label">03 / RUN-IN SIMULATOR</span><span class="tiny-note">PERSONAL PREDICTIONS · SAVED ON THIS DEVICE</span></div>
           <div class="section-heading-row">
             <div><h2 id="predict-title">Predict the remaining fixtures</h2><p class="section-intro">Enter a score to lock in a prediction. Leave a match blank to use the team's current points-per-game form in the forecast.</p></div>
-            <button type="button" class="btn btn-text reset-btn" id="reset-predictions">↺ Clear predictions</button>
+            <div class="prediction-actions">
+              <button type="button" class="btn btn-share" id="share-predictions">Share predictions <span aria-hidden="true">↗</span></button>
+              <button type="button" class="btn btn-text reset-btn" id="reset-predictions">↺ Clear predictions</button>
+            </div>
+          </div>
+          <div id="shared-mode-banner" class="shared-mode-banner" hidden>
+            <span><strong>Shared forecast opened.</strong> You can explore and edit it without replacing predictions saved on this device.</span>
+            <div><button type="button" id="restore-personal">Return to my predictions</button><button type="button" id="save-shared">Save this version</button></div>
+          </div>
+          <div class="share-tools" id="share-tools" hidden>
+            <label for="share-url">Your shareable forecast link</label>
+            <div class="share-url-row"><input id="share-url" type="text" readonly aria-label="Shareable forecast URL"><button type="button" id="copy-share">Copy link</button></div>
+            <p id="share-status" role="status">Anyone with this link can open your selected scores. No account required.</p>
           </div>
           <div class="predictor-grid">
             <div class="fixture-panel">
@@ -98,13 +152,13 @@
         </section>
 
         <section class="section" id="table" aria-labelledby="table-title">
-          <div class="section-topline"><span class="section-label">03 / LEAGUE TABLE</span><a id="official-table" href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer" class="section-link">Official FA table ↗</a></div>
+          <div class="section-topline"><span class="section-label">04 / LEAGUE TABLE</span><a id="official-table" href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer" class="section-link">Official FA table ↗</a></div>
           <div class="section-heading-row"><div><h2 id="table-title">The competition</h2><p class="section-intro">Compare today's standings with your projected finish. Opponents' unplayed games use their current points-per-game rates, adjusted for your predictions against them.</p></div><div class="mode-toggle" role="group" aria-label="Table view"><button type="button" id="actual-mode" class="active" aria-pressed="true">Current</button><button type="button" id="projected-mode" aria-pressed="false">Projected</button></div></div>
           <div class="table-card"><div class="table-scroll"><table><thead id="league-head"><tr><th class="pos-col">#</th><th class="club-col">CLUB</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr></thead><tbody id="league-body"><tr><td colspan="8">Loading league table…</td></tr></tbody></table></div><div class="table-footnote" id="table-note">Source: FA Full-Time · 2026/27</div></div>
         </section>
 
         <section class="section form-section" id="form" aria-labelledby="form-title">
-          <div class="section-topline"><span class="section-label">04 / SEASON FORM</span><span class="tiny-note">CANFORD LEAGUE MATCHES ONLY</span></div>
+          <div class="section-topline"><span class="section-label">05 / SEASON FORM</span><span class="tiny-note">CANFORD LEAGUE MATCHES ONLY</span></div>
           <h2 id="form-title">Results across the season</h2>
           <p class="section-intro form-intro">Every completed league match, in date order. Select a W, D or L to view that result.</p>
           <div class="form-history-card">
