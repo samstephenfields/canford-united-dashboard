@@ -20,10 +20,14 @@ for(const id of ['season-results-list','canford-results-mode','division-results-
   assert(!ids.includes(id),'Obsolete results table remains: '+id);
 }
 const scoutSection=html.indexOf('<section class="section scouting-section" id="scouting"');
-const summarySection=html.indexOf('<section class="section" aria-labelledby="picture-title"');
+const summarySection=html.indexOf('<section class="section planning-section" aria-labelledby="picture-title"');
 assert(scoutSection>=0 && summarySection>scoutSection,'Opposition scouting should be first after the hero');
-assert(html.indexOf('01 / OPPOSITION SCOUTING')<html.indexOf('02 / SEASON SUMMARY'),
+assert(html.indexOf('01 / OPPOSITION SCOUTING')<html.indexOf('02 / MATCHDAY PLANNING'),
   'Section numbers should match the displayed order');
+assert(!html.includes('class="stat-grid"'),'Redundant four-card summary strip should be removed');
+assert(!app.includes("text('stat-points'"),'Removed statistic cards should not have JavaScript bindings');
+assert(html.includes('id="briefing"')&&html.includes('id="targets"'),
+  'Matchday briefing and points target calculator should remain');
 assert(html.includes('href="https://www.nonleaguematters.co.uk/divisions/117/"'),
   'Footer should credit the NonLeagueMatters results source');
 const footer=html.slice(html.indexOf('<footer'));
