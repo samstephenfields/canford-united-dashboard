@@ -16,7 +16,7 @@ Automatic checks use **UK local time** (GMT/BST): 07:15 and 19:15 daily, **Satur
 
 The dashboard shows **the date of the latest verified result** separately from **the time and status of the most recent check**. If the service is inaccessible or sends inconsistent data, existing verified results are preserved and the page displays a failed-check warning. The initial data covers results through 7 November 2026. Dates marked TBC are not confirmed fixtures. The forecast is based on points per game and is *not* a guaranteed finishing position.
 
-The **Form & Stats** section now lists every Canford league result and has a **Whole league** filter. That whole-division view clearly states when the available data does not cover all matches in the table.
+Section **04 / Season Form** shows every Canford league result in chronological order as a swipeable W/D/L strip. Select any result to see the date, home and away teams, final score and outcome. The separate results table and whole-division filter have been removed from this section; the main league standings table remains available in Section 03.
 
 - [FA Full-Time Dorset League](https://fulltime.thefa.com/index.html?league=3520598)
 - [Independent FullTime API source](https://github.com/jwhughes-work/FullTimeAPI)
