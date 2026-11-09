@@ -160,3 +160,98 @@
  .form-stat{padding:13px}
  .form-stat>strong{font-size:24px}
 }
+
+/* Season decisions: briefing, points targets, opposition and sharing. */
+.decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
+.decision-card{border-radius:13px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow);padding:26px;min-width:0;scroll-margin-top:18px}
+.decision-kicker{font-size:10px;font-weight:850;letter-spacing:.13em;color:#168454;margin-bottom:11px}
+.decision-card h3{font-size:clamp(19px,2vw,24px);letter-spacing:-.035em;line-height:1.22;margin:0 0 22px}
+.decision-note{font-size:11px;line-height:1.55;color:#839189;margin:16px 0 0}
+.briefing-match{border-radius:11px;background:#f1f8f2;border:1px solid #e0eee2;padding:17px}
+.briefing-status{font-size:10px;font-weight:800;letter-spacing:.12em;color:#0c7850}
+.briefing-opponent{font-size:clamp(17px,1.9vw,24px);font-weight:820;letter-spacing:-.035em;color:#0c3d2a;margin:5px 0 7px;line-height:1.25}
+.briefing-info{font-size:12px;color:#597465;line-height:1.6}
+.briefing-info a{color:#086e48;text-decoration:underline;text-underline-offset:3px}
+.briefing-scenarios{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:13px}
+.briefing-case{background:#f8faf7;border:1px solid #e6ece5;border-radius:10px;padding:13px 11px}
+.briefing-case .case-label{display:block;color:#718577;font-weight:850;font-size:10px;letter-spacing:.06em}
+.briefing-case .case-rank{display:block;margin:6px 0 0;color:#134b32;font-weight:850;letter-spacing:-.04em;font-size:25px;line-height:1.15}
+.briefing-case .case-points{display:block;color:#778879;font-size:11px;margin-top:3px}
+.briefing-case.case-win{border-color:#cde6d4;background:#edf9f0}
+.briefing-case.case-win .case-label{color:#128150}
+.briefing-case.case-loss{background:#fcf7f5}
+.target-select-label,.scout-select-wrap label{display:block;color:#648073;font-weight:750;font-size:12px;margin-bottom:8px}
+.target-select{display:block;width:100%;min-height:46px;background:#fff;color:#153b28;border:1px solid #c7dacf;border-radius:9px;padding:11px 35px 11px 12px;font-size:15px;font-weight:730}
+.target-select:focus-visible{outline:3px solid #9de0b3;outline-offset:2px}
+.target-numbers{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:17px}
+.target-numbers>div{background:#f2f8f2;border-radius:9px;padding:16px 13px;display:flex;flex-direction:column;gap:7px}
+.target-numbers span{font-size:11px;color:#697c70;line-height:1.3}
+.target-numbers strong{font-size:38px;font-weight:840;letter-spacing:-.06em;color:#0e5c3d;line-height:1}
+.target-plan{border-left:3px solid #44ba7a;margin-top:16px;padding:5px 10px 5px 13px;font-size:13px;line-height:1.55;color:#264b32}
+.target-plan strong{color:#0e714b}
+.target-plan.unreachable{border-color:#cf776b;color:#a8443d}
+.scout-select-wrap{min-width:240px;max-width:330px;width:100%}
+.scout-card{background:#fff;border:1px solid var(--line);border-radius:13px;padding:23px;box-shadow:var(--shadow)}
+.scout-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}
+.scout-card-title{font-size:24px;font-weight:840;letter-spacing:-.045em;line-height:1.25;color:#193b29;margin:0 0 4px}
+.scout-card-meta{font-size:12px;color:#73897b}
+.scout-position{background:#e8f7ee;border-radius:10px;padding:10px 14px;text-align:center;min-width:90px;white-space:nowrap}
+.scout-position strong{font-size:28px;line-height:1;font-weight:850;letter-spacing:-.05em;color:#0b7449;display:block}
+.scout-position span{font-size:10px;color:#47785c;font-weight:700}
+.scout-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.scout-metric{border-radius:9px;background:#f6f8f5;padding:13px 12px}
+.scout-metric span{display:block;font-size:10px;color:#7d8e82;line-height:1.3}
+.scout-metric strong{display:block;margin-top:5px;font-weight:820;font-size:23px;color:#163b27;line-height:1.2}
+.scout-insights{display:grid;grid-template-columns:1fr 1fr;gap:17px;margin-top:16px}
+.scout-insight{border-top:1px solid #e6ebe4;padding-top:13px;min-width:0}
+.scout-insight strong{font-size:11px;letter-spacing:.06em;color:#507263}
+.scout-insight p{font-size:13px;color:#314c3a;margin:8px 0 0;line-height:1.55}
+.scout-insight .form-inline{display:flex;gap:5px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.form-inline span{font-size:11px;font-weight:830;width:28px;height:28px;border-radius:6px;display:grid;place-items:center}
+.form-inline .W{background:#e1f7e9;color:#13774b}.form-inline .D{background:#f0f1ed;color:#647469}.form-inline .L{background:#fbe4e4;color:#b44646}
+.scout-footnote{font-size:11px;color:#89968c;margin-top:14px}
+.scout-link{display:inline-flex;padding:4px 0;margin-top:5px;font-size:11px;font-weight:800;border:0;background:transparent;color:#0c7d50;text-decoration:underline;text-underline-offset:3px}
+.scout-link:hover{color:#04462e}
+.prediction-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.btn-share{background:#e3f5e9;border:1px solid #c8e7d2;color:#0c6e46;padding:10px 14px}
+.btn-share:hover{background:#d4efde}
+.shared-mode-banner{display:flex;align-items:center;justify-content:space-between;gap:15px;border:1px solid #a9dcb8;background:#ecf8ed;padding:13px 16px;border-radius:10px;margin:0 0 16px;color:#28523a;font-size:12px}
+.shared-mode-banner[hidden],.share-tools[hidden]{display:none!important}
+.shared-mode-banner>div{display:flex;gap:8px;flex-wrap:wrap}
+.shared-mode-banner button,.share-url-row button{border-radius:8px;border:1px solid #b6d8c0;background:#fff;color:#0f6b45;padding:10px 12px;min-height:42px;font-weight:780;font-size:12px;white-space:nowrap}
+.shared-mode-banner button:last-child,.share-url-row button{background:#0e7148;color:white;border-color:#0e7148}
+.share-tools{border:1px solid #badfc5;background:#f4fbf6;padding:16px;border-radius:11px;margin:0 0 18px}
+.share-tools label{display:block;color:#356848;font-size:12px;font-weight:760;margin-bottom:8px}
+.share-url-row{display:flex;gap:8px}
+.share-url-row input{flex:1;min-width:0;border:1px solid #cadecf;background:white;border-radius:7px;padding:10px 12px;font-size:12px;color:#47735c}
+.share-tools p{font-size:11px;color:#6e8276;line-height:1.45;margin:8px 0 0}
+@media(max-width:1000px){
+ .decision-grid{grid-template-columns:1fr}
+ .scout-card{padding:18px}
+}
+@media(max-width:720px){
+ .decision-grid{gap:11px;margin-top:13px}
+ .decision-card{padding:19px 15px}
+ .decision-card h3{font-size:20px;margin-bottom:16px}
+ .briefing-match{padding:14px}
+ .briefing-scenarios{gap:6px}
+ .briefing-case{padding:12px 8px}
+ .briefing-case .case-rank{font-size:23px}
+ .briefing-case .case-label{font-size:9px}
+ .briefing-case .case-points{font-size:10px}
+ .target-numbers strong{font-size:33px}
+ .scout-select-wrap{min-width:0;max-width:none}
+ .scout-card-head{gap:10px}
+ .scout-card-title{font-size:20px}
+ .scout-position{min-width:70px;padding:10px}
+ .scout-position strong{font-size:25px}
+ .scout-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .scout-metric{padding:12px}
+ .scout-insights{grid-template-columns:1fr;gap:10px}
+ .prediction-actions{width:100%}
+ .prediction-actions .btn{flex:1;min-width:135px}
+ .shared-mode-banner{align-items:flex-start;flex-direction:column}
+ .shared-mode-banner>div{width:100%}
+ .shared-mode-banner button{flex:1;white-space:normal}
+ .share-url-row input{font-size:11px}
+}
