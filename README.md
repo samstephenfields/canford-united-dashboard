@@ -1,4 +1,4 @@
-# Canford United FC — Manager Dashboard
+# Canford United FC — Season Dashboard
 
 Mobile-first 2026/27 Dorset Senior League fixture and finishing-position predictor, with the Canford crest, personal score predictions, projected league standings, form and statistics.
 
