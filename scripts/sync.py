@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Refresh a 2026/27 league snapshot from an independent, unofficial FA Full-Time API.
+"""Refresh a 2026/27 Dorset Senior League snapshot from public FA Full-Time.
 
-If the API is unavailable or sends inconsistent data, retain the last good JSON.
-This is not an official FA integration; never silently publish incomplete updates.
+Never publish unverified or partially parsed results. Keep the last verified
+snapshot when the FA source cannot be fetched or has changed its markup.
 """
 import copy
 import datetime as dt
@@ -70,7 +70,7 @@ def parse_date(value):
     if not value:
         raise ValueError('Missing fixture date')
     text = str(value).strip()
-    for spec in ('%d/%m/%y %H:%M','%d/%m/%Y %H:%M','%Y-%m-%dT%H:%M:%S','%Y-%m-%dT%H:%M:%SZ','%d/%m/%y','%d/%m/%Y','%Y-%m-%d'):
+    for spec in ('%d/%m/%y %H:%M','%d/%m/%Y %H:%M','%a %d %b %y %H:%M','%d %b %y %H:%M','%Y-%m-%dT%H:%M:%S','%Y-%m-%dT%H:%M:%SZ','%d/%m/%y','%d/%m/%Y','%a %d %b %y','%d %b %y','%d %B %Y','%Y-%m-%d'):
         try:
             date = dt.datetime.strptime(text,spec)
             return date.strftime('%Y-%m-%d'), date.strftime('%H:%M') if ':' in text else None
@@ -184,9 +184,12 @@ def fixtures_from_api(raw,results,previous):
 
 def sync():
     previous=json.loads(DATA_PATH.read_text(encoding='utf-8'))
-    table=get_json(BASE+'/api/League/'+DIVISION_ID)
-    results=get_json(BASE+'/api/Results/'+DIVISION_ID)
-    fixtures=get_json(BASE+'/api/Fixtures/'+DIVISION_ID)
+    # Public official pages are the only default source. No third-party API.
+    from official_fulltime import fetch_official
+    table, results = fetch_official()
+    # Previously published fixture dates are preserved unless a match is
+    # completed; this results-only source does not claim to refresh fixtures.
+    fixtures=[]
     next_data=copy.deepcopy(previous)
     next_data['standings']=standings_from_api(table,previous)
     next_data['results']=results_from_api(results,next_data['standings'],previous.get('results'))
@@ -210,7 +213,7 @@ def sync():
     next_data.pop('lastCheckIssue',None)
     if changed:
         next_data['lastSuccessfulSync']=now
-        next_data['sourceNote']='Automatic snapshot via independent unofficial FullTime API; source: FA Full-Time.'
+        next_data['sourceNote']='Public FA Full-Time Dorset Senior League table and results (fulltime.thefa.com).'
     tmp=DATA_PATH.with_suffix('.tmp')
     tmp.write_text(json.dumps(next_data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     tmp.replace(DATA_PATH)
