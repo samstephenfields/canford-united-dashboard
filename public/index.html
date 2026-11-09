@@ -111,6 +111,17 @@
             <article class="form-card"><span class="card-overline">POINTS PER GAME</span><strong class="form-big" id="stats-ppg">1.25</strong><span class="submetric">Across league matches played</span><div class="form-divider"></div><span class="card-overline">GOALS FOR / MATCH</span><strong class="form-big" id="stats-gf">2.50</strong></article>
             <article class="form-card"><span class="card-overline">GOALS AGAINST / MATCH</span><strong class="form-big" id="stats-ga">2.13</strong><span class="submetric">Defensive average</span><div class="form-divider"></div><span class="card-overline">GOAL DIFFERENCE</span><strong class="form-big" id="stats-gd">+3</strong></article>
           </div>
+          <div class="season-results" aria-labelledby="season-results-title">
+            <div class="results-heading">
+              <div><h3 id="season-results-title">Every league result this season</h3><p id="results-summary">Loading completed matches…</p></div>
+              <div class="mode-toggle" role="group" aria-label="Results filter">
+                <button type="button" id="canford-results-mode" class="active" aria-pressed="true">Canford</button>
+                <button type="button" id="division-results-mode" aria-pressed="false">Whole league</button>
+              </div>
+            </div>
+            <div id="season-results-list" class="season-results-list" aria-live="polite"><div class="loading-state">Loading results…</div></div>
+            <p id="results-coverage-note" class="results-coverage-note"></p>
+          </div>
         </section>
       </div>
     </main>
