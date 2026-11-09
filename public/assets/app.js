@@ -6,7 +6,7 @@
  const $=id=>document.getElementById(id);
  const text=(id,value)=>{const el=$(id);if(el)el.textContent=value};
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const fmt=n=>Number.isFinite(n)?n.toFixed(1):'—';
+ const fmt=n=>Number.isFinite(n)?String(Math.round(n)):'—';
  const shortDate=date=>date?new Date(date+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}):'TBC';
  const nameTeam=s=>s==='Bournemouth Poppies Reserves'?'Bournemouth Poppies Res.':s;
  const selfResult=(r,team)=>{const gf=r.home===team?r.homeScore:r.awayScore,ga=r.home===team?r.awayScore:r.homeScore;return{type:gf>ga?'W':gf===ga?'D':'L',gf,ga,opponent:F.opponent(r,team),date:r.date}};
@@ -299,6 +299,14 @@
    delete STATE.picks[ev.target.closest('.fixture-row').dataset.key];persist();rerender();
   });
   $('reset-predictions').addEventListener('click',()=>{STATE.picks={};persist();rerender()});
+  $('target-rank').addEventListener('change',renderPointsTarget);
+  $('scout-opponent').addEventListener('change',ev=>{STATE.scoutOpponent=ev.target.value;renderScoutingCard()});
+  $('fixtures-list').addEventListener('click',ev=>{const b=ev.target.closest('button[data-scout]');if(b)openScout(b.dataset.scout)});
+  $('briefing-match').addEventListener('click',ev=>{if(ev.target.closest('#briefing-scout-link')){const next=nextScheduledFixture();if(next)openScout(F.opponent(next,STATE.data.team));}});
+  $('share-predictions').addEventListener('click',sharePredictions);
+  $('copy-share').addEventListener('click',copyShareUrl);
+  $('restore-personal').addEventListener('click',restorePersonal);
+  $('save-shared').addEventListener('click',saveShared);
   $('actual-mode').addEventListener('click',()=>{STATE.mode='actual';renderTable()});
   $('projected-mode').addEventListener('click',()=>{STATE.mode='projected';renderTable()});
   $('form-badges').addEventListener('click',ev=>{
@@ -308,6 +316,67 @@
    renderSelectedResult();
   });
  }
+
+ function shareAddress(){
+  const url=new URL(window.location.href);
+  url.hash='p='+encodeURIComponent(F.serializePredictions(STATE.data,STATE.picks));
+  return url.href;
+ }
+ async function copyTextToClipboard(value){
+  if(navigator.clipboard?.writeText){
+    try{await navigator.clipboard.writeText(value);return true}catch{}
+  }
+  try{
+    const field=$('share-url');field.focus();field.select();
+    return Boolean(document.execCommand&&document.execCommand('copy'));
+  }catch{return false;}
+ }
+ async function sharePredictions(){
+  const share=shareAddress();
+  $('share-tools').hidden=false;
+  $('share-url').value=share;
+  const ok=await copyTextToClipboard(share);
+  text('share-status',ok?'Link copied. Send it to the captain, assistant manager or anyone you want to compare predictions with.':'Copy the link above to share these predictions. No login is required.');
+ }
+ async function copyShareUrl(){
+  const url=$('share-url').value||shareAddress();
+  $('share-tools').hidden=false;
+  $('share-url').value=url;
+  const ok=await copyTextToClipboard(url);
+  text('share-status',ok?'Link copied to clipboard.':'Select and copy the link shown above.');
+ }
+ function clearSharedFragment(){
+  const url=new URL(window.location.href);
+  if(url.hash.startsWith('#p=')){
+   url.hash='';
+   if(window.history?.replaceState)window.history.replaceState(null,'',url.href);
+  }
+ }
+ function updateSharedMode(){
+  $('shared-mode-banner').hidden=!STATE.sharedMode;
+ }
+ function restorePersonal(){
+  STATE.sharedMode=false;
+  STATE.picks=saved();
+  clearSharedFragment();
+  updateSharedMode();
+  $('share-tools').hidden=true;
+  rerender();
+ }
+ function saveShared(){
+  STATE.sharedMode=false;
+  try{localStorage.setItem(STORAGE,JSON.stringify(STATE.picks))}catch{}
+  clearSharedFragment();
+  updateSharedMode();
+  $('share-tools').hidden=true;
+  rerender();
+ }
+ function loadSharedPredictions(data){
+  const hash=window.location?.hash||'';
+  if(!hash.startsWith('#p='))return null;
+  try{return F.parseSharedPredictions(data,decodeURIComponent(hash.slice(3)))}
+  catch{return null}
+ }
  async function init(){
   handleInputs();
   try{
@@ -315,8 +384,12 @@
    if(!response.ok)throw new Error('HTTP '+response.status);
    const data=await response.json();
    if(!data.standings||!data.standings.length||!data.results||!data.team)throw new Error('Incomplete data');
-   STATE.data=data;STATE.picks=saved();
-   renderStats();rerender();
+   STATE.data=data;
+   const shared=loadSharedPredictions(data);
+   STATE.sharedMode=shared!==null;
+   STATE.picks=shared||saved();
+   updateSharedMode();
+   renderStats();renderScoutingSelector();rerender();
   }catch(err){
    text('data-status-text','Could not load data. Serve the site through GitHub Pages or a local web server.');
    text('data-stamp','');
