@@ -116,7 +116,7 @@ def parse_results(html):
         # Full-Time labels league matches L. Cups (CC) are excluded.
         if group and group.upper() not in ("L", "LEAGUE", "DORSET SENIOR LEAGUE"):
             continue
-        match = re.match(r"^(\\d+)\\s*[-–]\\s*(\\d+)(?:\\s|$)", score)
+        match = re.match(r"^(\d+)\s*[-–]\s*(\d+)(?:\s|$)", score)
         if not match or not date or not home or not away:
             continue
         pair = (home.casefold(), away.casefold())
