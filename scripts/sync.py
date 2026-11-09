@@ -8,6 +8,7 @@ import copy
 import datetime as dt
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -220,7 +221,7 @@ def sync():
 if __name__=='__main__':
     try:
         sync()
-    except (HTTPError,URLError,TimeoutError,ValueError,KeyError,TypeError, OSError, json.JSONDecodeError) as exc:
+    except (HTTPError,URLError,TimeoutError,subprocess.TimeoutExpired,ValueError,KeyError,TypeError,OSError,json.JSONDecodeError) as exc:
         print('Data refresh skipped; keeping last verified snapshot: '+str(exc),file=sys.stderr)
         # Keep old verified football data; update only the freshness indicator.
         # The workflow should still publish the static page rather than fail closed.
