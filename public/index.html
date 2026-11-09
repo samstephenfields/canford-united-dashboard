@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a4130">
   <meta name="description" content="Canford United FC 2026/27 Dorset Senior League fixtures, results, standings and match-by-match finishing position predictor.">
-  <title>Canford United | Season Predictor</title>
+  <title>Canford United | Season Dashboard</title>
   <link rel="icon" type="image/png" href="assets/canford-crest.png">
   <link rel="stylesheet" href="assets/styles.css">
   <script src="assets/forecast.js" defer></script>
@@ -17,7 +17,7 @@
       <div class="header-inner wrap">
         <a class="brand" href="#overview" aria-label="Canford United dashboard home">
           <span class="brand-mark"><img src="assets/canford-crest.png" alt="Canford United FC crest" width="62" height="59"></span>
-          <span><strong>CANFORD UNITED</strong><small>MANAGER'S SEASON HUB</small></span>
+          <span><strong>CANFORD UNITED</strong><small>SEASON DASHBOARD</small></span>
         </a>
         <nav aria-label="Page sections">
           <a href="#predictor">Fixtures &amp; predictions</a>
@@ -34,12 +34,13 @@
         <div class="wrap hero-inner">
           <div class="hero-copy">
             <div class="eyebrow"><span class="pulse"></span> DORSET SENIOR LEAGUE <span class="dot-sep">•</span> 2026 / 27</div>
-            <h1>Every point.<br><em>Every possibility.</em></h1>
-            <p>Pick a score for every remaining league match. See how your run-in could change Canford's final position.</p>
+            <h1>Remaining fixtures.<br><em>Projected finish.</em></h1>
+            <p>Review Canford's Dorset Senior League position and predict the results of remaining matches. The forecast estimates final points and finishing position, using current form for fixtures without a prediction.</p>
             <div class="hero-actions">
-              <a href="#predictor" class="btn btn-primary">Predict the run-in <span aria-hidden="true">→</span></a>
+              <a href="#predictor" class="btn btn-primary">Enter match predictions <span aria-hidden="true">→</span></a>
               <a href="#table" class="btn btn-outline">View league table <span aria-hidden="true">↗</span></a>
             </div>
+            <div class="hero-next"><span>NEXT LISTED LEAGUE FIXTURE</span><a href="#predictor" id="hero-next-fixture">Loading fixture details…</a></div>
           </div>
           <div class="hero-panel" aria-label="Canford United season snapshot">
             <span class="hero-panel-kicker">CURRENT LEAGUE POSITION</span>
@@ -63,8 +64,8 @@
         </div>
 
         <section class="section" aria-labelledby="picture-title">
-          <div class="section-topline"><span class="section-label">01 / THE BIG PICTURE</span><span class="tiny-note">YOUR SEASON AT A GLANCE</span></div>
-          <h2 id="picture-title">The road ahead</h2>
+          <div class="section-topline"><span class="section-label">01 / SEASON SUMMARY</span><span class="tiny-note">LEAGUE MATCHES ONLY</span></div>
+          <h2 id="picture-title">Current position and outlook</h2>
           <div class="stat-grid">
             <article class="stat-card"><div class="stat-caption">CURRENT POINTS</div><div class="stat-number" id="stat-points">10</div><div class="stat-footer">Points already banked</div></article>
             <article class="stat-card"><div class="stat-caption">MATCHES LEFT</div><div class="stat-number" id="stat-remaining">12</div><div class="stat-footer" id="stat-remaining-sub">3 scheduled · 9 TBC</div></article>
@@ -74,7 +75,7 @@
         </section>
 
         <section class="section predictor-section" id="predictor" aria-labelledby="predict-title">
-          <div class="section-topline"><span class="section-label">02 / RUN-IN SIMULATOR</span><span class="tiny-note">YOUR OWN PREDICTIONS · SAVED ON THIS DEVICE</span></div>
+          <div class="section-topline"><span class="section-label">02 / RUN-IN SIMULATOR</span><span class="tiny-note">PERSONAL PREDICTIONS · SAVED ON THIS DEVICE</span></div>
           <div class="section-heading-row">
             <div><h2 id="predict-title">Predict the remaining fixtures</h2><p class="section-intro">Enter a score to lock in a prediction. Leave a match blank to use the team's current points-per-game form in the forecast.</p></div>
             <button type="button" class="btn btn-text reset-btn" id="reset-predictions">↺ Clear predictions</button>
@@ -85,7 +86,7 @@
               <div id="fixtures-list" class="fixtures-list"><div class="loading-state">Loading fixtures…</div></div>
             </div>
             <aside class="projection-panel" id="forecast" aria-live="polite">
-              <div class="panel-head"><span>YOUR FORECAST</span><span class="mini-tag">LIVE CALCULATION</span></div>
+              <div class="panel-head"><span>PROJECTED OUTCOME</span><span class="mini-tag">LIVE CALCULATION</span></div>
               <div class="forecast-main"><span class="forecast-label">Projected finish</span><div class="forecast-rank"><span id="forecast-rank">8</span><small id="forecast-suffix">TH</small></div><div class="forecast-desc" id="forecast-desc">Current form projection</div></div>
               <div class="forecast-points"><span>Estimated final points</span><strong id="forecast-points">25.0</strong></div>
               <div class="forecast-detail"><span id="forecast-selected">0 of 12 predicted</span><span id="forecast-wdl">0W · 0D · 0L</span></div>
@@ -120,7 +121,7 @@
       </a>
       <a class="mobile-bar-action" href="#table" aria-label="View league table">Table <span aria-hidden="true">↗</span></a>
     </div>
-    <footer class="footer"><div class="wrap footer-inner"><div><strong>CANFORD UNITED FC</strong><span>Independent manager's season dashboard · 2026/27</span></div><div><a href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer">League source ↗</a><span>Not affiliated with the FA</span></div></div></footer>
+    <footer class="footer"><div class="wrap footer-inner"><div><strong>CANFORD UNITED FC</strong><span>Independent team season dashboard · 2026/27</span></div><div><a href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer">League source ↗</a><span>Not affiliated with the FA</span></div></div></footer>
   </div>
 </body>
 </html>
