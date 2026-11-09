@@ -37,7 +37,14 @@ def source_url(page, page_number=1):
         "selectedTeam": "",
     }
     if page == "table":
-        return OFFICIAL_HOST + "/table.html?" + urlencode(params)
+        # The FA league homepage links to this exact table filter set.
+        return OFFICIAL_HOST + "/table.html?" + urlencode({
+            "league": LEAGUE_ID,
+            "selectedCompetition": "0",
+            "selectedDivision": "69783872",
+            "selectedFixtureGroupKey": GROUP_KEY,
+            "selectedSeason": SEASON_ID,
+        })
     if not isinstance(page_number, int) or not (1 <= page_number <= MAX_PAGES):
         raise ValueError("Invalid results page number")
     return OFFICIAL_HOST + f"/results/{page_number}/{PAGE_SIZE}.html?" + urlencode(params)
