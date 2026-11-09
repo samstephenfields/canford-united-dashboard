@@ -1,7 +1,7 @@
 (function(){
  'use strict';
  const F=window.CanfordForecast;
- const STATE={data:null,picks:{},mode:'actual',resultsScope:'canford'};
+ const STATE={data:null,picks:{},mode:'actual',formIndex:null};
  const STORAGE='canford-predictions:2026-27:v1';
  const $=id=>document.getElementById(id);
  const text=(id,value)=>{const el=$(id);if(el)el.textContent=value};
@@ -86,11 +86,7 @@
   text('stats-ppg',((cur.won*3+cur.drawn)/cur.played).toFixed(2));
   text('stats-gf',cur.gf!=null?(cur.gf/cur.played).toFixed(2):'—');text('stats-ga',cur.ga!=null?(cur.ga/cur.played).toFixed(2):'—');
   text('stats-gd',(cur.gd>0?'+':'')+cur.gd);
-  const recent=data.results.filter(r=>r.home===data.team||r.away===data.team).sort((a,b)=>a.date.localeCompare(b.date)).slice(-5).reverse();
-  const lastFive=recent.map(r=>selfResult(r,data.team));
-  $('form-badges').innerHTML=[...lastFive].reverse().map(r=>`<span class="form-badge ${r.type}" title="${esc(r.opponent)}">${r.type}</span>`).join('');
-  text('form-summary',lastFive.filter(r=>r.type==='W').length+' wins · '+lastFive.filter(r=>r.type==='D').length+' draws · '+lastFive.filter(r=>r.type==='L').length+' losses in the last '+lastFive.length+' league games');
-  $('recent-results').innerHTML=lastFive.slice(0,3).map(r=>`<div class="recent-row"><span>${esc(shortDate(r.date))} · ${esc(r.opponent)}</span><strong>${r.gf}–${r.ga} ${r.type}</strong></div>`).join('');
+  renderSeasonForm();
   const officialTeam=$('official-fixtures'),officialTable=$('official-table');
   officialTeam.href=data.officialTeamUrl;officialTable.href=data.officialTableUrl;
   const lastCheck=data.lastCheckedAt?new Date(data.lastCheckedAt).toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short',timeZone:'Europe/London'}):null;
@@ -100,37 +96,56 @@
   $('data-light').classList.toggle('online',checkedOk);
  }
 
- function renderSeasonResults(){
-  const data=STATE.data,all=[...(data.results||[])].sort((a,b)=>b.date.localeCompare(a.date)||a.home.localeCompare(b.home));
-  const own=all.filter(r=>r.home===data.team||r.away===data.team);
-  const chosen=STATE.resultsScope==='division'?all:own;
-  const expected=Math.round(data.standings.reduce((sum,t)=>sum+t.played,0)/2);
-  const counts=Object.fromEntries(data.standings.map(t=>[t.name,0]));
-  for(const r of all){if(r.home in counts)counts[r.home]++;if(r.away in counts)counts[r.away]++;}
-  const complete=all.length===expected&&data.standings.every(t=>counts[t.name]===t.played);
-  $('canford-results-mode').classList.toggle('active',STATE.resultsScope==='canford');
-  $('division-results-mode').classList.toggle('active',STATE.resultsScope==='division');
-  $('canford-results-mode').setAttribute('aria-pressed',String(STATE.resultsScope==='canford'));
-  $('division-results-mode').setAttribute('aria-pressed',String(STATE.resultsScope==='division'));
-  text('results-summary',STATE.resultsScope==='canford'?own.length+' completed Canford league matches, newest first':all.length+' recorded league matches, newest first');
-  $('season-results-list').innerHTML=chosen.length?chosen.map(r=>{
-   const isUs=r.home===data.team||r.away===data.team;
-   const gf=r.home===data.team?r.homeScore:r.awayScore;
-   const ga=r.home===data.team?r.awayScore:r.homeScore;
-   const result=isUs?(gf>ga?'W':gf===ga?'D':'L'):'';
-   const label=result==='W'?'Win':result==='D'?'Draw':result==='L'?'Loss':'';
-   const perspective=isUs?(r.home===data.team?'Home':'Away'):'League';
-   return '<div class="season-result-row">'+
-     '<div class="season-result-date"><strong>'+esc(shortDate(r.date))+'</strong><span>'+perspective+'</span></div>'+
-     '<div class="season-result-teams"><span class="'+(r.home===data.team?'us':'')+'">'+esc(r.home)+'</span><span class="'+(r.away===data.team?'us':'')+'">'+esc(r.away)+'</span></div>'+
-     '<div class="season-result-score" aria-label="Final score '+r.homeScore+' to '+r.awayScore+'"><strong>'+r.homeScore+'</strong><strong>'+r.awayScore+'</strong></div>'+
-     '<div class="season-result-outcome '+result+'" aria-label="'+(label||'Completed')+'">'+(label||'FT')+'</div></div>';
-  }).join(''):'<div class="loading-state">No completed league results recorded yet.</div>';
-  const canfordInTable=data.standings.find(t=>t.name===data.team);
-  const ownComplete=!!canfordInTable&&own.length===canfordInTable.played;
-  text('results-coverage-note',STATE.resultsScope==='division'
-    ?(complete?'Complete division results match the recorded league table.':'Only '+all.length+' of '+expected+' completed league matches are present in the verified data snapshot. This list is not yet the complete division record.')
-    :(ownComplete?'Showing all '+own.length+' Canford league results recorded in the current standings.':'Only '+own.length+' of '+(canfordInTable?.played??'the')+' Canford league matches are recorded. Some results are awaiting verification.'));
+
+ function ownLeagueResults(){
+  return STATE.data.results
+   .filter(r=>r.home===STATE.data.team||r.away===STATE.data.team)
+   .slice().sort((a,b)=>a.date.localeCompare(b.date)||a.home.localeCompare(b.home));
+ }
+ function renderSelectedResult(){
+  const results=ownLeagueResults(),team=STATE.data.team;
+  if(!results.length){
+   $('form-match-detail').innerHTML='<p class="form-empty">No completed league matches have been recorded yet.</p>';
+   return;
+  }
+  const index=STATE.formIndex==null?results.length-1:Math.min(Math.max(STATE.formIndex,0),results.length-1);
+  STATE.formIndex=index;
+  document.querySelectorAll('#form-badges .form-badge').forEach(button=>{
+   const selected=Number(button.dataset.matchIndex)===index;
+   button.classList.toggle('selected',selected);
+   button.setAttribute('aria-pressed',String(selected));
+  });
+  const r=results[index];
+  const result=selfResult(r,team);
+  const resultName=result.type==='W'?'Win':result.type==='D'?'Draw':'Loss';
+  const date=new Date(r.date+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+  const venue=r.home===team?'Home':'Away';
+  $('form-match-detail').innerHTML='<div class="form-detail-heading">'+
+   '<span class="form-detail-label">MATCH '+(index+1)+' OF '+results.length+'</span>'+
+   '<span class="form-detail-outcome '+result.type+'">'+resultName+'</span>'+
+   '</div><div class="form-detail-score">'+
+   '<span class="form-detail-club '+(r.home===team?'canford':'')+'">'+esc(r.home)+'</span>'+
+   '<strong>'+r.homeScore+' <span>–</span> '+r.awayScore+'</strong>'+
+   '<span class="form-detail-club '+(r.away===team?'canford':'')+'">'+esc(r.away)+'</span>'+
+   '</div><div class="form-detail-meta">'+esc(date)+' · '+venue+' for Canford · League match</div>';
+ }
+ function renderSeasonForm(){
+  const results=ownLeagueResults(),team=STATE.data.team;
+  const outcomes=results.map(r=>selfResult(r,team));
+  const wins=outcomes.filter(r=>r.type==='W').length, draws=outcomes.filter(r=>r.type==='D').length;
+  text('form-summary',wins+' wins · '+draws+' draws · '+(results.length-wins-draws)+' losses · '+results.length+' played');
+  $('form-badges').innerHTML=results.length?outcomes.map((r,index)=>{
+   const fixture=results[index];
+   const label=r.type==='W'?'Win':r.type==='D'?'Draw':'Loss';
+   return '<div class="form-match">'+
+    '<button type="button" class="form-badge '+r.type+'" data-match-index="'+index+'" aria-pressed="false"'+
+    ' aria-label="Match '+(index+1)+' of '+results.length+': '+esc(label)+' versus '+esc(r.opponent)+', '+esc(shortDate(fixture.date))+'">'+r.type+'</button>'+
+    '<span class="form-match-date">'+esc(shortDate(fixture.date))+'</span></div>';
+  }).join(''):'<span class="form-empty">No results yet</span>';
+  if(STATE.formIndex===null||STATE.formIndex>=results.length)STATE.formIndex=Math.max(0,results.length-1);
+  renderSelectedResult();
+  // Put the newest result in view on narrow screens; older games remain swipeable.
+  const rail=$('form-badges');rail.scrollLeft=rail.scrollWidth;
  }
  function rerender(){renderFixtures();renderProjection();renderTable();}
  function handleInputs(){
@@ -158,8 +173,12 @@
   $('reset-predictions').addEventListener('click',()=>{STATE.picks={};persist();rerender()});
   $('actual-mode').addEventListener('click',()=>{STATE.mode='actual';renderTable()});
   $('projected-mode').addEventListener('click',()=>{STATE.mode='projected';renderTable()});
-  $('canford-results-mode').addEventListener('click',()=>{STATE.resultsScope='canford';renderSeasonResults()});
-  $('division-results-mode').addEventListener('click',()=>{STATE.resultsScope='division';renderSeasonResults()});
+  $('form-badges').addEventListener('click',ev=>{
+   const button=ev.target.closest('button[data-match-index]');
+   if(!button)return;
+   STATE.formIndex=Number(button.dataset.matchIndex);
+   renderSelectedResult();
+  });
  }
  async function init(){
   handleInputs();
@@ -169,7 +188,7 @@
    const data=await response.json();
    if(!data.standings||!data.standings.length||!data.results||!data.team)throw new Error('Incomplete data');
    STATE.data=data;STATE.picks=saved();
-   renderStats();rerender();renderSeasonResults();
+   renderStats();rerender();
   }catch(err){
    text('data-status-text','Could not load data. Serve the site through GitHub Pages or a local web server.');
    text('data-stamp','');
