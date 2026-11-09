@@ -290,3 +290,9 @@
 .scout-source-links a{font-size:12px;font-weight:740;text-decoration:underline;text-underline-offset:3px;color:#0c774d}
 .scout-source-links a:hover{color:#06462f}
 @media(max-width:720px){.scout-source-links{padding:13px 15px;gap:15px}.scout-source-links a{font-size:12px}}
+
+/* Footer credits both official standings and verified match history sources. */
+.footer-sources{align-items:flex-end;text-align:right}
+.footer-sources a{text-decoration:underline;text-underline-offset:3px}
+#scouting,#targets{scroll-margin-top:18px}
+@media(max-width:720px){.footer-sources{align-items:flex-start;text-align:left}}
