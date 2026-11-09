@@ -1,6 +1,6 @@
 # Canford United FC — Season Dashboard
 
-Mobile-first 2026/27 Dorset Senior League fixture and finishing-position predictor, with the Canford crest, personal score predictions, projected league standings, form and statistics.
+Mobile-first 2026/27 Dorset Senior League season dashboard with the Canford crest, fixture predictions, projected league standings, points targets, opponent scouting, a matchday briefing and selectable chronological W/D/L season results.
 
 **Public website:** https://samstephenfields.github.io/canford-united-dashboard/
 
@@ -9,6 +9,16 @@ Mobile-first 2026/27 Dorset Senior League fixture and finishing-position predict
 In repository **Settings → Pages**, choose **GitHub Actions** as the Build and deployment source. Then open **Actions → Deploy Canford United dashboard → Run workflow**. The initial run extracts `dashboard.zip` into editable source files, refreshes league data if possible, tests the predictor, and deploys the site. Future runs use the extracted files.
 
 The site is static and needs no server or accounts. Your score predictions remain stored locally in your browser (not shared or uploaded).
+
+## Using the dashboard
+
+- **Season objective:** Choose any target position (1st–11th). The tool estimates a whole-number points threshold from other clubs' projected totals and shows an example combination of wins, draws and losses across unpredicted games. This is an indicative target, not a guaranteed finish; rivals' results and goal difference matter.
+- **Opposition scouting:** Choose any team Canford still need to play. View current league position, points, played, scoring totals when available, previous Canford meeting and recent form **only when sufficient results have been verified**.
+- **Next-match briefing:** View the next dated league fixture, time and venue, and estimated final position and points for a win, draw or defeat, holding your other predictions constant.
+- **Shareable forecasts:** Click *Share predictions* to create a link containing only the selected future scores. The receiver can explore it without overwriting their own saved predictions, then explicitly choose *Save this version* or *Return to my predictions*. No account or server-side database is needed.
+- **Whole-number points:** All total points and estimated final points are shown as rounded whole numbers. Points-per-game and goals-per-game averages remain decimal rates. The forecast model uses unrounded form estimates internally.
+
+These features depend on the latest verified data snapshot; where league results are incomplete or out of date, the site says so rather than inventing opposition form or match dates.
 
 ## Data freshness
 
