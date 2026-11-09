@@ -284,3 +284,9 @@
  .scout-history-card .form-match-detail{min-height:145px}
  .scout-results-coverage{padding:12px 15px}
 }
+
+/* Verified season match-history sources */
+.scout-source-links{display:flex;gap:12px;flex-wrap:wrap;padding:12px 24px;border-top:1px solid var(--line);background:#fff}
+.scout-source-links a{font-size:12px;font-weight:740;text-decoration:underline;text-underline-offset:3px;color:#0c774d}
+.scout-source-links a:hover{color:#06462f}
+@media(max-width:720px){.scout-source-links{padding:13px 15px;gap:15px}.scout-source-links a{font-size:12px}}
