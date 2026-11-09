@@ -20,8 +20,8 @@
           <span><strong>CANFORD UNITED</strong><small>SEASON DASHBOARD</small></span>
         </a>
         <nav aria-label="Page sections">
-          <a href="#targets">Points target</a>
           <a href="#scouting">Opposition</a>
+          <a href="#targets">Points target</a>
           <a href="#predictor">Predictions</a>
           <a href="#table">League table</a>
           <a href="#form">Season form</a>
@@ -39,7 +39,7 @@
             <h1>Remaining fixtures.<br><em>Projected finish.</em></h1>
             <p>Review Canford's Dorset Senior League position and predict the results of remaining matches. The forecast estimates final points and finishing position, using current form for fixtures without a prediction.</p>
             <div class="hero-actions">
-              <a href="#predictor" class="btn btn-primary">Enter match predictions <span aria-hidden="true">→</span></a>
+              <a href="#scouting" class="btn btn-primary">Know the opposition <span aria-hidden="true">→</span></a>
               <a href="#table" class="btn btn-outline">View league table <span aria-hidden="true">↗</span></a>
             </div>
             <div class="hero-next"><span>NEXT LISTED LEAGUE FIXTURE</span><a href="#predictor" id="hero-next-fixture">Loading fixture details…</a></div>
@@ -65,8 +65,32 @@
           <div class="data-links"><span id="data-stamp"></span><a id="official-fixtures" href="https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&teamID=208163315" target="_blank" rel="noopener noreferrer">Official fixtures ↗</a></div>
         </div>
 
+        <section class="section scouting-section" id="scouting" aria-labelledby="scouting-title">
+          <div class="section-topline"><span class="section-label">01 / OPPOSITION SCOUTING</span><span class="tiny-note">FROM THE VERIFIED LEAGUE SNAPSHOT</span></div>
+          <div class="section-heading-row">
+            <div><h2 id="scouting-title">Know the opposition</h2><p class="section-intro">Review the next opponent or choose another remaining fixture. Form is only shown when the results are available.</p></div>
+            <div class="scout-select-wrap"><label for="scout-opponent">Opponent</label><select id="scout-opponent" class="target-select"><option value="">Loading clubs…</option></select></div>
+          </div>
+          <div id="scout-card" class="scout-card"><div class="loading-state">Loading opponent statistics…</div></div>
+          <div class="form-history-card scout-history-card" aria-labelledby="scout-history-title">
+            <div class="form-history-top">
+              <span class="card-overline" id="scout-history-title">OPPONENT MATCH-BY-MATCH FORM <span class="form-direction">EARLIEST → LATEST</span></span>
+              <strong id="scout-form-summary" class="form-history-summary">Loading results…</strong>
+            </div>
+            <div id="scout-form-badges" class="form-badges form-timeline" role="group" aria-label="Select an opponent league result"></div>
+            <div id="scout-match-detail" class="form-match-detail" aria-live="polite" aria-atomic="true">
+              <div class="loading-state">Select a result to view match details.</div>
+            </div>
+            <p id="scout-results-coverage" class="scout-results-coverage"></p>
+            <div class="scout-source-links">
+              <a href="https://fulltime.thefa.com/results/2/25.html?selectedSeason=242517082&amp;selectedFixtureGroupAgeGroup=0&amp;previousSelectedFixtureGroupAgeGroup=&amp;selectedFixtureGroupKey=1_293688393&amp;previousSelectedFixtureGroupKey=1_293688393&amp;selectedDateCode=&amp;selectedRelatedFixtureOption=3&amp;selectedClub=&amp;previousSelectedClub=&amp;selectedTeam=" target="_blank" rel="noopener noreferrer">Official FA results ↗</a>
+              <a href="https://www.nonleaguematters.co.uk/divisions/117/" target="_blank" rel="noopener noreferrer">Full verified match list ↗</a>
+            </div>
+          </div>
+        </section>
+
         <section class="section" aria-labelledby="picture-title">
-          <div class="section-topline"><span class="section-label">01 / SEASON SUMMARY</span><span class="tiny-note">LEAGUE MATCHES ONLY</span></div>
+          <div class="section-topline"><span class="section-label">02 / SEASON SUMMARY</span><span class="tiny-note">LEAGUE MATCHES ONLY</span></div>
           <h2 id="picture-title">Current position and outlook</h2>
           <div class="stat-grid">
             <article class="stat-card"><div class="stat-caption">CURRENT POINTS</div><div class="stat-number" id="stat-points">10</div><div class="stat-footer">Points already banked</div></article>
@@ -106,30 +130,6 @@
               <div class="target-plan" id="target-plan">Calculating the results required…</div>
               <p class="decision-note">Based on other clubs maintaining their current points-per-game rates, adjusted for your predicted matches. Not a guaranteed finishing position; goal difference and rivals' results may change the target.</p>
             </article>
-          </div>
-        </section>
-
-        <section class="section scouting-section" id="scouting" aria-labelledby="scouting-title">
-          <div class="section-topline"><span class="section-label">02 / OPPOSITION SCOUTING</span><span class="tiny-note">FROM THE VERIFIED LEAGUE SNAPSHOT</span></div>
-          <div class="section-heading-row">
-            <div><h2 id="scouting-title">Know the opposition</h2><p class="section-intro">Review the next opponent or choose another remaining fixture. Form is only shown when the results are available.</p></div>
-            <div class="scout-select-wrap"><label for="scout-opponent">Opponent</label><select id="scout-opponent" class="target-select"><option value="">Loading clubs…</option></select></div>
-          </div>
-          <div id="scout-card" class="scout-card"><div class="loading-state">Loading opponent statistics…</div></div>
-          <div class="form-history-card scout-history-card" aria-labelledby="scout-history-title">
-            <div class="form-history-top">
-              <span class="card-overline" id="scout-history-title">OPPONENT MATCH-BY-MATCH FORM <span class="form-direction">EARLIEST → LATEST</span></span>
-              <strong id="scout-form-summary" class="form-history-summary">Loading results…</strong>
-            </div>
-            <div id="scout-form-badges" class="form-badges form-timeline" role="group" aria-label="Select an opponent league result"></div>
-            <div id="scout-match-detail" class="form-match-detail" aria-live="polite" aria-atomic="true">
-              <div class="loading-state">Select a result to view match details.</div>
-            </div>
-            <p id="scout-results-coverage" class="scout-results-coverage"></p>
-            <div class="scout-source-links">
-              <a href="https://fulltime.thefa.com/results/2/25.html?selectedSeason=242517082&amp;selectedFixtureGroupAgeGroup=0&amp;previousSelectedFixtureGroupAgeGroup=&amp;selectedFixtureGroupKey=1_293688393&amp;previousSelectedFixtureGroupKey=1_293688393&amp;selectedDateCode=&amp;selectedRelatedFixtureOption=3&amp;selectedClub=&amp;previousSelectedClub=&amp;selectedTeam=" target="_blank" rel="noopener noreferrer">Official FA results ↗</a>
-              <a href="https://www.nonleaguematters.co.uk/divisions/117/" target="_blank" rel="noopener noreferrer">Full verified match list ↗</a>
-            </div>
           </div>
         </section>
 
@@ -204,7 +204,7 @@
       </a>
       <a class="mobile-bar-action" href="#table" aria-label="View league table">Table <span aria-hidden="true">↗</span></a>
     </div>
-    <footer class="footer"><div class="wrap footer-inner"><div><strong>CANFORD UNITED FC</strong><span>Independent team season dashboard · 2026/27</span></div><div><a href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer">League source ↗</a><span>Not affiliated with the FA</span></div></div></footer>
+    <footer class="footer"><div class="wrap footer-inner"><div><strong>CANFORD UNITED FC</strong><span>Independent team season dashboard · 2026/27</span></div><div class="footer-sources"><a href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer">FA Full-Time ↗</a><a href="https://www.nonleaguematters.co.uk/divisions/117/" target="_blank" rel="noopener noreferrer">Results: NonLeagueMatters ↗</a><span>Not affiliated with the FA or NonLeagueMatters</span></div></div></footer>
   </div>
 </body>
 </html>
