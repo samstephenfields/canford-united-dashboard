@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
-"""Read public Dorset Senior League results from the FA Full-Time website.
+"""Read public Dorset Senior League results using its season-specific FA Full-Time URLs.
 
-Source: https://fulltime.thefa.com/index.html?league=3520598
-Only publicly accessible pages are requested. A block, changed markup or
-incomplete response raises an error: never silently publish missing results.
+The page link was supplied by the club:
+https://fulltime.thefa.com/results/2/25.html?selectedSeason=242517082&selectedFixtureGroupKey=1_293688393
+
+Public web access may be denied (HTTP 403). Never bypass access controls or
+publish partial results as complete; retain the last verified snapshot instead.
 """
-import os
 import re
 import subprocess
 from urllib.parse import urlencode
@@ -14,29 +15,39 @@ from bs4 import BeautifulSoup
 
 OFFICIAL_HOST = "https://fulltime.thefa.com"
 LEAGUE_ID = "3520598"
-DIVISION_ID = "69783872"
-# Use the current FA Full-Time season selector if supplied by the league;
-# otherwise use the site's current-season default.
-SEASON_ID = os.environ.get("FA_FULLTIME_SEASON_ID", "").strip()
+SEASON_ID = "242517082"
+GROUP_KEY = "1_293688393"
+PAGE_SIZE = 25
+MAX_PAGES = 20
 
 
-def source_url(page):
+def source_url(page, page_number=1):
     if page not in ("results", "table"):
         raise ValueError("Unexpected FA Full-Time page")
-    params = {"league": LEAGUE_ID, "selectedDivision": DIVISION_ID,
-              "selectedRelatedFixtureOption": "1", "itemsPerPage": "500"}
-    if SEASON_ID:
-        params["selectedSeason"] = SEASON_ID
-    return OFFICIAL_HOST + "/" + page + ".html?" + urlencode(params)
+    params = {
+        "selectedSeason": SEASON_ID,
+        "selectedFixtureGroupAgeGroup": "0",
+        "previousSelectedFixtureGroupAgeGroup": "",
+        "selectedFixtureGroupKey": GROUP_KEY,
+        "previousSelectedFixtureGroupKey": GROUP_KEY,
+        "selectedDateCode": "",
+        "selectedRelatedFixtureOption": "3",
+        "selectedClub": "",
+        "previousSelectedClub": "",
+        "selectedTeam": "",
+    }
+    if page == "table":
+        return OFFICIAL_HOST + "/table.html?" + urlencode(params)
+    if not isinstance(page_number, int) or not (1 <= page_number <= MAX_PAGES):
+        raise ValueError("Invalid results page number")
+    return OFFICIAL_HOST + f"/results/{page_number}/{PAGE_SIZE}.html?" + urlencode(params)
 
 
-def fetch_page(page):
-    url = source_url(page)
+def fetch_page(page, page_number=1):
+    url = source_url(page, page_number)
     proc = subprocess.run(
         ["curl", "--fail", "--silent", "--show-error", "--location",
-         "--max-time", "35", "--retry", "1", "--user-agent",
-         "CanfordUnitedSeasonDashboard/1.0 (public league results)",
-         url],
+         "--max-time", "35", "--retry", "1", url],
         capture_output=True, text=True, timeout=95, check=False
     )
     if proc.returncode or len(proc.stdout) < 700:
@@ -44,8 +55,6 @@ def fetch_page(page):
             f"FA Full-Time {page} page unavailable (curl exit {proc.returncode}): "
             + proc.stderr[:230]
         )
-    if "fulltime.thefa.com" not in url:
-        raise ValueError("Unexpected source host")
     return proc.stdout
 
 
@@ -113,7 +122,6 @@ def parse_results(html):
         score = clean(row.select_one(".score-col"))
         group = clean(row.select_one(".fg-col"))
         date = clean(dt)
-        # Full-Time labels league matches L. Cups (CC) are excluded.
         if group and group.upper() not in ("L", "LEAGUE", "DORSET SENIOR LEAGUE"):
             continue
         match = re.match(r"^(\d+)\s*[-–]\s*(\d+)(?:\s|$)", score)
@@ -121,7 +129,7 @@ def parse_results(html):
             continue
         pair = (home.casefold(), away.casefold())
         if pair in seen:
-            raise ValueError("Duplicate league result in official page: " + home + " v " + away)
+            raise ValueError("Duplicate league result on official page: " + home + " v " + away)
         seen.add(pair)
         output.append({
             "fixtureDateTime": date,
@@ -130,16 +138,35 @@ def parse_results(html):
             "homeScore": match.group(1),
             "awayScore": match.group(2),
         })
-    if not output:
-        raise ValueError("No completed senior-league results in official response")
     return output
 
 
 def fetch_official():
-    """Return table/results shaped for scripts/sync.py validation."""
+    """Fetch complete official league results across pages, then return table/results."""
     table = parse_table(fetch_page("table"))
-    results = parse_results(fetch_page("results"))
-    return table, results
+    total_games = sum(team["gamesPlayed"] for team in table)
+    if total_games % 2:
+        raise ValueError("Official table has an odd total of matches played")
+    expected = total_games // 2
+    if expected < 1 or expected > MAX_PAGES * PAGE_SIZE:
+        raise ValueError("Official table has an unexpected number of matches")
+    output = {}
+    for number in range(1, MAX_PAGES + 1):
+        page_rows = parse_results(fetch_page("results", number))
+        for row in page_rows:
+            key = (row["homeTeam"].casefold(), row["awayTeam"].casefold())
+            if key in output:
+                if output[key] != row:
+                    raise ValueError("Conflicting results for " + str(key))
+                continue
+            output[key] = row
+        if len(output) == expected:
+            break
+        if len(output) > expected or not page_rows:
+            raise ValueError(f"Official result pages incomplete or inconsistent: {len(output)} of {expected}")
+    if len(output) != expected:
+        raise ValueError(f"Official results incomplete after pagination: {len(output)} of {expected}")
+    return table, list(output.values())
 
 
 if __name__ == "__main__":
