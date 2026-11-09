@@ -12,7 +12,11 @@ The site is static and needs no server or accounts. Your score predictions remai
 
 ## Data freshness
 
-Automatic checks run twice daily at 07:15 and 19:15 UTC using an **unofficial** FA Full-Time service. If the service is inaccessible or provides inconsistent data, the last verified snapshot is retained and the page displays its source date. The initial data covers results through 7 November 2026. Dates marked TBC are not confirmed fixtures. The forecast is based on points per game and is *not* a guaranteed finishing position.
+Automatic checks use **UK local time** (GMT/BST): 07:15 and 19:15 daily, **Saturday 20:25 and 21:25**, and **Sunday 09:25**. The source is an **unofficial** FA Full-Time service, so these checks do not guarantee that scores have been published or that GitHub will start precisely on schedule. GitHub may disable scheduled workflows on public repositories after 60 days without activity.
+
+The dashboard shows **the date of the latest verified result** separately from **the time and status of the most recent check**. If the service is inaccessible or sends inconsistent data, existing verified results are preserved and the page displays a failed-check warning. The initial data covers results through 7 November 2026. Dates marked TBC are not confirmed fixtures. The forecast is based on points per game and is *not* a guaranteed finishing position.
+
+The **Form & Stats** section now lists every Canford league result and has a **Whole league** filter. That whole-division view clearly states when the available data does not cover all matches in the table.
 
 - [FA Full-Time Dorset League](https://fulltime.thefa.com/index.html?league=3520598)
 - [Independent FullTime API source](https://github.com/jwhughes-work/FullTimeAPI)
