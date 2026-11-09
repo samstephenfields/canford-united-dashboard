@@ -1,0 +1,56 @@
+name: Deploy Canford United dashboard
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '15 7,19 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: canford-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract initial website source
+        run: |
+          if [ ! -f public/index.html ]; then
+            unzip -oq dashboard.zip -d .
+          fi
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run dashboard tests
+        run: |
+          node tests/forecast.test.js
+          python -m unittest discover -s tests -p '*test.py'
+      - name: Update league results and fixtures
+        run: python scripts/sync.py
+      - name: Save newly extracted or refreshed website data
+        run: |
+          if [[ -n "$(git status --porcelain -- public scripts tests .gitignore)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add public scripts tests .gitignore
+            git commit -m "Publish and update Canford dashboard [skip ci]"
+            git push
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: public
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
