@@ -296,3 +296,8 @@
 .footer-sources a{text-decoration:underline;text-underline-offset:3px}
 #scouting,#targets{scroll-margin-top:18px}
 @media(max-width:720px){.footer-sources{align-items:flex-start;text-align:left}}
+
+/* Slimmer matchday planning, without the redundant four-card summary. */
+.planning-section .decision-grid{margin-top:0}
+.planning-section h2{margin-bottom:18px}
+@media(max-width:720px){.planning-section h2{margin-bottom:14px}}
