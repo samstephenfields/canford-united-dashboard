@@ -116,6 +116,17 @@
             <div class="scout-select-wrap"><label for="scout-opponent">Opponent</label><select id="scout-opponent" class="target-select"><option value="">Loading clubs…</option></select></div>
           </div>
           <div id="scout-card" class="scout-card"><div class="loading-state">Loading opponent statistics…</div></div>
+          <div class="form-history-card scout-history-card" aria-labelledby="scout-history-title">
+            <div class="form-history-top">
+              <span class="card-overline" id="scout-history-title">OPPONENT MATCH-BY-MATCH FORM <span class="form-direction">EARLIEST → LATEST</span></span>
+              <strong id="scout-form-summary" class="form-history-summary">Loading results…</strong>
+            </div>
+            <div id="scout-form-badges" class="form-badges form-timeline" role="group" aria-label="Select an opponent league result"></div>
+            <div id="scout-match-detail" class="form-match-detail" aria-live="polite" aria-atomic="true">
+              <div class="loading-state">Select a result to view match details.</div>
+            </div>
+            <p id="scout-results-coverage" class="scout-results-coverage"></p>
+          </div>
         </section>
 
         <section class="section predictor-section" id="predictor" aria-labelledby="predict-title">
