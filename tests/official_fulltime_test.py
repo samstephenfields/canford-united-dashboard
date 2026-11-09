@@ -1,5 +1,6 @@
 import sys
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1] / 'scripts'))
 import official_fulltime as official
@@ -9,9 +10,15 @@ class OfficialSourceTests(unittest.TestCase):
     def test_source_urls_are_the_fa_pages(self):
         for page in ('table', 'results'):
             url=official.source_url(page)
-            self.assertTrue(url.startswith('https://fulltime.thefa.com/'+page+'.html?'))
-            self.assertIn('selectedDivision=69783872',url)
-            self.assertIn('league=3520598',url)
+            if page=='table':
+                self.assertTrue(url.startswith('https://fulltime.thefa.com/table.html?'))
+            else:
+                self.assertTrue(url.startswith('https://fulltime.thefa.com/results/1/25.html?'))
+            self.assertIn('selectedSeason=242517082',url)
+            self.assertIn('selectedFixtureGroupKey=1_293688393',url)
+        page_two=official.source_url('results',2)
+        self.assertIn('/results/2/25.html?',page_two)
+        self.assertIn('selectedRelatedFixtureOption=3',page_two)
         with self.assertRaises(ValueError):
             official.source_url('other')
 
@@ -59,6 +66,45 @@ class OfficialSourceTests(unittest.TestCase):
         self.assertEqual(rows[1]['awayTeam'],'Canford United First')
         with self.assertRaises(ValueError):
             official.parse_results('<p>This page was blocked</p>')
+
+
+    def test_fetch_entire_division_across_result_pages(self):
+        table='''<div id="league-table"><h2>Dorset Senior League</h2>
+        <div class="table-scroll"><table><tbody>
+        <tr><td>1</td><td><a>Canford United</a></td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>3</td></tr>
+        <tr><td>2</td><td><a>Stars FC</a></td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>3</td></tr>
+        </tbody></table></div></div>'''
+        def page(home, away, hs, ass):
+            return ('''<div id="results-list"><div class="match">
+                <div class="datetime-col">05/09/26 14:00</div>
+                <div class="home-team-col">'''+home+'''</div>
+                <div class="score-col">'''+str(hs)+' - '+str(ass)+'''</div>
+                <div class="road-team-col">'''+away+'''</div>
+                <div class="fg-col">L</div>
+                </div></div>''')
+        calls=[]
+        def fake_fetch(which, number=1):
+            calls.append((which,number))
+            if which=='table':return table
+            if number==1:return page('Canford United','Stars FC',2,1)
+            if number==2:return page('Stars FC','Canford United',2,1)
+            raise AssertionError('Unexpected page request')
+        with patch.object(official,'fetch_page',side_effect=fake_fetch):
+            standings,results=official.fetch_official()
+        self.assertEqual(len(standings),2)
+        self.assertEqual(len(results),2)
+        self.assertEqual(calls,[('table',1),('results',1),('results',2)])
+
+    def test_pagination_does_not_accept_incomplete_results(self):
+        table='''<div id="league-table"><h2>Dorset Senior League</h2>
+        <div class="table-scroll"><table><tbody>
+        <tr><td>1</td><td><a>Canford United</a></td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>3</td></tr>
+        <tr><td>2</td><td><a>Stars FC</a></td><td>2</td><td>1</td><td>0</td><td>1</td><td>0</td><td>3</td></tr>
+        </tbody></table></div></div>'''
+        empty='<div id="results-list"></div>'
+        with patch.object(official,'fetch_page',side_effect=lambda page,number=1: table if page=='table' else empty):
+            with self.assertRaises(ValueError):
+                official.fetch_official()
 
 
 if __name__=='__main__':
