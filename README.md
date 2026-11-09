@@ -18,7 +18,7 @@ The site is static and needs no server or accounts. Your score predictions remai
 - **Shareable forecasts:** Click *Share predictions* to create a link containing only the selected future scores. The receiver can explore it without overwriting their own saved predictions, then explicitly choose *Save this version* or *Return to my predictions*. No account or server-side database is needed.
 - **Whole-number points:** All total points and estimated final points are shown as rounded whole numbers. Points-per-game and goals-per-game averages remain decimal rates. The forecast model uses unrounded form estimates internally.
 
-These features depend on the latest verified data snapshot; where league results are incomplete or out of date, the site says so rather than inventing opposition form or match dates.
+The saved 2026/27 snapshot was backfilled on **9 November 2026** with **all 37 senior-league matches played through 7 November**. Match scores/dates were cross-checked against the [NonLeagueMatters Dorset Senior League results](https://www.nonleaguematters.co.uk/divisions/117/) and reconciled for all 11 clubs against the [official FA Full-Time league table](https://fulltime.thefa.com/index.html?league=3520598), including Poole Borough's one-point deduction. Section 2 now has complete opponent form chips as of that date. This is a verified historical snapshot, **not a claim that live FA Full-Time scraping is working**.
 
 ## Data freshness
 
@@ -28,7 +28,7 @@ Automatic checks run on each push to `main` and on a **UK local time** schedule:
 
 **Important limitation:** Public FA Full-Time HTML is not a guaranteed machine-readable feed. Requests from GitHub Actions may be blocked or the page may change without warning. This direct-site integration has been coded and unit-tested with representative HTML, but has not yet completed a verified live refresh. For higher reliability the league can provide an authorised Full-Time data feed or export. GitHub can also delay scheduled jobs or disable them after 60 days of inactivity in public repositories.
 
-The dashboard shows **the date of the latest verified result** separately from **the time and status of the most recent check**. If the service is inaccessible or sends inconsistent data, existing verified results are preserved and the page displays a failed-check warning. The initial data covers results through 7 November 2026. Dates marked TBC are not confirmed fixtures. The forecast is based on points per game and is *not* a guaranteed finishing position.
+The dashboard shows **the last verified result date** separately from **the automatic check status**. GitHub Actions' requests to public FA Full-Time currently return **HTTP 403**, so the completed 37-match dataset through 7 November 2026 was verified and imported independently. If future automatic checks fail, the latest saved results are preserved and the site reports an unavailable refresh. Dates marked TBC are not confirmed fixtures. The forecast is based on points per game and is *not* a guaranteed finishing position.
 
 Section **05 / Season Form** shows every Canford league result in chronological order as a swipeable W/D/L strip. Select any result to see the date, home and away teams, final score and outcome. The separate results table and whole-division filter have been removed from this section; the main league standings table remains available in Section 03.
 
