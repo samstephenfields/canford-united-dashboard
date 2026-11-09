@@ -15,6 +15,9 @@ class OfficialSourceTests(unittest.TestCase):
             else:
                 self.assertTrue(url.startswith('https://fulltime.thefa.com/results/1/25.html?'))
             self.assertIn('selectedSeason=242517082',url)
+            if page=='table':
+                self.assertIn('selectedDivision=69783872',url)
+                self.assertIn('league=3520598',url)
             self.assertIn('selectedFixtureGroupKey=1_293688393',url)
         page_two=official.source_url('results',2)
         self.assertIn('/results/2/25.html?',page_two)
