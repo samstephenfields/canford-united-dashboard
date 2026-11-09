@@ -61,6 +61,8 @@ if(data.manualVerifiedAt){
 }
 assert(app.includes('function renderSeasonForm()'));
 assert(app.includes('function renderScoutingCard()'));
+assert(!app.includes('Figures come from the latest saved league snapshot'),
+  'Redundant scouting disclaimer must not be rendered');
 assert(app.includes('function renderScoutingTimeline()'));
 assert(app.includes('function renderScoutingMatchDetail()'));
 assert(app.includes('data-scout-match-index'));
