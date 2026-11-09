@@ -133,7 +133,7 @@
   const results=ownLeagueResults(),team=STATE.data.team;
   const outcomes=results.map(r=>selfResult(r,team));
   const wins=outcomes.filter(r=>r.type==='W').length, draws=outcomes.filter(r=>r.type==='D').length;
-  text('form-summary',wins+' wins · '+draws+' draws · '+(results.length-wins-draws)+' losses · '+results.length+' played');
+  text('form-summary',wins+'W · '+draws+'D · '+(results.length-wins-draws)+'L · '+results.length+' played');
   $('form-badges').innerHTML=results.length?outcomes.map((r,index)=>{
    const fixture=results[index];
    const label=r.type==='W'?'Win':r.type==='D'?'Draw':'Loss';
