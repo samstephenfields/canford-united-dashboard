@@ -1,7 +1,7 @@
 (function(){
  'use strict';
  const F=window.CanfordForecast;
- const STATE={data:null,picks:{},mode:'actual',formIndex:null};
+ const STATE={data:null,picks:{},mode:'actual',formIndex:null,sharedMode:false,scoutOpponent:null};
  const STORAGE='canford-predictions:2026-27:v1';
  const $=id=>document.getElementById(id);
  const text=(id,value)=>{const el=$(id);if(el)el.textContent=value};
@@ -11,8 +11,24 @@
  const nameTeam=s=>s==='Bournemouth Poppies Reserves'?'Bournemouth Poppies Res.':s;
  const selfResult=(r,team)=>{const gf=r.home===team?r.homeScore:r.awayScore,ga=r.home===team?r.awayScore:r.homeScore;return{type:gf>ga?'W':gf===ga?'D':'L',gf,ga,opponent:F.opponent(r,team),date:r.date}};
  const saved=()=>{try{const obj=JSON.parse(localStorage.getItem(STORAGE)||'{}');return obj&&typeof obj==='object'&&!Array.isArray(obj)?obj:{}}catch{return {}}};
- const persist=()=>{try{localStorage.setItem(STORAGE,JSON.stringify(STATE.picks))}catch{}};
+ const persist=()=>{if(STATE.sharedMode)return;try{localStorage.setItem(STORAGE,JSON.stringify(STATE.picks))}catch{}};
  function currentPosition(data){const ordered=[...data.standings].sort((a,b)=>b.points-a.points||b.gd-a.gd);return ordered.findIndex(t=>t.name===data.team)+1;}
+ function ukDate(){
+  const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const get=type=>parts.find(p=>p.type===type)?.value;
+  return get('year')+'-'+get('month')+'-'+get('day');
+ }
+ const rankText=n=>n+F.ordinal(n).toLowerCase();
+ function nextScheduledFixture(){
+  const remaining=new Set(F.remainingFixtures(STATE.data).map(f=>f.id));
+  return (STATE.data.scheduledFixtures||[])
+   .filter(f=>f.date&&f.date>=ukDate()&&remaining.has(F.key(f.home,f.away)))
+   .sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||''))[0]||null;
+ }
+ function teamRank(name){
+  const rows=[...STATE.data.standings].sort((a,b)=>b.points-a.points||b.gd-a.gd||a.name.localeCompare(b.name));
+  return rows.findIndex(r=>r.name===name)+1;
+ }
  function fixtureMarkup(f){
    const pick=STATE.picks[f.id]||{};
    const picked=F.validPick(pick);
@@ -23,7 +39,7 @@
    const theirSide=home?'awayScore':'homeScore';
    return `<div class="fixture-row ${picked?'predicted':''}" data-key="${esc(f.id)}">
       <div class="fixture-date ${f.date?'':'tbc'}"><span class="day">${esc(parts[0])}</span>${f.date?`<span class="month">${esc(parts[1].toUpperCase())}</span>`:''}</div>
-      <div class="fixture-meta"><div class="fixture-opponent">${esc(nameTeam(f.opponent))} ${match?`<span class="fixture-result-pill ${match.result}">${match.result}</span>`:''}</div><div class="fixture-info"><span class="venue-pill ${home?'':'away'}">${home?'HOME':'AWAY'}</span>${f.date?`${esc(f.time||'Time TBC')} · ${esc(f.venue||'Venue TBC')}`:'Fixture date not yet published'}</div></div>
+      <div class="fixture-meta"><div class="fixture-opponent">${esc(nameTeam(f.opponent))} ${match?`<span class="fixture-result-pill ${match.result}">${match.result}</span>`:''}</div><div class="fixture-info"><span class="venue-pill ${home?'':'away'}">${home?'HOME':'AWAY'}</span>${f.date?`${esc(f.time||'Time TBC')} · ${esc(f.venue||'Venue TBC')}`:'Fixture date not yet published'}</div><button type="button" class="scout-link" data-scout="${esc(f.opponent)}">Scout opponent →</button></div>
       <div class="score-wrap">
         <div class="score-control" role="group" aria-label="Predict Canford versus ${esc(f.opponent)}">
           <label class="score-side"><span>CANFORD</span><input class="score-field" data-side="${ourSide}" type="number" min="0" max="30" step="1" inputmode="numeric" placeholder="–" aria-label="Canford United goals against ${esc(f.opponent)}" value="${pick[ourSide]??''}"></label>
@@ -55,7 +71,120 @@
    $('forecast-progress').style.width=(result.totalFixtures?100*result.selected/result.totalFixtures:100)+'%';
    text('best-case',`${best.position}${F.ordinal(best.position).toLowerCase()} · ${Math.round(best.points)} pts`);
    text('worst-case',`${worst.position}${F.ordinal(worst.position).toLowerCase()} · ${Math.round(worst.points)} pts`);
+   renderPointsTarget();
+   renderBriefing();
    if(STATE.mode==='projected')renderTable();
+ }
+
+ function renderPointsTarget(){
+  const desired=Number($('target-rank').value)||6;
+  const t=F.pointsTarget(STATE.data,STATE.picks,desired);
+  text('target-total',t.targetPoints);
+  text('target-needed',t.need);
+  const box=$('target-plan');
+  box.classList.toggle('unreachable',!t.feasible);
+  if(!t.feasible){
+   box.innerHTML='<strong>Not achievable with these predicted scores.</strong> Maximum: '+t.maxPoints+
+    ' points. Adjust your predictions to keep this target in reach.';
+  }else if(t.need===0){
+   box.innerHTML='<strong>Target already reached by recorded and selected results.</strong> '+
+    'The estimate can still change as other clubs play.';
+  }else if(t.plan){
+   box.innerHTML='<strong>One possible route:</strong> '+t.plan.wins+' wins, '+t.plan.draws+
+    ' draws and '+t.plan.losses+' losses from the '+t.open+' fixtures without a predicted score.'+
+    '<div class="target-context">Requires '+t.need+' more points after the results you have selected.</div>';
+  }else{
+   box.textContent='No combination available with the remaining matches.';
+  }
+ }
+ function scoreScenario(fixture,kind){
+  const home=fixture.home===STATE.data.team;
+  if(kind==='draw')return {homeScore:0,awayScore:0};
+  const canfordWins=kind==='win';
+  return {homeScore:(home===canfordWins)?1:0,awayScore:(home===canfordWins)?0:1};
+ }
+ function renderBriefing(){
+  const next=nextScheduledFixture();
+  if(!next){
+   $('briefing-match').innerHTML='<div class="briefing-status">DATE TO BE CONFIRMED</div>'+
+    '<div class="briefing-opponent">No upcoming fixture date in the saved snapshot</div>'+
+    '<div class="briefing-info">There may be unplayed matches without published dates. '+
+    '<a href="'+esc(STATE.data.officialTeamUrl)+'" target="_blank" rel="noopener noreferrer">Check official fixtures ↗</a></div>';
+   $('briefing-scenarios').innerHTML='';
+   return;
+  }
+  const opponent=F.opponent(next,STATE.data.team),home=next.home===STATE.data.team;
+  const when=new Date(next.date+'T12:00:00Z').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',timeZone:'UTC'});
+  const venue=next.venue&&next.venue!=='Venue TBC'?next.venue:'Venue to be confirmed';
+  $('briefing-match').innerHTML='<div class="briefing-status">'+(home?'HOME':'AWAY')+' · NEXT CONFIRMED FIXTURE</div>'+
+   '<div class="briefing-opponent">'+esc(opponent)+'</div>'+
+   '<div class="briefing-info">'+esc(when)+' · '+esc(next.time||'Kick-off TBC')+' · '+esc(venue)+'</div>'+
+   '<div class="briefing-info">Opposition currently '+rankText(teamRank(opponent))+' in the league · '+
+   '<a href="#scouting" id="briefing-scout-link">View scouting details ↗</a></div>';
+  const id=F.key(next.home,next.away);
+  $('briefing-scenarios').innerHTML=[['win','Win'],['draw','Draw'],['loss','Lose']].map(([code,label])=>{
+   const projected=F.forecast(STATE.data,{...STATE.picks,[id]:scoreScenario(next,code)});
+   return '<div class="briefing-case case-'+code+'"><span class="case-label">IF WE '+label.toUpperCase()+
+     '</span><strong class="case-rank">'+rankText(projected.position)+'</strong><span class="case-points">'+
+     fmt(projected.points)+' est. pts</span></div>';
+  }).join('');
+ }
+ function renderScoutingSelector(){
+  const remaining=F.remainingFixtures(STATE.data);
+  const names=[...new Set(remaining.map(f=>f.opponent))].sort((a,b)=>a.localeCompare(b));
+  const next=nextScheduledFixture();
+  if(!STATE.scoutOpponent||!names.includes(STATE.scoutOpponent)){
+   STATE.scoutOpponent=next?F.opponent(next,STATE.data.team):(names[0]||null);
+  }
+  $('scout-opponent').innerHTML=names.length?names.map(name=>'<option value="'+esc(name)+'">'+esc(name)+'</option>').join('')
+   :'<option value="">No remaining opponents</option>';
+  $('scout-opponent').value=STATE.scoutOpponent||'';
+  renderScoutingCard();
+ }
+ function renderScoutingCard(){
+  const name=STATE.scoutOpponent,data=STATE.data;
+  const card=$('scout-card');
+  if(!name){card.innerHTML='<p class="form-empty">No remaining league opponents.</p>';return;}
+  const row=data.standings.find(t=>t.name===name);
+  if(!row){card.innerHTML='<p class="form-empty">No verified standings for this opponent.</p>';return;}
+  const rank=teamRank(name),ppg=(row.points/Math.max(1,row.played)).toFixed(2);
+  const headToHead=data.results.filter(r=>[r.home,r.away].includes(data.team)&&[r.home,r.away].includes(name))
+   .sort((a,b)=>b.date.localeCompare(a.date));
+  const recentHead=headToHead[0];
+  const prev=recentHead?selfResult(recentHead,data.team):null;
+  const past=recentHead?esc(shortDate(recentHead.date))+' · '+esc(prev.gf+'–'+prev.ga)+' '+prev.type+
+   ' for Canford ('+(recentHead.home===data.team?'home':'away')+')'
+   :'No recorded meeting between the clubs this season.';
+  const recorded=data.results.filter(r=>r.home===name||r.away===name).sort((a,b)=>a.date.localeCompare(b.date));
+  const coverage=recorded.length===row.played;
+  const form=coverage&&recorded.length?recorded.slice(-5).map(r=>{
+   const goals=r.home===name?r.homeScore:r.awayScore,conceded=r.home===name?r.awayScore:r.homeScore;
+   return goals>conceded?'W':goals===conceded?'D':'L';
+  }):[];
+  const formHtml=form.length?
+    '<div class="form-inline" aria-label="Opponent recent results, earliest to latest">'+form.map(v=>'<span class="'+v+'">'+v+'</span>').join('')+'</div>':
+    '<p>Recent form unavailable: only '+recorded.length+' of '+row.played+' league results are recorded in this snapshot.</p>';
+  const gf=Number.isFinite(row.gf)?row.gf:'—',ga=Number.isFinite(row.ga)?row.ga:'—';
+  const fixtures=F.remainingFixtures(data).filter(f=>f.opponent===name);
+  const nextFixture=fixtures.find(f=>f.date);
+  const nextText=nextFixture?shortDate(nextFixture.date)+' · '+(nextFixture.home===data.team?'Home':'Away'):
+    'Remaining fixture date TBC';
+  card.innerHTML='<div class="scout-card-head"><div><h3 class="scout-card-title">'+esc(name)+'</h3>'+
+    '<div class="scout-card-meta">'+row.won+'W · '+row.drawn+'D · '+row.lost+'L · '+row.played+
+    ' played · Next meeting: '+esc(nextText)+'</div></div>'+
+    '<div class="scout-position"><strong>'+rankText(rank)+'</strong><span>Current place</span></div></div>'+
+    '<div class="scout-metrics">'+
+    [['Points',row.points],['Points / game',ppg],['Goals scored',gf],['Goals conceded',ga]].map(([label,value])=>
+     '<div class="scout-metric"><span>'+label+'</span><strong>'+value+'</strong></div>').join('')+
+    '</div><div class="scout-insights"><div class="scout-insight"><strong>RECENT FORM</strong>'+formHtml+
+    '</div><div class="scout-insight"><strong>PREVIOUS CANFORD MEETING</strong><p>'+past+'</p></div></div>'+
+    '<p class="scout-footnote">Figures come from the latest saved league snapshot. A dash means the goals total could not be verified.</p>';
+ }
+ function openScout(name){
+  STATE.scoutOpponent=name;
+  $('scout-opponent').value=name;
+  renderScoutingCard();
+  $('scouting').scrollIntoView({behavior:'smooth',block:'start'});
  }
  function renderTable(){
   const data=STATE.data,proj=F.forecast(data,STATE.picks);const isProjected=STATE.mode==='projected';
@@ -80,8 +209,7 @@
   $('season-progress').style.width=(100*cur.played/data.totalMatchesPerTeam)+'%';
   text('stat-points',cur.points);text('stat-remaining',data.totalMatchesPerTeam-cur.played);
   text('stat-maximum',cur.points+3*(data.totalMatchesPerTeam-cur.played));
-  const today=new Date().toISOString().slice(0,10);
-  const next=(data.scheduledFixtures||[]).filter(f=>f.date&&f.date>=today).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  const next=nextScheduledFixture();
   text('hero-next-fixture',next?shortDate(next.date)+' · '+F.opponent(next,data.team)+' ('+(next.home===data.team?'Home':'Away')+')':'Check the fixture list for confirmed dates');
   text('stats-ppg',((cur.won*3+cur.drawn)/cur.played).toFixed(2));
   text('stats-gf',cur.gf!=null?(cur.gf/cur.played).toFixed(2):'—');text('stats-ga',cur.ga!=null?(cur.ga/cur.played).toFixed(2):'—');
