@@ -6,6 +6,7 @@ const vm=require('node:vm');
 const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'public/index.html'),'utf8');
 const app=fs.readFileSync(path.join(root,'public/assets/app.js'),'utf8');
+const stylesheet=fs.readFileSync(path.join(root,'public/assets/styles.css'),'utf8');
 const F=require('../public/assets/forecast.js');
 const data=JSON.parse(fs.readFileSync(path.join(root,'public/data/season.json'),'utf8'));
 const squad=JSON.parse(fs.readFileSync(path.join(root,'public/data/squad.json'),'utf8'));
@@ -106,6 +107,12 @@ assert(html.includes('Apps</abbr>'));
 assert(html.includes('Goals + assists + pre-assists.'));
 assert(html.includes('Goals Conceded'));
 assert(html.includes('>Goal Involvements</abbr>'));
+assert(stylesheet.includes('.squad-table td.squad-active-metric{font-weight:850'),
+ 'Only the selected sort metric should be bold');
+assert(!stylesheet.includes('.squad-table td:last-child,.squad-active-metric'),
+ 'Last column must not always be bold');
+assert(!stylesheet.includes('.squad-table td.squad-conceded{font-weight'),
+ 'Goals Conceded should inherit the same font weight as all other metrics');
 assert(!html.includes('>GI</abbr>'));
 assert(html.includes('Review any league opponent, including teams already played twice.'));
 assert(html.includes('A squad-level average, not individual defensive responsibility.'));

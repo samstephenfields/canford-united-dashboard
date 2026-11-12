@@ -334,7 +334,7 @@
 .squad-table abbr{text-decoration:none;cursor:help}
 .squad-player-name{display:inline}
 .squad-left{display:inline-block;margin-left:7px;padding:2px 6px;border-radius:4px;background:#f3ece8;color:#865345;font-size:10px;font-weight:700}
-.squad-table td:last-child,.squad-active-metric{font-weight:850;color:#0d7850}
+.squad-table td.squad-active-metric{font-weight:850;color:#0d7850}
 .squad-card-bottom{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:15px 18px;background:#f8faf7;border-top:1px solid #e4e9e2}
 .squad-definitions{display:flex;flex-wrap:wrap;column-gap:18px;row-gap:5px;font-size:11px;line-height:1.5;color:#506b5a}
 .squad-definitions p{margin:0}
@@ -378,8 +378,6 @@
 /* Average team goals conceded per squad appearance, rounded to one decimal. */
 .squad-table{min-width:730px}
 .squad-table th:last-child,.squad-table td:last-child{min-width:126px}
-.squad-table td.squad-conceded{font-weight:700;color:#2b4c3b}
-.squad-table td.squad-conceded.squad-active-metric{color:#0d7850;font-weight:850}
 @media(max-width:720px){.squad-table{min-width:670px}.squad-table th:last-child,.squad-table td:last-child{min-width:115px}}
 
 /* Make the full Goal Involvements header readable on desktop and mobile. */
