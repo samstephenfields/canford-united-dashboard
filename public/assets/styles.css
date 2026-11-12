@@ -385,3 +385,8 @@
 .squad-table th:nth-last-child(2),.squad-table td:nth-last-child(2){min-width:158px}
 .squad-table thead th:nth-last-child(2){white-space:nowrap}
 @media(max-width:720px){.squad-table{min-width:795px}.squad-table th:nth-last-child(2),.squad-table td:nth-last-child(2){min-width:150px}}
+
+/* The shared league-table CSS styles td:last-child as bold. Override that legacy
+   rule inside the player table so Goals Conceded matches other numeric cells.
+   The more-specific .squad-active-metric rule still highlights the selected sort. */
+.squad-table tbody td{font-weight:400;color:#617069}

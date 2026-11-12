@@ -113,6 +113,15 @@ assert(!stylesheet.includes('.squad-table td:last-child,.squad-active-metric'),
  'Last column must not always be bold');
 assert(!stylesheet.includes('.squad-table td.squad-conceded{font-weight'),
  'Goals Conceded should inherit the same font weight as all other metrics');
+assert(stylesheet.includes('td:last-child{font-weight:820;color:#263d30}'),
+ 'Legacy global last-column style should be detected');
+assert(stylesheet.includes('.squad-table tbody td{font-weight:400;color:#617069}'),
+ 'Player-table cells must explicitly override global last-column bold styling');
+assert(stylesheet.lastIndexOf('.squad-table tbody td{font-weight:400;color:#617069}') >
+       stylesheet.lastIndexOf('td:last-child{font-weight:820;color:#263d30}'),
+ 'Scoped normal-weight rule must follow the global style');
+assert(stylesheet.includes('.squad-table td.squad-active-metric{font-weight:850;color:#0d7850}'),
+ 'Only the active sorting metric should remain emphasised');
 assert(!html.includes('>GI</abbr>'));
 assert(html.includes('Review any league opponent, including teams already played twice.'));
 assert(html.includes('A squad-level average, not individual defensive responsibility.'));
