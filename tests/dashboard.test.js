@@ -28,7 +28,7 @@ assert.equal(ids.length,new Set(ids).size,'All HTML IDs should be unique');
 for(const id of ['form-badges','form-summary','form-match-detail','stats-ppg','data-status-text',
   'target-rank','target-total','target-needed','target-plan','briefing-match','briefing-scenarios',
   'scout-opponent','scout-card','scout-form-badges','scout-match-detail','scout-form-summary','scout-results-coverage','share-predictions','share-url','share-tools','shared-mode-banner',
-  'copy-share','restore-personal','save-shared','squad-rows','squad-sort-apps','squad-sort-goals','squad-status','squad-subtitle','squad-source']){
+  'copy-share','restore-personal','save-shared','squad-rows','squad-sort','squad-status','squad-subtitle','squad-definitions']){
   assert(ids.includes(id),'Missing interactive UI element '+id);
 }
 assert(!html.includes('class="scenario-block"'),'Redundant What if panel should be removed');
@@ -66,9 +66,19 @@ assert(app.includes('function loadSquad()'));
 assert(html.includes('06 / CANFORD SQUAD'));
 assert(html.includes('id="squad-rows"'));
 assert.equal(squad.season,data.season);
-assert(squad.players.length>0,'Publicly verified current-season scorers should be included');
-assert(!squad.complete,'Incomplete roster should never be presented as complete');
-assert(squad.players.every(p=>p.appearances==null||Number.isInteger(p.appearances)));
+assert.equal(squad.schemaVersion,2,'Use club-maintained season totals rather than partial scorers');
+assert(squad.complete,'All recorded club squad players must be represented');
+assert.equal(squad.players.length,27,'Season Totals should contain the complete 27-player record');
+assert.equal(squad.players.reduce((n,p)=>n+p.appearances,0),127);
+assert.equal(squad.players.reduce((n,p)=>n+p.goals,0),20);
+assert.equal(squad.players.reduce((n,p)=>n+p.assists,0),13);
+assert.equal(squad.players.reduce((n,p)=>n+p.preAssists,0),14);
+assert.equal(squad.players.reduce((n,p)=>n+p.goalContributions,0),47);
+assert(squad.players.every(p=>p.goalContributions===p.goals+p.assists+p.preAssists));
+assert.equal(squad.players.filter(p=>p.status==='Left').length,2);
+assert(html.includes('squad-definitions'),'Statistics must have visible on-page definitions');
+assert(!html.includes('FA player statistics'),'Do not link to old FA squad data or expose a private sheet');
+assert(!html.includes('id="squad-source"'),'Avoid public links to private club workbook');
 
 assert(app.includes('function renderScoutingCard()'));
 assert(!app.includes('Figures come from the latest saved league snapshot'),
@@ -144,12 +154,23 @@ async function run(){
   assert(personal.el('scout-card').innerHTML.length>80,'Scouting details should load');
   const squadMarkup=personal.el('squad-rows').innerHTML;
   assert.equal((squadMarkup.match(/<tr>/g)||[]).length,squad.players.length);
-  assert.match(squadMarkup,/Cameron Corbin/);
-  assert.match(personal.el('squad-status').textContent,/confirmed minimums/);
-  personal.el('squad-sort-apps').listeners.click();
-  assert.equal(personal.el('squad-sort-apps').attrs['aria-pressed'],'true');
-  personal.el('squad-sort-goals').listeners.click();
-  assert.equal(personal.el('squad-sort-goals').attrs['aria-pressed'],'true');
+  assert.match(squadMarkup,/Dean Fields/);
+  assert.match(squadMarkup,/Charlie Dibben/);
+  assert.match(squadMarkup,/squad-left/,'Former players must retain historical totals');
+  assert.match(personal.el('squad-status').textContent,/12 Nov 2026 snapshot/);
+  assert(squadMarkup.indexOf('Dean Fields')<squadMarkup.indexOf('Cam Corbin'),
+    'Default ordering should show highest goal contributions first');
+  personal.el('squad-sort').listeners.change({target:{value:'appearances'}});
+  assert.equal(personal.el('squad-sort').value,'appearances');
+  assert(personal.el('squad-rows').innerHTML.indexOf('Ethan Colebrook')<
+         personal.el('squad-rows').innerHTML.indexOf('Dean Fields'),
+    'Appearances sort must rank 8 before 7');
+  personal.el('squad-sort').listeners.change({target:{value:'goals'}});
+  assert.equal(personal.el('squad-sort').value,'goals');
+  personal.el('squad-sort').listeners.change({target:{value:'preAssists'}});
+  assert.equal(personal.el('squad-sort').value,'preAssists');
+  personal.el('squad-sort').listeners.change({target:{value:'goalContributions'}});
+  assert.equal(personal.el('squad-sort').value,'goalContributions');
 
   const westland='Westland Sports Reserves';
   personal.el('scout-opponent').listeners.change({target:{value:westland}});

@@ -315,27 +315,40 @@
   .data-fixtures-link{font-size:11px}
 }
 
-/* Canford squad: readable, three-column table with accessible sorting. */
+/* Club-maintained player statistics; compact on mobile with a frozen player column. */
 .squad-heading{align-items:end}
-.squad-heading .mode-toggle{margin-left:auto}
+.squad-sort-control{display:flex;align-items:center;gap:9px;margin-left:auto;white-space:nowrap}
+.squad-sort-control label{font-size:12px;font-weight:700;color:#607a68}
+.squad-sort-control select{font:inherit;font-size:13px;font-weight:750;color:#204430;background:#fff;border:1px solid #cbd9ce;border-radius:9px;padding:10px 12px;max-width:200px;cursor:pointer}
+.squad-sort-control select:focus-visible,.squad-scroll:focus-visible{outline:2px solid #208657;outline-offset:2px}
 .squad-card{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;box-shadow:var(--shadow)}
-.squad-table{width:100%;min-width:0;font-size:14px;text-align:left;font-variant-numeric:tabular-nums}
+.squad-scroll{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.squad-table{width:100%;min-width:570px;border-collapse:separate;border-spacing:0;font-size:13px;text-align:left;font-variant-numeric:tabular-nums}
 .squad-table thead{background:#eff5f0}
-.squad-table th{padding:13px 22px;font-size:10px;letter-spacing:.1em;color:#5b7b66}
-.squad-table td{padding:14px 22px;border-top:1px solid #e9eee8}
-.squad-table th:first-child,.squad-table td:first-child{text-align:left;width:auto}
-.squad-table td:first-child{font-weight:750;color:#204430}
-.squad-table th:nth-child(n+2),.squad-table td:nth-child(n+2){width:115px;text-align:right}
-.squad-table td:last-child strong{color:#0d7850;font-weight:850}
-.squad-card-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:14px 22px;background:#f8faf7;border-top:1px solid #e4e9e2}
-.squad-card-bottom span{font-size:11px;color:#6b8173;line-height:1.55}
-.squad-card-bottom a{font-weight:750;color:#0b754a;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;font-size:12px}
+.squad-table th{padding:12px 14px;font-size:11px;letter-spacing:.03em;color:#4b7059}
+.squad-table td{padding:12px 14px;border-top:1px solid #e9eee8;text-align:right;min-width:58px}
+.squad-table th:not(:first-child){text-align:right;min-width:58px}
+.squad-table th:first-child{position:sticky;left:0;z-index:1;min-width:178px;max-width:220px;background:#fff;box-shadow:1px 0 0 #e9eee8}
+.squad-table thead th:first-child{z-index:2;background:#eff5f0}
+.squad-table tbody th{padding:12px 14px;border-top:1px solid #e9eee8;font-size:13px;letter-spacing:0;color:#204430;font-weight:750;white-space:normal}
+.squad-table abbr{text-decoration:none;cursor:help}
+.squad-player-name{display:inline}
+.squad-left{display:inline-block;margin-left:7px;padding:2px 6px;border-radius:4px;background:#f3ece8;color:#865345;font-size:10px;font-weight:700}
+.squad-table td:last-child,.squad-active-metric{font-weight:850;color:#0d7850}
+.squad-card-bottom{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:15px 18px;background:#f8faf7;border-top:1px solid #e4e9e2}
+.squad-definitions{display:flex;flex-wrap:wrap;column-gap:18px;row-gap:5px;font-size:11px;line-height:1.5;color:#506b5a}
+.squad-definitions p{margin:0}
+.squad-definitions strong{color:#204430}
+.squad-snapshot{margin:0;font-size:11px;color:#728376}
 @media(max-width:720px){
- .squad-heading{align-items:start;gap:14px;flex-direction:column}
- .squad-heading .mode-toggle{align-self:stretch;margin-left:0}
- .squad-heading .mode-toggle button{flex:1}
- .squad-table{font-size:13px}
- .squad-table th,.squad-table td{padding:11px 13px}
- .squad-table th:nth-child(n+2),.squad-table td:nth-child(n+2){width:77px}
- .squad-card-bottom{padding:14px;align-items:start;flex-direction:column;gap:8px}
+ .squad-heading{align-items:start;gap:12px;flex-direction:column}
+ .squad-sort-control{margin-left:0;align-self:stretch;justify-content:space-between}
+ .squad-sort-control select{max-width:65%;min-width:170px}
+ .squad-table{min-width:535px;font-size:12px}
+ .squad-table th,.squad-table td{padding:11px 9px}
+ .squad-table tbody th{padding:11px 9px;font-size:12px}
+ .squad-table th:first-child{min-width:153px;max-width:153px}
+ .squad-table th:not(:first-child),.squad-table td{min-width:60px}
+ .squad-definitions{column-gap:10px;row-gap:5px}
+ .squad-card-bottom{padding:12px 13px}
 }

@@ -214,19 +214,40 @@
               <h2 id="squad-title">Players &amp; statistics</h2>
               <p class="section-intro" id="squad-subtitle">Loading the squad data…</p>
             </div>
-            <div class="mode-toggle squad-sort" role="group" aria-label="Sort players by">
-              <button type="button" id="squad-sort-apps" aria-pressed="false">Appearances</button>
-              <button type="button" id="squad-sort-goals" class="active" aria-pressed="true">Goals scored</button>
+            <div class="squad-sort-control">
+              <label for="squad-sort">Sort by</label>
+              <select id="squad-sort" aria-label="Sort player statistics">
+                <option value="goalContributions" selected>Goal contributions</option>
+                <option value="appearances">Appearances</option>
+                <option value="goals">Goals</option>
+                <option value="assists">Assists</option>
+                <option value="preAssists">Pre-assists</option>
+              </select>
             </div>
           </div>
           <div class="squad-card">
-            <table class="squad-table" aria-describedby="squad-status">
-              <thead><tr><th scope="col">Player</th><th scope="col">Apps</th><th scope="col">Goals</th></tr></thead>
-              <tbody id="squad-rows"><tr><td colspan="3">Loading players…</td></tr></tbody>
-            </table>
+            <div class="squad-scroll" role="region" aria-label="Canford United season player statistics, scroll horizontally for more columns" tabindex="0">
+              <table class="squad-table" aria-describedby="squad-definitions squad-status">
+                <thead><tr>
+                  <th scope="col">Player</th>
+                  <th scope="col"><abbr title="Squad appearances">Apps</abbr></th>
+                  <th scope="col"><abbr title="Goals scored">G</abbr></th>
+                  <th scope="col"><abbr title="Assists">A</abbr></th>
+                  <th scope="col"><abbr title="Pre-assists">Pre</abbr></th>
+                  <th scope="col"><abbr title="Goal contributions">GC</abbr></th>
+                </tr></thead>
+                <tbody id="squad-rows"><tr><td colspan="6">Loading players…</td></tr></tbody>
+              </table>
+            </div>
             <div class="squad-card-bottom">
-              <span id="squad-status" role="status">Checking 2026/27 data…</span>
-              <a id="squad-source" href="https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&amp;teamID=208163315" target="_blank" rel="noopener noreferrer">FA player statistics ↗</a>
+              <div id="squad-definitions" class="squad-definitions" aria-label="Player statistics definitions">
+                <p><strong>Apps</strong> Named in the matchday squad, even if unused.</p>
+                <p><strong>G</strong> Player goals, excluding own goals.</p>
+                <p><strong>A</strong> Final pass or touch creating a goal.</p>
+                <p><strong>Pre</strong> Pass creating the assist.</p>
+                <p><strong>GC</strong> Goals + assists + pre-assists.</p>
+              </div>
+              <p id="squad-status" class="squad-snapshot" role="status">Loading club records…</p>
             </div>
           </div>
         </section>

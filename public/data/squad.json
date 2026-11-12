@@ -1,53 +1,230 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "season": "2026/27",
   "team": "Canford United First",
-  "complete": false,
-  "appearanceScope": "league",
-  "sourceNote": "Partial list of players named as scorers in 2026/27 FA Dorset Senior League match reports. This is not the full 2026/27 squad. Appearance totals and overall goals are not verified; reportedGoals is a documented minimum only.",
-  "sourceUrl": "https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&teamID=208163315",
-  "sources": [
-    "https://fulltime.thefa.com/newsArticle.html?id=932342061&league=3520598",
-    "https://fulltime.thefa.com/newsArticle.html?id=340828058&league=3520598",
-    "https://fulltime.thefa.com/newsArticle.html?league=3520598&noticeID=765534085&noticePlacementID=796686832",
-    "https://fulltime.thefa.com/newsArticle.html?league=3520598&noticeID=396050232&noticePlacementID=938624598"
-  ],
+  "complete": true,
+  "appearanceScope": "Named in a league matchday squad, including unused players; minutes are not tracked.",
+  "sourceNote": "Club-maintained 2026/27 Season Totals. Snapshot copied from the private Google Sheet on 12 November 2026. Not automatically synchronised.",
+  "sourceUpdatedAt": "2026-11-12",
+  "automaticSync": false,
   "players": [
     {
-      "name": "Cameron Corbin",
-      "appearances": null,
-      "goals": null,
-      "reportedGoals": 4
+      "name": "Ethan Colebrook",
+      "appearances": 8,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 1,
+      "goalContributions": 1
+    },
+    {
+      "name": "Adam Wright",
+      "appearances": 2,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Dom Leaver-Smith",
+      "appearances": 6,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Jack Dunsmore",
+      "appearances": 3,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Jordan Payne",
+      "appearances": 3,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Luke Baylis",
+      "appearances": 1,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Mike Davidson",
+      "appearances": 8,
+      "goals": 0,
+      "assists": 1,
+      "preAssists": 0,
+      "goalContributions": 1
+    },
+    {
+      "name": "Rob Coley",
+      "appearances": 0,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Ryan Andrew",
+      "appearances": 7,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Tom Alner",
+      "appearances": 5,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Tom Rosser",
+      "appearances": 5,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Ben Butterworth",
+      "appearances": 4,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Ben Lees",
+      "appearances": 4,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 1,
+      "goalContributions": 1
+    },
+    {
+      "name": "Ben Wright",
+      "appearances": 4,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Jamie Winwood",
+      "appearances": 5,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Shane Ngwenya",
+      "appearances": 4,
+      "goals": 0,
+      "assists": 1,
+      "preAssists": 0,
+      "goalContributions": 1,
+      "status": "Left"
+    },
+    {
+      "name": "Tom Marsh",
+      "appearances": 7,
+      "goals": 2,
+      "assists": 1,
+      "preAssists": 3,
+      "goalContributions": 6
+    },
+    {
+      "name": "Cam Corbin",
+      "appearances": 7,
+      "goals": 5,
+      "assists": 2,
+      "preAssists": 1,
+      "goalContributions": 8
+    },
+    {
+      "name": "Charlie Dibben",
+      "appearances": 2,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0,
+      "status": "Left"
+    },
+    {
+      "name": "Connor Wright",
+      "appearances": 4,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
     },
     {
       "name": "Dean Fields",
-      "appearances": null,
-      "goals": null,
-      "reportedGoals": 4
+      "appearances": 7,
+      "goals": 7,
+      "assists": 3,
+      "preAssists": 0,
+      "goalContributions": 10
+    },
+    {
+      "name": "Dom Woodward",
+      "appearances": 7,
+      "goals": 3,
+      "assists": 2,
+      "preAssists": 2,
+      "goalContributions": 7
+    },
+    {
+      "name": "George Heap",
+      "appearances": 3,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 1,
+      "goalContributions": 1
+    },
+    {
+      "name": "Jayden Foote",
+      "appearances": 7,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
+    },
+    {
+      "name": "Joff",
+      "appearances": 1,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "goalContributions": 0
     },
     {
       "name": "Riccardo Bruno",
-      "appearances": null,
-      "goals": null,
-      "reportedGoals": 2
-    },
-    {
-      "name": "Dominic Woodward",
-      "appearances": null,
-      "goals": null,
-      "reportedGoals": 2
-    },
-    {
-      "name": "Thomas Marsh",
-      "appearances": null,
-      "goals": null,
-      "reportedGoals": 2
+      "appearances": 6,
+      "goals": 2,
+      "assists": 1,
+      "preAssists": 1,
+      "goalContributions": 4
     },
     {
       "name": "Sam Fields",
-      "appearances": null,
-      "goals": null,
-      "reportedGoals": 1
+      "appearances": 7,
+      "goals": 1,
+      "assists": 2,
+      "preAssists": 4,
+      "goalContributions": 7
     }
   ]
 }

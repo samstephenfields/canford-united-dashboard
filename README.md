@@ -20,11 +20,11 @@ Link previews are controlled and cached by WhatsApp; a new preview is **not guar
 
 ## 2026/27 squad and player statistics
 
-Section **06 / Canford Squad** is a mobile-friendly sortable table. Tap **Appearances** or **Goals scored** to reorder by that column, with player names as a tie-breaker. The data is maintained in `public/data/squad.json`.
+Section **06 / Canford Squad** displays the **27-player** club-maintained 2026/27 Dorset Senior League season totals. It includes six columns: Player, Apps, G, A, Pre and GC. Use the **Sort by** control to rank by goal contributions, appearances, goals, assists or pre-assists. The table scrolls horizontally on mobile while keeping player names in view. Players marked **Left** (Shane Ngwenya and Charlie Dibben) retain their season statistics.
 
-**Data verification:** As at 12 November 2026, the public FA Full-Time team statistics page for the current season could not be retrieved reliably. The initial table includes only six players explicitly named as scorers in 2026/27 Dorset Senior League news reports. Their recorded goals appear with a `+` suffix to indicate **confirmed minimum totals**, not full-season goal tallies. Appearance totals remain blank (—), and the page clearly states the squad is incomplete. We have **not** reused an older season's registration list or statistics.
+The public data is a snapshot in `public/data/squad.json`, transcribed on **12 November 2026** from the club's private Google Sheet, **Season Totals**. The sheet is **not** automatically connected to this public dashboard, and its private URL must not be published. Future edits to the Google Sheet require a new export/update of `squad.json` followed by deployment. Public page does not fetch the private sheet.
 
-To complete the squad, provide an FA Full-Time 2026/27 player-statistics export or a club-maintained list with `name`, `appearances`, and `goals`. Once verified, update `public/data/squad.json`, set `complete` to true only if all players are present, and remove `reportedGoals` values when exact goal totals have replaced them. This feature is intentionally independent of the results sync because the public FA site has denied automated reads (HTTP 403).
+**Definitions:** Apps = named in a league matchday squad, including unused players, regardless of minutes played. G = goals scored (excluding opposition own goals). A = final pass or touch creating a goal. Pre = pass creating the assist. GC = G + A + Pre. Statistics reflect club records for eight recorded league fixtures and the goal-event log as captured on the snapshot date. All entries are nonnegative whole numbers and GC is validated against the sum of contributions. The individual player names and totals in `public/data/squad.json` are intentionally club-maintained, not auto-scraped from FA Full-Time.
 
 ## Using the dashboard
 

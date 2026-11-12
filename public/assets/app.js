@@ -340,52 +340,50 @@
   const rail=$('form-badges');rail.scrollLeft=rail.scrollWidth;
  }
 
- const SQUAD={data:null,sort:'goals'};
- function squadMetric(player,type){
-  const value=player[type];
-  if(Number.isInteger(value)&&value>=0)return value;
-  if(type==='goals'&&Number.isInteger(player.reportedGoals)&&player.reportedGoals>=0)return player.reportedGoals;
-  return null;
- }
+ const SQUAD={data:null,sort:'goalContributions'};
+ const SQUAD_SORTS=['goalContributions','appearances','goals','assists','preAssists'];
  function renderSquad(){
   const players=Array.isArray(SQUAD.data?.players)?SQUAD.data.players:[];
-  $('squad-sort-apps').classList.toggle('active',SQUAD.sort==='appearances');
-  $('squad-sort-goals').classList.toggle('active',SQUAD.sort==='goals');
-  $('squad-sort-apps').setAttribute('aria-pressed',String(SQUAD.sort==='appearances'));
-  $('squad-sort-goals').setAttribute('aria-pressed',String(SQUAD.sort==='goals'));
+  $('squad-sort').value=SQUAD.sort;
   const sorted=players.slice().sort((a,b)=>{
-   const av=squadMetric(a,SQUAD.sort),bv=squadMetric(b,SQUAD.sort);
-   if(av===null&&bv!==null)return 1;
-   if(bv===null&&av!==null)return -1;
-   if(av!==null&&bv!==null&&av!==bv)return bv-av;
+   const primary=b[SQUAD.sort]-a[SQUAD.sort];
+   if(primary)return primary;
+   const secondary=b.goalContributions-a.goalContributions;
+   if(secondary)return secondary;
    return a.name.localeCompare(b.name);
   });
-  $('squad-rows').innerHTML=sorted.length?sorted.map(player=>{
-   const appearances=Number.isInteger(player.appearances)?player.appearances:'—';
-   const verified=Number.isInteger(player.goals);
-   const known=Number.isInteger(player.reportedGoals)?player.reportedGoals:null;
-   const goals=verified?player.goals:known!==null?known+'+':'—';
-   return '<tr><td>'+esc(player.name)+'</td><td>'+appearances+'</td><td>'+
-    (verified||known!==null?'<strong>'+goals+'</strong>':goals)+'</td></tr>';
-  }).join(''):'<tr><td colspan="3">No confirmed 2026/27 player records available.</td></tr>';
-  if(!SQUAD.data){text('squad-subtitle','Player statistics currently unavailable.');text('squad-status','Check the official FA player records.');return;}
-  const complete=SQUAD.data.complete===true;
-  text('squad-subtitle',complete?'Full 2026/27 squad · '+players.length+' players':
-   'Verified 2026/27 scorers · full squad and appearances awaiting confirmation');
-  text('squad-status',complete?'Sorted by '+(SQUAD.sort==='goals'?'goals scored':'appearances'):
-   (SQUAD.sort==='appearances'?'Appearance totals are not yet verified. ':'')+
-   'Goals marked + are confirmed minimums from match reports, not final totals.');
-  if(SQUAD.data.sourceUrl)$('squad-source').href=SQUAD.data.sourceUrl;
+  $('squad-rows').innerHTML=sorted.length?sorted.map(p=>{
+   const label='<span class="squad-player-name">'+esc(p.name)+'</span>'+
+    (p.status==='Left'?'<span class="squad-left">Left</span>':'');
+   const cell=key=>'<td class="'+(SQUAD.sort===key?'squad-active-metric':'')+'">'+p[key]+'</td>';
+   return '<tr><th scope="row" class="squad-player-cell">'+label+'</th>'+
+    cell('appearances')+cell('goals')+cell('assists')+
+    cell('preAssists')+cell('goalContributions')+'</tr>';
+  }).join(''):'<tr><td colspan="6">Player statistics are currently unavailable.</td></tr>';
+  if(!SQUAD.data){
+   text('squad-subtitle','Player statistics unavailable.');
+   text('squad-status','Club-maintained season data could not be loaded.');
+   return;
+  }
+  text('squad-subtitle',players.length+' players · club-recorded league statistics');
+  const date=new Date(SQUAD.data.sourceUpdatedAt+'T12:00:00Z').toLocaleDateString('en-GB',
+   {day:'numeric',month:'short',year:'numeric',timeZone:'UTC'});
+  text('squad-status','Club records · '+date+' snapshot · includes former squad members');
  }
  async function loadSquad(){
   try{
    const response=await fetch('data/squad.json?ts='+Date.now(),{cache:'no-store'});
-   if(!response.ok)throw new Error('Squad data not found');
+   if(!response.ok)throw new Error('Squad data unavailable');
    const json=await response.json();
-   if(!Array.isArray(json.players)||json.season!==STATE.data.season)throw new Error('Invalid squad data');
+   const metrics=['appearances','goals','assists','preAssists','goalContributions'];
+   if(!Array.isArray(json.players)||json.season!==STATE.data.season||json.schemaVersion!==2)
+    throw new Error('Invalid squad data');
    if(json.players.some(p=>typeof p.name!=='string'||!p.name.trim()||
-      ['appearances','goals','reportedGoals'].some(k=>p[k]!=null&&(!Number.isInteger(p[k])||p[k]<0))))
-      throw new Error('Invalid player statistics');
+       metrics.some(k=>!Number.isInteger(p[k])||p[k]<0)||
+       p.goalContributions!==p.goals+p.assists+p.preAssists||
+       (p.status!=null&&p.status!=='Left')))throw new Error('Invalid player statistics');
+   if(new Set(json.players.map(p=>p.name)).size!==json.players.length)
+    throw new Error('Duplicate squad players');
    SQUAD.data=json;
   }catch(error){
    SQUAD.data=null;
@@ -433,8 +431,10 @@
   $('save-shared').addEventListener('click',saveShared);
   $('actual-mode').addEventListener('click',()=>{STATE.mode='actual';renderTable()});
   $('projected-mode').addEventListener('click',()=>{STATE.mode='projected';renderTable()});
-  $('squad-sort-apps').addEventListener('click',()=>{SQUAD.sort='appearances';renderSquad()});
-  $('squad-sort-goals').addEventListener('click',()=>{SQUAD.sort='goals';renderSquad()});
+  $('squad-sort').addEventListener('change',ev=>{
+   if(!SQUAD_SORTS.includes(ev.target.value))return;
+   SQUAD.sort=ev.target.value;renderSquad();
+  });
   $('form-badges').addEventListener('click',ev=>{
    const button=ev.target.closest('button[data-match-index]');
    if(!button)return;
