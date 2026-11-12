@@ -7,6 +7,7 @@ const root=path.join(__dirname,'..');
 const html=fs.readFileSync(path.join(root,'public/index.html'),'utf8');
 const app=fs.readFileSync(path.join(root,'public/assets/app.js'),'utf8');
 const stylesheet=fs.readFileSync(path.join(root,'public/assets/styles.css'),'utf8');
+const cssMobile=stylesheet.slice(stylesheet.indexOf('/* Mobile-browser typography and layout, including iPhone landscape.'));
 const F=require('../public/assets/forecast.js');
 const data=JSON.parse(fs.readFileSync(path.join(root,'public/data/season.json'),'utf8'));
 const squad=JSON.parse(fs.readFileSync(path.join(root,'public/data/squad.json'),'utf8'));
@@ -122,6 +123,24 @@ assert(stylesheet.lastIndexOf('.squad-table tbody td{font-weight:400;color:#6170
  'Scoped normal-weight rule must follow the global style');
 assert(stylesheet.includes('.squad-table td.squad-active-metric{font-weight:850;color:#0d7850}'),
  'Only the active sorting metric should remain emphasised');
+assert(cssMobile.startsWith('/* Mobile-browser typography and layout, including iPhone landscape.'),
+ 'Dedicated mobile/landscape CSS section is required');
+assert(cssMobile.includes('html{-webkit-text-size-adjust:100%;text-size-adjust:100%}'),
+ 'Disable unintended WebKit text inflation on iPhone landscape');
+assert(cssMobile.includes('.squad-definitions p{'),
+ 'Each definition paragraph should have its own consistent font size');
+assert(cssMobile.includes('font-size:12px'),
+ 'Definitions should use readable fixed typography');
+assert(cssMobile.includes('grid-template-columns:repeat(2,minmax(0,1fr))'),
+ 'Wide views should distribute definitions evenly');
+assert(cssMobile.includes('@media(max-width:700px)'),
+ 'Portrait phone layout should have explicit small-screen rules');
+assert(cssMobile.includes('(orientation:landscape) and (max-height:600px)'),
+ 'Short landscape viewports must receive mobile-specific layout');
+assert(cssMobile.includes('.squad-scroll{width:100%;max-width:100%;touch-action:pan-x pan-y}'),
+ 'Statistics table must remain independently scrollable');
+assert(html.includes('styles.css?v=20261112-mobile-landscape'),
+ 'Updated mobile CSS must bypass browser caches');
 assert(!html.includes('>GI</abbr>'));
 assert(html.includes('Review any league opponent, including teams already played twice.'));
 assert(html.includes('A squad-level average, not individual defensive responsibility.'));

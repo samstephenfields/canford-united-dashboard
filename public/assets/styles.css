@@ -390,3 +390,93 @@
    rule inside the player table so Goals Conceded matches other numeric cells.
    The more-specific .squad-active-metric rule still highlights the selected sort. */
 .squad-table tbody td{font-weight:400;color:#617069}
+
+/* Mobile-browser typography and layout, including iPhone landscape.
+   Keep numerical tables horizontally scrollable rather than shrinking text. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.site-shell,.site-shell main,.section,.squad-card{min-width:0}
+.squad-scroll{width:100%;max-width:100%;touch-action:pan-x pan-y}
+.squad-card-bottom{min-width:0}
+.squad-definitions{
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:8px 20px;
+ align-items:start;
+ font-size:12px;
+ line-height:1.5;
+}
+.squad-definitions p{
+ display:block;
+ min-width:0;
+ margin:0;
+ font-size:12px;
+ line-height:1.5;
+ overflow-wrap:break-word;
+ -webkit-text-size-adjust:100%;
+ text-size-adjust:100%;
+}
+.squad-definitions strong{font-size:inherit;line-height:inherit}
+.squad-snapshot{
+ font-size:11px;
+ line-height:1.5;
+ overflow-wrap:break-word;
+ -webkit-text-size-adjust:100%;
+ text-size-adjust:100%;
+}
+.squad-table{font-size:13px}
+.squad-table tbody td{font-size:13px}
+.squad-table tbody th{font-size:13px}
+@media(max-width:700px){
+ .squad-definitions{grid-template-columns:1fr;gap:6px}
+ .squad-card-bottom{gap:12px;padding:14px}
+ .squad-definitions p{font-size:12px}
+ .squad-snapshot{font-size:11px}
+ .squad-table,.squad-table tbody td,.squad-table tbody th{font-size:12px}
+ .squad-scroll{scrollbar-width:thin}
+ .scout-card,.form-history-card,.squad-card{max-width:100%}
+ .scout-card-head,.form-detail-heading{min-width:0}
+ .form-stat-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .form-detail-club{overflow-wrap:anywhere}
+}
+@media(min-width:701px) and (max-width:1050px) and (orientation:landscape) and (max-height:600px){
+ .wrap{width:calc(100% - 32px)}
+ .header-inner{height:62px;gap:12px}
+ .site-header nav{display:none}
+ .header-link{margin-left:auto;border-left:0;padding-left:8px}
+ .brand-mark{width:44px;height:44px}
+ .brand-mark img{width:43px;height:42px}
+ .brand strong{font-size:12px}
+ .brand small{font-size:8px}
+ .hero-inner{grid-template-columns:minmax(0,1.1fr) minmax(230px,.9fr);gap:24px;padding-top:32px;padding-bottom:34px}
+ .hero h1{font-size:clamp(31px,4.3vw,40px);line-height:1.08}
+ .hero-copy p{font-size:13px;line-height:1.5}
+ .hero-panel{padding:18px}
+ .hero-position>span:first-child{font-size:66px}
+ .hero-actions{gap:8px}
+ .btn{min-height:42px;padding:10px 12px;font-size:12px}
+ .section{padding-top:29px}
+ .section h2{font-size:clamp(24px,3.1vw,29px)}
+ .section-heading-row{gap:15px;margin-bottom:16px}
+ .section-intro{font-size:13px;line-height:1.5}
+ .matchweek-content{gap:20px;margin-top:15px}
+ .scout-card{padding:17px}
+ .scout-card-title{font-size:21px}
+ .form-history-top{padding:16px 18px 9px}
+ .form-timeline{padding:9px 18px 15px}
+ .form-match-detail{padding:15px 18px}
+ .squad-heading{align-items:start}
+ .squad-sort-control{flex-shrink:0}
+ .squad-table{min-width:830px}
+ .squad-table th,.squad-table td{padding:10px 11px}
+ .squad-card-bottom{padding:14px 17px}
+ .squad-definitions{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 18px}
+ .squad-definitions p{font-size:12px}
+ .squad-snapshot{font-size:11px}
+ .footer{margin-top:44px}
+}
+@media(max-width:700px) and (orientation:landscape){
+ .hero-inner{padding-top:28px;padding-bottom:30px;gap:20px}
+ .hero h1{font-size:clamp(31px,7vw,39px)}
+ .section{padding-top:27px}
+ .squad-definitions{grid-template-columns:1fr}
+}
