@@ -314,3 +314,28 @@
   .data-status{font-size:11px}
   .data-fixtures-link{font-size:11px}
 }
+
+/* Canford squad: readable, three-column table with accessible sorting. */
+.squad-heading{align-items:end}
+.squad-heading .mode-toggle{margin-left:auto}
+.squad-card{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:#fff;box-shadow:var(--shadow)}
+.squad-table{width:100%;min-width:0;font-size:14px;text-align:left;font-variant-numeric:tabular-nums}
+.squad-table thead{background:#eff5f0}
+.squad-table th{padding:13px 22px;font-size:10px;letter-spacing:.1em;color:#5b7b66}
+.squad-table td{padding:14px 22px;border-top:1px solid #e9eee8}
+.squad-table th:first-child,.squad-table td:first-child{text-align:left;width:auto}
+.squad-table td:first-child{font-weight:750;color:#204430}
+.squad-table th:nth-child(n+2),.squad-table td:nth-child(n+2){width:115px;text-align:right}
+.squad-table td:last-child strong{color:#0d7850;font-weight:850}
+.squad-card-bottom{display:flex;justify-content:space-between;align-items:center;gap:18px;padding:14px 22px;background:#f8faf7;border-top:1px solid #e4e9e2}
+.squad-card-bottom span{font-size:11px;color:#6b8173;line-height:1.55}
+.squad-card-bottom a{font-weight:750;color:#0b754a;text-decoration:underline;text-underline-offset:3px;white-space:nowrap;font-size:12px}
+@media(max-width:720px){
+ .squad-heading{align-items:start;gap:14px;flex-direction:column}
+ .squad-heading .mode-toggle{align-self:stretch;margin-left:0}
+ .squad-heading .mode-toggle button{flex:1}
+ .squad-table{font-size:13px}
+ .squad-table th,.squad-table td{padding:11px 13px}
+ .squad-table th:nth-child(n+2),.squad-table td:nth-child(n+2){width:77px}
+ .squad-card-bottom{padding:14px;align-items:start;flex-direction:column;gap:8px}
+}

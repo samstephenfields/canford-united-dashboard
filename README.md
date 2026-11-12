@@ -18,6 +18,14 @@ The 1200x630 PNG is generated from the club's existing crest by `scripts/build_s
 
 Link previews are controlled and cached by WhatsApp; a new preview is **not guaranteed** to show immediately in an older conversation. Try pasting the address into a fresh message or using a query string such as `?share=20261109` if an old preview is cached. This does not change the underlying page.
 
+## 2026/27 squad and player statistics
+
+Section **06 / Canford Squad** is a mobile-friendly sortable table. Tap **Appearances** or **Goals scored** to reorder by that column, with player names as a tie-breaker. The data is maintained in `public/data/squad.json`.
+
+**Data verification:** As at 12 November 2026, the public FA Full-Time team statistics page for the current season could not be retrieved reliably. The initial table includes only six players explicitly named as scorers in 2026/27 Dorset Senior League news reports. Their recorded goals appear with a `+` suffix to indicate **confirmed minimum totals**, not full-season goal tallies. Appearance totals remain blank (—), and the page clearly states the squad is incomplete. We have **not** reused an older season's registration list or statistics.
+
+To complete the squad, provide an FA Full-Time 2026/27 player-statistics export or a club-maintained list with `name`, `appearances`, and `goals`. Once verified, update `public/data/squad.json`, set `complete` to true only if all players are present, and remove `reportedGoals` values when exact goal totals have replaced them. This feature is intentionally independent of the results sync because the public FA site has denied automated reads (HTTP 403).
+
 ## Using the dashboard
 
 - **Season objective:** Choose any target position (1st–11th). The tool estimates a whole-number points threshold from other clubs' projected totals and shows an example combination of wins, draws and losses across unpredicted games. This is an indicative target, not a guaranteed finish; rivals' results and goal difference matter.

@@ -7,6 +7,7 @@ const html=fs.readFileSync(path.join(root,'public/index.html'),'utf8');
 const app=fs.readFileSync(path.join(root,'public/assets/app.js'),'utf8');
 const F=require('../public/assets/forecast.js');
 const data=JSON.parse(fs.readFileSync(path.join(root,'public/data/season.json'),'utf8'));
+const squad=JSON.parse(fs.readFileSync(path.join(root,'public/data/squad.json'),'utf8'));
 new vm.Script(app,{filename:'app.js'});
 // WhatsApp/Instagram-style previews must be available to non-JavaScript crawlers.
 const canonical='https://samstephenfields.github.io/canford-united-dashboard/';
@@ -27,7 +28,7 @@ assert.equal(ids.length,new Set(ids).size,'All HTML IDs should be unique');
 for(const id of ['form-badges','form-summary','form-match-detail','stats-ppg','data-status-text',
   'target-rank','target-total','target-needed','target-plan','briefing-match','briefing-scenarios',
   'scout-opponent','scout-card','scout-form-badges','scout-match-detail','scout-form-summary','scout-results-coverage','share-predictions','share-url','share-tools','shared-mode-banner',
-  'copy-share','restore-personal','save-shared']){
+  'copy-share','restore-personal','save-shared','squad-rows','squad-sort-apps','squad-sort-goals','squad-status','squad-subtitle','squad-source']){
   assert(ids.includes(id),'Missing interactive UI element '+id);
 }
 assert(!html.includes('class="scenario-block"'),'Redundant What if panel should be removed');
@@ -60,6 +61,15 @@ if(data.manualVerifiedAt){
   assert(html.includes('Official FA results'),'Scouting section should link to official FA results');
 }
 assert(app.includes('function renderSeasonForm()'));
+assert(app.includes('function renderSquad()'));
+assert(app.includes('function loadSquad()'));
+assert(html.includes('06 / CANFORD SQUAD'));
+assert(html.includes('id="squad-rows"'));
+assert.equal(squad.season,data.season);
+assert(squad.players.length>0,'Publicly verified current-season scorers should be included');
+assert(!squad.complete,'Incomplete roster should never be presented as complete');
+assert(squad.players.every(p=>p.appearances==null||Number.isInteger(p.appearances)));
+
 assert(app.includes('function renderScoutingCard()'));
 assert(!app.includes('Figures come from the latest saved league snapshot'),
   'Redundant scouting disclaimer must not be rendered');
@@ -114,7 +124,7 @@ function dashboard(hash='',stored={}){
     setItem(key,value){storageValue=value;savedWrites.push({key,value})}
   };
   const navigator={clipboard:{async writeText(value){copies.push(value)}}};
-  const fetch=async()=>({ok:true,json:async()=>data});
+  const fetch=async(url)=>({ok:true,json:async()=>url.includes('squad.json')?squad:data});
   vm.runInNewContext(app,{window,document,localStorage,navigator,fetch,URL,Date,Intl,console:{
     log(){},error(error){errors.push(String(error))}
   }},{filename:'app.js'});
@@ -132,6 +142,15 @@ async function run(){
   assert.match(personal.el('target-total').textContent.toString(),/^\d+$/);
   assert.match(personal.el('target-needed').textContent.toString(),/^\d+$/);
   assert(personal.el('scout-card').innerHTML.length>80,'Scouting details should load');
+  const squadMarkup=personal.el('squad-rows').innerHTML;
+  assert.equal((squadMarkup.match(/<tr>/g)||[]).length,squad.players.length);
+  assert.match(squadMarkup,/Cameron Corbin/);
+  assert.match(personal.el('squad-status').textContent,/confirmed minimums/);
+  personal.el('squad-sort-apps').listeners.click();
+  assert.equal(personal.el('squad-sort-apps').attrs['aria-pressed'],'true');
+  personal.el('squad-sort-goals').listeners.click();
+  assert.equal(personal.el('squad-sort-goals').attrs['aria-pressed'],'true');
+
   const westland='Westland Sports Reserves';
   personal.el('scout-opponent').listeners.change({target:{value:westland}});
   const westlandMatches=data.results.filter(r=>r.home===westland||r.away===westland);

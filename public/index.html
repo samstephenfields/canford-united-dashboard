@@ -42,6 +42,7 @@
           <a href="#predictor">Predictions</a>
           <a href="#table">League table</a>
           <a href="#form">Season form</a>
+          <a href="#squad">Squad</a>
         </nav>
         <a class="header-link" href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer">FA Full-Time <span aria-hidden="true">↗</span></a>
       </div>
@@ -203,6 +204,30 @@
             <div class="form-stat"><span>Goals scored / match</span><strong id="stats-gf">2.50</strong></div>
             <div class="form-stat"><span>Goals conceded / match</span><strong id="stats-ga">2.13</strong></div>
             <div class="form-stat"><span>Goal difference</span><strong id="stats-gd">+3</strong></div>
+          </div>
+        </section>
+
+        <section class="section squad-section" id="squad" aria-labelledby="squad-title">
+          <div class="section-topline"><span class="section-label">06 / CANFORD SQUAD</span><span class="tiny-note">2026 / 27 · LEAGUE ONLY</span></div>
+          <div class="section-heading-row squad-heading">
+            <div>
+              <h2 id="squad-title">Players &amp; statistics</h2>
+              <p class="section-intro" id="squad-subtitle">Loading the squad data…</p>
+            </div>
+            <div class="mode-toggle squad-sort" role="group" aria-label="Sort players by">
+              <button type="button" id="squad-sort-apps" aria-pressed="false">Appearances</button>
+              <button type="button" id="squad-sort-goals" class="active" aria-pressed="true">Goals scored</button>
+            </div>
+          </div>
+          <div class="squad-card">
+            <table class="squad-table" aria-describedby="squad-status">
+              <thead><tr><th scope="col">Player</th><th scope="col">Apps</th><th scope="col">Goals</th></tr></thead>
+              <tbody id="squad-rows"><tr><td colspan="3">Loading players…</td></tr></tbody>
+            </table>
+            <div class="squad-card-bottom">
+              <span id="squad-status" role="status">Checking 2026/27 data…</span>
+              <a id="squad-source" href="https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&amp;teamID=208163315" target="_blank" rel="noopener noreferrer">FA player statistics ↗</a>
+            </div>
           </div>
         </section>
       </div>

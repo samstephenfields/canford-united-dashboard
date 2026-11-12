@@ -339,6 +339,60 @@
   // Put the newest result in view on narrow screens; older games remain swipeable.
   const rail=$('form-badges');rail.scrollLeft=rail.scrollWidth;
  }
+
+ const SQUAD={data:null,sort:'goals'};
+ function squadMetric(player,type){
+  const value=player[type];
+  if(Number.isInteger(value)&&value>=0)return value;
+  if(type==='goals'&&Number.isInteger(player.reportedGoals)&&player.reportedGoals>=0)return player.reportedGoals;
+  return null;
+ }
+ function renderSquad(){
+  const players=Array.isArray(SQUAD.data?.players)?SQUAD.data.players:[];
+  $('squad-sort-apps').classList.toggle('active',SQUAD.sort==='appearances');
+  $('squad-sort-goals').classList.toggle('active',SQUAD.sort==='goals');
+  $('squad-sort-apps').setAttribute('aria-pressed',String(SQUAD.sort==='appearances'));
+  $('squad-sort-goals').setAttribute('aria-pressed',String(SQUAD.sort==='goals'));
+  const sorted=players.slice().sort((a,b)=>{
+   const av=squadMetric(a,SQUAD.sort),bv=squadMetric(b,SQUAD.sort);
+   if(av===null&&bv!==null)return 1;
+   if(bv===null&&av!==null)return -1;
+   if(av!==null&&bv!==null&&av!==bv)return bv-av;
+   return a.name.localeCompare(b.name);
+  });
+  $('squad-rows').innerHTML=sorted.length?sorted.map(player=>{
+   const appearances=Number.isInteger(player.appearances)?player.appearances:'—';
+   const verified=Number.isInteger(player.goals);
+   const known=Number.isInteger(player.reportedGoals)?player.reportedGoals:null;
+   const goals=verified?player.goals:known!==null?known+'+':'—';
+   return '<tr><td>'+esc(player.name)+'</td><td>'+appearances+'</td><td>'+
+    (verified||known!==null?'<strong>'+goals+'</strong>':goals)+'</td></tr>';
+  }).join(''):'<tr><td colspan="3">No confirmed 2026/27 player records available.</td></tr>';
+  if(!SQUAD.data){text('squad-subtitle','Player statistics currently unavailable.');text('squad-status','Check the official FA player records.');return;}
+  const complete=SQUAD.data.complete===true;
+  text('squad-subtitle',complete?'Full 2026/27 squad · '+players.length+' players':
+   'Verified 2026/27 scorers · full squad and appearances awaiting confirmation');
+  text('squad-status',complete?'Sorted by '+(SQUAD.sort==='goals'?'goals scored':'appearances'):
+   (SQUAD.sort==='appearances'?'Appearance totals are not yet verified. ':'')+
+   'Goals marked + are confirmed minimums from match reports, not final totals.');
+  if(SQUAD.data.sourceUrl)$('squad-source').href=SQUAD.data.sourceUrl;
+ }
+ async function loadSquad(){
+  try{
+   const response=await fetch('data/squad.json?ts='+Date.now(),{cache:'no-store'});
+   if(!response.ok)throw new Error('Squad data not found');
+   const json=await response.json();
+   if(!Array.isArray(json.players)||json.season!==STATE.data.season)throw new Error('Invalid squad data');
+   if(json.players.some(p=>typeof p.name!=='string'||!p.name.trim()||
+      ['appearances','goals','reportedGoals'].some(k=>p[k]!=null&&(!Number.isInteger(p[k])||p[k]<0))))
+      throw new Error('Invalid player statistics');
+   SQUAD.data=json;
+  }catch(error){
+   SQUAD.data=null;
+   console.error('Squad data unavailable',error);
+  }
+  renderSquad();
+ }
  function rerender(){renderFixtures();renderProjection();renderTable();}
  function handleInputs(){
   const parent=$('fixtures-list');
@@ -379,6 +433,8 @@
   $('save-shared').addEventListener('click',saveShared);
   $('actual-mode').addEventListener('click',()=>{STATE.mode='actual';renderTable()});
   $('projected-mode').addEventListener('click',()=>{STATE.mode='projected';renderTable()});
+  $('squad-sort-apps').addEventListener('click',()=>{SQUAD.sort='appearances';renderSquad()});
+  $('squad-sort-goals').addEventListener('click',()=>{SQUAD.sort='goals';renderSquad()});
   $('form-badges').addEventListener('click',ev=>{
    const button=ev.target.closest('button[data-match-index]');
    if(!button)return;
@@ -459,7 +515,7 @@
    STATE.sharedMode=shared!==null;
    STATE.picks=shared||saved();
    updateSharedMode();
-   renderStats();renderScoutingSelector();rerender();
+   renderStats();renderScoutingSelector();rerender();await loadSquad();
   }catch(err){
    text('data-status-text','Results unavailable');
    $('fixtures-list').innerHTML='<div class="loading-state">Season data is temporarily unavailable. Please try again later.</div>';
