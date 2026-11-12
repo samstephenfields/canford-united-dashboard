@@ -1,19 +1,10 @@
 name: Deploy Canford United dashboard
 
 on:
-  push:
-    branches: [main]
-  # All scheduled checks run in UK local time (GMT/BST).
+  # Publish the complete dashboard once each Sunday, after the 22:00
+  # Europe/London private squad-sheet refresh has had time to finish.
   schedule:
-    - cron: '15 7,19 * * *'
-      timezone: 'Europe/London'
-    # First two checks after Saturday 8pm results publication.
-    - cron: '25 20 * * 6'
-      timezone: 'Europe/London'
-    - cron: '25 21 * * 6'
-      timezone: 'Europe/London'
-    # Sunday fallback for late results.
-    - cron: '25 9 * * 0'
+    - cron: '30 22 * * 0'
       timezone: 'Europe/London'
   workflow_dispatch:
 
