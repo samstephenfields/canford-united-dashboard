@@ -87,10 +87,10 @@ assert.equal(names.length,new Set(names).size);
 for(const p of squad.players){
  assert.equal(typeof p.name,'string');
  assert(p.name.trim());
- for(const metric of ['appearances','goals','assists','preAssists','goalContributions']){
+ for(const metric of ['appearances','goals','assists','preAssists','goalInvolvements']){
   assert(Number.isInteger(p[metric]) && p[metric]>=0,'Invalid '+metric+' for '+p.name);
  }
- assert.equal(p.goalContributions,p.goals+p.assists+p.preAssists);
+ assert.equal(p.goalInvolvements,p.goals+p.assists+p.preAssists);
  assert(Number.isInteger(p.goalsConcededTotal)&&p.goalsConcededTotal>=0);
  if(p.appearances===0){
   assert.equal(p.goalsConceded,null);
@@ -159,7 +159,7 @@ async function run(){
  assert(site.el('briefing-match').innerHTML.length>30);
  assert(site.el('briefing-scenarios').innerHTML.length===0 ||
         (site.el('briefing-scenarios').innerHTML.match(/briefing-case/g)||[]).length===3);
- for(const metric of ['appearances','goals','assists','preAssists','goalContributions','goalsConceded']){
+ for(const metric of ['appearances','goals','assists','preAssists','goalInvolvements','goalsConceded']){
   site.el('squad-sort').listeners.change({target:{value:metric}});
   assert.equal(site.el('squad-sort').value,metric);
  }

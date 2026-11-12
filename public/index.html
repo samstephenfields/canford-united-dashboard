@@ -26,7 +26,7 @@
   <link rel="icon" type="image/png" href="assets/canford-crest.png">
   <link rel="stylesheet" href="assets/styles.css?v=20261112-conceded">
   <script src="assets/forecast.js?v=20261109-2" defer></script>
-  <script src="assets/app.js?v=20261112-conceded" defer></script>
+  <script src="assets/app.js?v=20261112-gi" defer></script>
 </head>
 <body>
   <div class="site-shell">
@@ -163,7 +163,7 @@
             <div class="squad-sort-control">
               <label for="squad-sort">Sort by</label>
               <select id="squad-sort" aria-label="Sort player statistics">
-                <option value="goalContributions" selected>Goal contributions</option>
+                <option value="goalInvolvements" selected>Goal involvements</option>
                 <option value="appearances">Appearances</option>
                 <option value="goals">Goals</option>
                 <option value="assists">Assists</option>
@@ -181,7 +181,7 @@
                   <th scope="col"><abbr title="Goals scored">G</abbr></th>
                   <th scope="col"><abbr title="Assists">A</abbr></th>
                   <th scope="col"><abbr title="Pre-assists">Pre</abbr></th>
-                  <th scope="col"><abbr title="Goal contributions">GC</abbr></th>
+                  <th scope="col"><abbr title="Goal involvements">GI</abbr></th>
                   <th scope="col"><abbr title="Average team goals conceded per squad appearance">Goals Conceded</abbr></th>
                 </tr></thead>
                 <tbody id="squad-rows"><tr><td colspan="7">Loading players…</td></tr></tbody>
@@ -193,7 +193,7 @@
                 <p><strong>G</strong> Player goals, excluding own goals.</p>
                 <p><strong>A</strong> Final pass or touch creating a goal.</p>
                 <p><strong>Pre</strong> Pass creating the assist.</p>
-                <p><strong>GC</strong> Goals + assists + pre-assists.</p>
+                <p><strong>GI</strong> Goals + assists + pre-assists.</p>
                 <p><strong>Goals Conceded</strong> Team goals conceded in matches named in the squad, divided by squad appearances (including unused players). A squad-level average, not individual defensive responsibility.</p>
               </div>
               <p id="squad-status" class="squad-snapshot" role="status">Loading club records…</p>

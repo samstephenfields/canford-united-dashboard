@@ -278,8 +278,8 @@
   const rail=$('form-badges');rail.scrollLeft=rail.scrollWidth;
  }
 
- const SQUAD={data:null,sort:'goalContributions'};
- const SQUAD_SORTS=['goalContributions','appearances','goals','assists','preAssists','goalsConceded'];
+ const SQUAD={data:null,sort:'goalInvolvements'};
+ const SQUAD_SORTS=['goalInvolvements','appearances','goals','assists','preAssists','goalsConceded'];
  function renderSquad(){
   const players=Array.isArray(SQUAD.data?.players)?SQUAD.data.players:[];
   $('squad-sort').value=SQUAD.sort;
@@ -289,7 +289,7 @@
    if(bv===null)return -1;
    const primary=SQUAD.sort==='goalsConceded'?av-bv:bv-av;
    if(primary)return primary;
-   const secondary=b.goalContributions-a.goalContributions;
+   const secondary=b.goalInvolvements-a.goalInvolvements;
    if(secondary)return secondary;
    return a.name.localeCompare(b.name);
   });
@@ -304,7 +304,7 @@
     '" title="'+esc(detail)+'">'+conceded+'</td>';
    return '<tr><th scope="row" class="squad-player-cell">'+label+'</th>'+
     cell('appearances')+cell('goals')+cell('assists')+
-    cell('preAssists')+cell('goalContributions')+concededCell+'</tr>';
+    cell('preAssists')+cell('goalInvolvements')+concededCell+'</tr>';
   }).join(''):'<tr><td colspan="7">Player statistics are currently unavailable.</td></tr>';
   if(!SQUAD.data){
    text('squad-subtitle','Player statistics unavailable.');
@@ -321,7 +321,7 @@
    const response=await fetch('data/squad.json?ts='+Date.now(),{cache:'no-store'});
    if(!response.ok)throw new Error('Squad data unavailable');
    const json=await response.json();
-   const metrics=['appearances','goals','assists','preAssists','goalContributions'];
+   const metrics=['appearances','goals','assists','preAssists','goalInvolvements'];
    if(!Array.isArray(json.players)||json.season!==STATE.data.season||json.schemaVersion!==2)
     throw new Error('Invalid squad data');
    if(json.players.some(p=>typeof p.name!=='string'||!p.name.trim()||
@@ -331,7 +331,7 @@
        (p.appearances===0?(p.goalsConceded!==null||p.goalsConcededTotal!==0):
         (typeof p.goalsConceded!=='number'||!Number.isFinite(p.goalsConceded)||
          p.goalsConceded<0||Math.abs(p.goalsConceded*p.appearances-p.goalsConcededTotal)>1e-6))||
-       p.goalContributions!==p.goals+p.assists+p.preAssists||
+       p.goalInvolvements!==p.goals+p.assists+p.preAssists||
        (p.status!=null&&p.status!=='Left')))throw new Error('Invalid player statistics');
    if(new Set(json.players.map(p=>p.name)).size!==json.players.length)
     throw new Error('Duplicate squad players');
