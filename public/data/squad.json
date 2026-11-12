@@ -4,9 +4,9 @@
   "team": "Canford United First",
   "complete": true,
   "appearanceScope": "Named in a league matchday squad, including unused players; minutes are not tracked.",
-  "sourceNote": "Club-maintained 2026/27 Season Totals. Snapshot copied from the private Google Sheet on 12 November 2026. Not automatically synchronised.",
+  "sourceNote": "Club-maintained 2026/27 season totals. Private Google Sheet checked by a scheduled sync every Sunday at 22:00 GMT (UTC). Public data is a validated snapshot; latest successful source update shown separately.",
   "sourceUpdatedAt": "2026-11-12",
-  "automaticSync": false,
+  "automaticSync": true,
   "players": [
     {
       "name": "Ethan Colebrook",
@@ -226,5 +226,6 @@
       "preAssists": 4,
       "goalContributions": 7
     }
-  ]
+  ],
+  "refreshSchedule": "Sunday 22:00 GMT (UTC)"
 }

@@ -161,7 +161,7 @@
  .form-stat>strong{font-size:24px}
 }
 
-/* Season decisions: briefing, points targets, opposition and sharing. */
+/* Fact-based next-match briefing and opposition scouting. */
 .decision-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:22px}
 .decision-card{border-radius:13px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow);padding:26px;min-width:0;scroll-margin-top:18px}
 .decision-kicker{font-size:10px;font-weight:850;letter-spacing:.13em;color:#168454;margin-bottom:11px}
@@ -352,3 +352,7 @@
  .squad-definitions{column-gap:10px;row-gap:5px}
  .squad-card-bottom{padding:12px 13px}
 }
+
+/* A single, wider matchweek briefing replaces the old target and prediction panels. */
+.planning-section .decision-grid{grid-template-columns:minmax(0,1fr);max-width:840px}
+@media(max-width:720px){.planning-section .decision-grid{grid-template-columns:minmax(0,1fr)}}

@@ -1,8 +1,7 @@
 (function(){
  'use strict';
  const F=window.CanfordForecast;
- const STATE={data:null,picks:{},mode:'actual',formIndex:null,sharedMode:false,scoutOpponent:null,scoutMatchIndex:null};
- const STORAGE='canford-predictions:2026-27:v1';
+ const STATE={data:null,formIndex:null,scoutOpponent:null,scoutMatchIndex:null};
  const $=id=>document.getElementById(id);
  const text=(id,value)=>{const el=$(id);if(el)el.textContent=value};
  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -10,8 +9,6 @@
  const shortDate=date=>date?new Date(date+'T12:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'}):'TBC';
  const nameTeam=s=>s==='Bournemouth Poppies Reserves'?'Bournemouth Poppies Res.':s;
  const selfResult=(r,team)=>{const gf=r.home===team?r.homeScore:r.awayScore,ga=r.home===team?r.awayScore:r.homeScore;return{type:gf>ga?'W':gf===ga?'D':'L',gf,ga,opponent:F.opponent(r,team),date:r.date}};
- const saved=()=>{try{const obj=JSON.parse(localStorage.getItem(STORAGE)||'{}');return obj&&typeof obj==='object'&&!Array.isArray(obj)?obj:{}}catch{return {}}};
- const persist=()=>{if(STATE.sharedMode)return;try{localStorage.setItem(STORAGE,JSON.stringify(STATE.picks))}catch{}};
  function currentPosition(data){const ordered=[...data.standings].sort((a,b)=>b.points-a.points||b.gd-a.gd);return ordered.findIndex(t=>t.name===data.team)+1;}
  function ukDate(){
   const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/London',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
@@ -29,74 +26,18 @@
   const rows=[...STATE.data.standings].sort((a,b)=>b.points-a.points||b.gd-a.gd||a.name.localeCompare(b.name));
   return rows.findIndex(r=>r.name===name)+1;
  }
- function fixtureMarkup(f){
-   const pick=STATE.picks[f.id]||{};
-   const picked=F.validPick(pick);
-   const match=picked?F.outcome(pick,f,STATE.data.team):null;
-   const home=f.home===STATE.data.team;
-   const parts=f.date?new Date(f.date+'T12:00:00Z').toLocaleDateString('en-GB',{day:'2-digit',month:'short',timeZone:'UTC'}).split(' '):['TBC',''];
-   const ourSide=home?'homeScore':'awayScore';
-   const theirSide=home?'awayScore':'homeScore';
-   return `<div class="fixture-row ${picked?'predicted':''}" data-key="${esc(f.id)}">
-      <div class="fixture-date ${f.date?'':'tbc'}"><span class="day">${esc(parts[0])}</span>${f.date?`<span class="month">${esc(parts[1].toUpperCase())}</span>`:''}</div>
-      <div class="fixture-meta"><div class="fixture-opponent">${esc(nameTeam(f.opponent))} ${match?`<span class="fixture-result-pill ${match.result}">${match.result}</span>`:''}</div><div class="fixture-info"><span class="venue-pill ${home?'':'away'}">${home?'HOME':'AWAY'}</span>${f.date?`${esc(f.time||'Time TBC')} · ${esc(f.venue||'Venue TBC')}`:'Fixture date not yet published'}</div><button type="button" class="scout-link" data-scout="${esc(f.opponent)}">Scout opponent →</button></div>
-      <div class="score-wrap">
-        <div class="score-control" role="group" aria-label="Predict Canford versus ${esc(f.opponent)}">
-          <label class="score-side"><span>CANFORD</span><input class="score-field" data-side="${ourSide}" type="number" min="0" max="30" step="1" inputmode="numeric" placeholder="–" aria-label="Canford United goals against ${esc(f.opponent)}" value="${pick[ourSide]??''}"></label>
-          <span class="score-dash" aria-hidden="true">–</span>
-          <label class="score-side"><span>OPPONENT</span><input class="score-field" data-side="${theirSide}" type="number" min="0" max="30" step="1" inputmode="numeric" placeholder="–" aria-label="${esc(f.opponent)} goals against Canford United" value="${pick[theirSide]??''}"></label>
-          <button class="clear-score" type="button" aria-label="Clear prediction against ${esc(f.opponent)}" data-clear="true">Clear</button>
-        </div>
-      </div>
-   </div>`;
- }
- function renderFixtures(){
-  const list=F.remainingFixtures(STATE.data);
-  text('fixture-count',`${list.length} MATCHES REMAINING`);
-  $('fixtures-list').innerHTML=list.length?list.map(fixtureMarkup).join(''):'<div class="loading-state">No remaining league matches.</div>';
- }
- function renderProjection(){
-   const data=STATE.data,result=F.forecast(data,STATE.picks);
-   text('forecast-rank',result.position);text('forecast-suffix',F.ordinal(result.position));
-   text('forecast-desc',result.selected?'Based on your scores + form for unpicked fixtures':'If current form continues');
-   text('forecast-points',fmt(result.points));
-   text('mobile-projection-rank',result.position+F.ordinal(result.position).toLowerCase());
-   text('mobile-projection-points',fmt(result.points)+' pts');
-   text('mobile-projection-count',result.selected+'/'+result.totalFixtures+' picked');
-   text('forecast-selected',`${result.selected} of ${result.totalFixtures} predicted`);
-   text('forecast-wdl',`${result.selectedWins}W · ${result.selectedDraws}D · ${result.selectedLosses}L`);
-   $('forecast-progress').style.width=(result.totalFixtures?100*result.selected/result.totalFixtures:100)+'%';
-   renderPointsTarget();
-   renderBriefing();
-   if(STATE.mode==='projected')renderTable();
- }
-
- function renderPointsTarget(){
-  const desired=Number($('target-rank').value)||6;
-  const t=F.pointsTarget(STATE.data,STATE.picks,desired);
-  text('target-total',t.targetPoints);
-  text('target-needed',t.need);
-  const box=$('target-plan');
-  box.classList.toggle('unreachable',!t.feasible);
-  if(!t.feasible){
-   box.innerHTML='<strong>Not achievable with these predicted scores.</strong> Maximum: '+t.maxPoints+
-    ' points. Adjust your predictions to keep this target in reach.';
-  }else if(t.need===0){
-   box.innerHTML='<strong>Target already reached by recorded and selected results.</strong> '+
-    'The estimate can still change as other clubs play.';
-  }else if(t.plan){
-   box.innerHTML='<strong>One possible route:</strong> '+t.plan.wins+' wins, '+t.plan.draws+
-    ' draws and '+t.plan.losses+' losses from the '+t.open+' fixtures without a predicted score.'+
-    '<div class="target-context">Requires '+t.need+' more points after the results you have selected.</div>';
-  }else{
-   box.textContent='No combination available with the remaining matches.';
-  }
- }
- function scoreScenario(fixture,kind){
-  const home=fixture.home===STATE.data.team;
-  if(kind==='draw')return {homeScore:0,awayScore:0};
-  const canfordWins=kind==='win';
-  return {homeScore:(home===canfordWins)?1:0,awayScore:(home===canfordWins)?0:1};
+ function provisionalNextResult(fixture,code){
+  const team=STATE.data.team,opponent=F.opponent(fixture,team);
+  const rows=STATE.data.standings.map(row=>({...row}));
+  const us=rows.find(row=>row.name===team),them=rows.find(row=>row.name===opponent);
+  if(!us||!them)return null;
+  const difference=code==='win'?1:code==='loss'?-1:0;
+  us.points+=code==='win'?3:code==='draw'?1:0;
+  them.points+=code==='loss'?3:code==='draw'?1:0;
+  us.gd+=difference;
+  them.gd-=difference;
+  rows.sort((a,b)=>b.points-a.points||b.gd-a.gd||a.name.localeCompare(b.name));
+  return {position:rows.findIndex(r=>r.name===team)+1,points:us.points};
  }
  function renderBriefing(){
   const next=nextScheduledFixture();
@@ -116,12 +57,12 @@
    '<div class="briefing-info">'+esc(when)+' · '+esc(next.time||'Kick-off TBC')+' · '+esc(venue)+'</div>'+
    '<div class="briefing-info">Opposition currently '+rankText(teamRank(opponent))+' in the league · '+
    '<a href="#scouting" id="briefing-scout-link">View scouting details ↗</a></div>';
-  const id=F.key(next.home,next.away);
-  $('briefing-scenarios').innerHTML=[['win','Win'],['draw','Draw'],['loss','Lose']].map(([code,label])=>{
-   const projected=F.forecast(STATE.data,{...STATE.picks,[id]:scoreScenario(next,code)});
-   return '<div class="briefing-case case-'+code+'"><span class="case-label">IF WE '+label.toUpperCase()+
-     '</span><strong class="case-rank">'+rankText(projected.position)+'</strong><span class="case-points">'+
-     fmt(projected.points)+' est. pts</span></div>';
+  $('briefing-scenarios').innerHTML=[['win','Win'],['draw','Draw'],['loss','Loss']].map(([code,label])=>{
+   const r=provisionalNextResult(next,code);
+   if(!r)return '';
+   return '<div class="briefing-case case-'+code+'"><span class="case-label">'+label.toUpperCase()+
+    '</span><strong class="case-rank">'+r.points+' pts</strong>'+
+    '<span class="case-points">Provisional '+rankText(r.position)+'</span></div>';
   }).join('');
  }
  function renderScoutingSelector(){
@@ -253,19 +194,16 @@
   $('scouting').scrollIntoView({behavior:'smooth',block:'start'});
  }
  function renderTable(){
-  const data=STATE.data,proj=F.forecast(data,STATE.picks);const isProjected=STATE.mode==='projected';
-  const rows=isProjected?proj.table:[...data.standings].sort((a,b)=>b.points-a.points||b.gd-a.gd||a.name.localeCompare(b.name));
-  $('league-head').closest('table').classList.toggle('projected-table',isProjected);
-  $('actual-mode').classList.toggle('active',!isProjected);$('projected-mode').classList.toggle('active',isProjected);
-  $('actual-mode').setAttribute('aria-pressed',String(!isProjected));$('projected-mode').setAttribute('aria-pressed',String(isProjected));
-  $('league-head').innerHTML=isProjected?'<tr><th class="pos-col">#</th><th class="club-col">CLUB</th><th>PL</th><th>PROJECTED GD</th><th>EST. PTS</th></tr>':'<tr><th class="pos-col">#</th><th class="club-col">CLUB</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr>';
+  const data=STATE.data;
+  const rows=[...data.standings].sort((a,b)=>b.points-a.points||b.gd-a.gd||a.name.localeCompare(b.name));
   $('league-body').innerHTML=rows.map((r,i)=>{
-    const isUs=r.name===data.team;
-    const club=`${isUs?'<span class="team-indicator"></span>':''}${esc(r.name)}`;
-    const cols=isProjected?`<td>${r.played}</td><td>${r.projGD>=0?'+':''}${Math.round(r.projGD)}</td><td class="projected-points">${fmt(r.projPoints)}</td>`:`<td>${r.played}</td><td>${r.won}</td><td>${r.drawn}</td><td>${r.lost}</td><td>${r.gd>0?'+':''}${r.gd}</td><td>${r.points}</td>`;
-    return `<tr class="${isUs?'our-team':''}"><td>${i+1}</td><td>${club}</td>${cols}</tr>`;
+   const isUs=r.name===data.team;
+   const club=(isUs?'<span class="team-indicator"></span>':'')+esc(r.name);
+   return '<tr class="'+(isUs?'our-team':'')+'"><td>'+(i+1)+'</td><td>'+club+'</td>'+
+    '<td>'+r.played+'</td><td>'+r.won+'</td><td>'+r.drawn+'</td><td>'+r.lost+'</td>'+
+    '<td>'+(r.gd>0?'+':'')+r.gd+'</td><td>'+r.points+'</td></tr>';
   }).join('');
-  text('table-note',isProjected?'Model only: estimates each club’s remaining matches at current form; chosen scores replace rivals’ expected points for those games. Goal differences are estimated.':'Official league standings as at '+data.dataAsOf+' · Current league table link above.');
+  text('table-note','Recorded league standings as at '+shortDate(data.dataAsOf)+' · Official table linked above.');
  }
  function renderStats(){
   const data=STATE.data,cur=data.standings.find(t=>t.name===data.team),pos=currentPosition(data);
@@ -391,46 +329,21 @@
   }
   renderSquad();
  }
- function rerender(){renderFixtures();renderProjection();renderTable();}
  function handleInputs(){
-  const parent=$('fixtures-list');
-  parent.addEventListener('input',ev=>{
-   if(!ev.target.matches('input.score-field'))return;
-   const row=ev.target.closest('.fixture-row'),k=row.dataset.key,side=ev.target.dataset.side;
-   const value=ev.target.value.trim();
-   const pick=STATE.picks[k]||{};
-   if(value==='')delete pick[side];
-   else if(/^\d+$/.test(value)&&Number(value)<=30)pick[side]=Number(value);
-   else {ev.target.value=pick[side]??'';return;}
-   if(pick.homeScore==null&&pick.awayScore==null)delete STATE.picks[k];else STATE.picks[k]=pick;
-   persist();renderProjection();
-   const result=F.validPick(pick)?F.outcome(pick,F.remainingFixtures(STATE.data).find(f=>f.id===k),STATE.data.team):null;
-   row.classList.toggle('predicted',!!result);
-   const existing=row.querySelector('.fixture-result-pill');
-   if(existing)existing.remove();
-   if(result)row.querySelector('.fixture-opponent').insertAdjacentHTML('beforeend',` <span class="fixture-result-pill ${result.result}">${result.result}</span>`);
+  $('scout-opponent').addEventListener('change',ev=>{
+   STATE.scoutOpponent=ev.target.value;STATE.scoutMatchIndex=null;renderScoutingCard();
   });
-  parent.addEventListener('click',ev=>{
-   if(!ev.target.matches('button[data-clear]'))return;
-   delete STATE.picks[ev.target.closest('.fixture-row').dataset.key];persist();rerender();
-  });
-  $('reset-predictions').addEventListener('click',()=>{STATE.picks={};persist();rerender()});
-  $('target-rank').addEventListener('change',renderPointsTarget);
-  $('scout-opponent').addEventListener('change',ev=>{STATE.scoutOpponent=ev.target.value;STATE.scoutMatchIndex=null;renderScoutingCard()});
   $('scout-form-badges').addEventListener('click',ev=>{
    const chip=ev.target.closest('button[data-scout-match-index]');
    if(!chip)return;
    STATE.scoutMatchIndex=Number(chip.dataset.scoutMatchIndex);
    renderScoutingMatchDetail();
   });
-  $('fixtures-list').addEventListener('click',ev=>{const b=ev.target.closest('button[data-scout]');if(b)openScout(b.dataset.scout)});
-  $('briefing-match').addEventListener('click',ev=>{if(ev.target.closest('#briefing-scout-link')){const next=nextScheduledFixture();if(next)openScout(F.opponent(next,STATE.data.team));}});
-  $('share-predictions').addEventListener('click',sharePredictions);
-  $('copy-share').addEventListener('click',copyShareUrl);
-  $('restore-personal').addEventListener('click',restorePersonal);
-  $('save-shared').addEventListener('click',saveShared);
-  $('actual-mode').addEventListener('click',()=>{STATE.mode='actual';renderTable()});
-  $('projected-mode').addEventListener('click',()=>{STATE.mode='projected';renderTable()});
+  $('briefing-match').addEventListener('click',ev=>{
+   if(ev.target.closest('#briefing-scout-link')){
+    const next=nextScheduledFixture();if(next)openScout(F.opponent(next,STATE.data.team));
+   }
+  });
   $('squad-sort').addEventListener('change',ev=>{
    if(!SQUAD_SORTS.includes(ev.target.value))return;
    SQUAD.sort=ev.target.value;renderSquad();
@@ -442,67 +355,6 @@
    renderSelectedResult();
   });
  }
-
- function shareAddress(){
-  const url=new URL(window.location.href);
-  url.hash='p='+encodeURIComponent(F.serializePredictions(STATE.data,STATE.picks));
-  return url.href;
- }
- async function copyTextToClipboard(value){
-  if(navigator.clipboard?.writeText){
-    try{await navigator.clipboard.writeText(value);return true}catch{}
-  }
-  try{
-    const field=$('share-url');field.focus();field.select();
-    return Boolean(document.execCommand&&document.execCommand('copy'));
-  }catch{return false;}
- }
- async function sharePredictions(){
-  const share=shareAddress();
-  $('share-tools').hidden=false;
-  $('share-url').value=share;
-  const ok=await copyTextToClipboard(share);
-  text('share-status',ok?'Link copied. Send it to the captain, assistant manager or anyone you want to compare predictions with.':'Copy the link above to share these predictions. No login is required.');
- }
- async function copyShareUrl(){
-  const url=$('share-url').value||shareAddress();
-  $('share-tools').hidden=false;
-  $('share-url').value=url;
-  const ok=await copyTextToClipboard(url);
-  text('share-status',ok?'Link copied to clipboard.':'Select and copy the link shown above.');
- }
- function clearSharedFragment(){
-  const url=new URL(window.location.href);
-  if(url.hash.startsWith('#p=')){
-   url.hash='';
-   if(window.history?.replaceState)window.history.replaceState(null,'',url.href);
-  }
- }
- function updateSharedMode(){
-  $('shared-mode-banner').hidden=!STATE.sharedMode;
- }
- function restorePersonal(){
-  STATE.sharedMode=false;
-  STATE.picks=saved();
-  clearSharedFragment();
-  updateSharedMode();
-  $('share-tools').hidden=true;
-  rerender();
- }
- function saveShared(){
-  STATE.sharedMode=false;
-  try{localStorage.setItem(STORAGE,JSON.stringify(STATE.picks))}catch{}
-  clearSharedFragment();
-  updateSharedMode();
-  $('share-tools').hidden=true;
-  rerender();
- }
- function loadSharedPredictions(data){
-  const hash=window.location?.hash||'';
-  if(!hash.startsWith('#p='))return null;
-  try{return F.parseSharedPredictions(data,decodeURIComponent(hash.slice(3)))}
-  catch{return null}
- }
  async function init(){
   handleInputs();
   try{
@@ -511,14 +363,10 @@
    const data=await response.json();
    if(!data.standings||!data.standings.length||!data.results||!data.team)throw new Error('Incomplete data');
    STATE.data=data;
-   const shared=loadSharedPredictions(data);
-   STATE.sharedMode=shared!==null;
-   STATE.picks=shared||saved();
-   updateSharedMode();
-   renderStats();renderScoutingSelector();rerender();await loadSquad();
+   renderStats();renderScoutingSelector();renderBriefing();renderTable();await loadSquad();
   }catch(err){
    text('data-status-text','Results unavailable');
-   $('fixtures-list').innerHTML='<div class="loading-state">Season data is temporarily unavailable. Please try again later.</div>';
+   $('briefing-match').innerHTML='<div class="loading-state">Season data is temporarily unavailable. Please try again later.</div>';
    console.error('Dashboard data error',err);
   }
  }
