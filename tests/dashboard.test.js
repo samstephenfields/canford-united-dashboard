@@ -91,11 +91,24 @@ for(const p of squad.players){
   assert(Number.isInteger(p[metric]) && p[metric]>=0,'Invalid '+metric+' for '+p.name);
  }
  assert.equal(p.goalContributions,p.goals+p.assists+p.preAssists);
+ assert(Number.isInteger(p.goalsConcededTotal)&&p.goalsConcededTotal>=0);
+ if(p.appearances===0){
+  assert.equal(p.goalsConceded,null);
+  assert.equal(p.goalsConcededTotal,0);
+ }else{
+  assert.equal(typeof p.goalsConceded,'number');
+  assert(Math.abs(p.goalsConceded*p.appearances-p.goalsConcededTotal)<1e-6);
+ }
  assert(p.status==null||p.status==='Left');
  assert(['GK','DEF','MID','ATT'].includes(p.position),'Missing squad position for '+p.name);
 }
 assert(html.includes('Apps</abbr>'));
 assert(html.includes('Goals + assists + pre-assists.'));
+assert(html.includes('Goals Conceded'));
+assert(html.includes('A squad-level average, not individual defensive responsibility.'));
+assert.equal(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConcededTotal,17);
+assert(Math.abs(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConceded-2.125)<1e-9);
+assert.equal(squad.players.find(p=>p.name==='Rob Coley').goalsConceded,null);
 assert(!html.includes('id="squad-source"'),'Private workbook link must not be published');
 
 function dashboard(){
@@ -136,6 +149,9 @@ async function run(){
  assert(site.el('squad-rows').innerHTML.includes('Dean Fields'));
  assert(site.el('squad-rows').innerHTML.includes(' (ATT)'));
  assert(site.el('squad-rows').innerHTML.includes('squad-player-position'));
+ assert(site.el('squad-rows').innerHTML.includes('17 conceded / 8 squad appearances'));
+ assert(site.el('squad-rows').innerHTML.includes('2.1'));
+ assert(site.el('squad-rows').innerHTML.includes('squad-conceded'));
  assert.equal((site.el('squad-rows').innerHTML.match(/<tr>/g)||[]).length,squad.players.length);
  assert.match(site.el('squad-subtitle').textContent,/club-recorded league statistics/);
  assert(site.el('form-badges').innerHTML.length>30);
@@ -143,7 +159,7 @@ async function run(){
  assert(site.el('briefing-match').innerHTML.length>30);
  assert(site.el('briefing-scenarios').innerHTML.length===0 ||
         (site.el('briefing-scenarios').innerHTML.match(/briefing-case/g)||[]).length===3);
- for(const metric of ['appearances','goals','assists','preAssists','goalContributions']){
+ for(const metric of ['appearances','goals','assists','preAssists','goalContributions','goalsConceded']){
   site.el('squad-sort').listeners.change({target:{value:metric}});
   assert.equal(site.el('squad-sort').value,metric);
  }

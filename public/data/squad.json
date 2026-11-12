@@ -15,7 +15,9 @@
       "assists": 0,
       "preAssists": 1,
       "goalContributions": 1,
-      "position": "GK"
+      "position": "GK",
+      "goalsConceded": 2.125,
+      "goalsConcededTotal": 17
     },
     {
       "name": "Adam Wright",
@@ -24,7 +26,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 3,
+      "goalsConcededTotal": 6
     },
     {
       "name": "Dom Leaver-Smith",
@@ -33,7 +37,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 1.5,
+      "goalsConcededTotal": 9
     },
     {
       "name": "Jack Dunsmore",
@@ -42,7 +48,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 1,
+      "goalsConcededTotal": 3
     },
     {
       "name": "Jordan Payne",
@@ -51,7 +59,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 1.3333333333333333,
+      "goalsConcededTotal": 4
     },
     {
       "name": "Luke Baylis",
@@ -60,7 +70,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 4,
+      "goalsConcededTotal": 4
     },
     {
       "name": "Mike Davidson",
@@ -69,7 +81,9 @@
       "assists": 1,
       "preAssists": 0,
       "goalContributions": 1,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 2.125,
+      "goalsConcededTotal": 17
     },
     {
       "name": "Rob Coley",
@@ -78,7 +92,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": null,
+      "goalsConcededTotal": 0
     },
     {
       "name": "Ryan Andrew",
@@ -87,7 +103,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 2.4285714285714284,
+      "goalsConcededTotal": 17
     },
     {
       "name": "Tom Alner",
@@ -96,7 +114,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 1.2,
+      "goalsConcededTotal": 6
     },
     {
       "name": "Tom Rosser",
@@ -105,7 +125,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "DEF"
+      "position": "DEF",
+      "goalsConceded": 2.8,
+      "goalsConcededTotal": 14
     },
     {
       "name": "Ben Butterworth",
@@ -114,7 +136,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "MID"
+      "position": "MID",
+      "goalsConceded": 1.75,
+      "goalsConcededTotal": 7
     },
     {
       "name": "Ben Lees",
@@ -123,7 +147,9 @@
       "assists": 0,
       "preAssists": 1,
       "goalContributions": 1,
-      "position": "MID"
+      "position": "MID",
+      "goalsConceded": 1.5,
+      "goalsConcededTotal": 6
     },
     {
       "name": "Ben Wright",
@@ -132,7 +158,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "MID"
+      "position": "MID",
+      "goalsConceded": 3.25,
+      "goalsConcededTotal": 13
     },
     {
       "name": "Jamie Winwood",
@@ -141,7 +169,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "MID"
+      "position": "MID",
+      "goalsConceded": 2,
+      "goalsConcededTotal": 10
     },
     {
       "name": "Shane Ngwenya",
@@ -151,7 +181,9 @@
       "preAssists": 0,
       "goalContributions": 1,
       "status": "Left",
-      "position": "MID"
+      "position": "MID",
+      "goalsConceded": 3.25,
+      "goalsConcededTotal": 13
     },
     {
       "name": "Tom Marsh",
@@ -160,7 +192,9 @@
       "assists": 1,
       "preAssists": 3,
       "goalContributions": 6,
-      "position": "MID"
+      "position": "MID",
+      "goalsConceded": 2.2857142857142856,
+      "goalsConcededTotal": 16
     },
     {
       "name": "Cam Corbin",
@@ -169,7 +203,9 @@
       "assists": 2,
       "preAssists": 1,
       "goalContributions": 8,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 1.8571428571428572,
+      "goalsConcededTotal": 13
     },
     {
       "name": "Charlie Dibben",
@@ -179,7 +215,9 @@
       "preAssists": 0,
       "goalContributions": 0,
       "status": "Left",
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 2.5,
+      "goalsConcededTotal": 5
     },
     {
       "name": "Connor Wright",
@@ -188,7 +226,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 1.5,
+      "goalsConcededTotal": 6
     },
     {
       "name": "Dean Fields",
@@ -197,7 +237,9 @@
       "assists": 3,
       "preAssists": 0,
       "goalContributions": 10,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 2.4285714285714284,
+      "goalsConcededTotal": 17
     },
     {
       "name": "Dom Woodward",
@@ -206,7 +248,9 @@
       "assists": 2,
       "preAssists": 2,
       "goalContributions": 7,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 1.8571428571428572,
+      "goalsConcededTotal": 13
     },
     {
       "name": "George Heap",
@@ -215,7 +259,9 @@
       "assists": 0,
       "preAssists": 1,
       "goalContributions": 1,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 3,
+      "goalsConcededTotal": 9
     },
     {
       "name": "Jayden Foote",
@@ -224,7 +270,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 2.2857142857142856,
+      "goalsConcededTotal": 16
     },
     {
       "name": "Joff",
@@ -233,7 +281,9 @@
       "assists": 0,
       "preAssists": 0,
       "goalContributions": 0,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 4,
+      "goalsConcededTotal": 4
     },
     {
       "name": "Riccardo Bruno",
@@ -242,7 +292,9 @@
       "assists": 1,
       "preAssists": 1,
       "goalContributions": 4,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 2.3333333333333335,
+      "goalsConcededTotal": 14
     },
     {
       "name": "Sam Fields",
@@ -251,7 +303,9 @@
       "assists": 2,
       "preAssists": 4,
       "goalContributions": 7,
-      "position": "ATT"
+      "position": "ATT",
+      "goalsConceded": 1.8571428571428572,
+      "goalsConcededTotal": 13
     }
   ],
   "refreshSchedule": "Sunday 22:00 GMT (UTC)"

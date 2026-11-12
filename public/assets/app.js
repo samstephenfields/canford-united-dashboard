@@ -279,12 +279,15 @@
  }
 
  const SQUAD={data:null,sort:'goalContributions'};
- const SQUAD_SORTS=['goalContributions','appearances','goals','assists','preAssists'];
+ const SQUAD_SORTS=['goalContributions','appearances','goals','assists','preAssists','goalsConceded'];
  function renderSquad(){
   const players=Array.isArray(SQUAD.data?.players)?SQUAD.data.players:[];
   $('squad-sort').value=SQUAD.sort;
   const sorted=players.slice().sort((a,b)=>{
-   const primary=b[SQUAD.sort]-a[SQUAD.sort];
+   const av=a[SQUAD.sort],bv=b[SQUAD.sort];
+   if(av===null)return bv===null?a.name.localeCompare(b.name):1;
+   if(bv===null)return -1;
+   const primary=SQUAD.sort==='goalsConceded'?av-bv:bv-av;
    if(primary)return primary;
    const secondary=b.goalContributions-a.goalContributions;
    if(secondary)return secondary;
@@ -295,10 +298,14 @@
     '<span class="squad-player-position"> ('+esc(p.position)+')</span>'+
     (p.status==='Left'?'<span class="squad-left">Left</span>':'');
    const cell=key=>'<td class="'+(SQUAD.sort===key?'squad-active-metric':'')+'">'+p[key]+'</td>';
+   const conceded=p.appearances>0?p.goalsConceded.toFixed(1):'—';
+   const detail=p.appearances>0?p.goalsConcededTotal+' conceded / '+p.appearances+' squad appearances':'No squad appearances';
+   const concededCell='<td class="squad-conceded '+(SQUAD.sort==='goalsConceded'?'squad-active-metric':'')+
+    '" title="'+esc(detail)+'">'+conceded+'</td>';
    return '<tr><th scope="row" class="squad-player-cell">'+label+'</th>'+
     cell('appearances')+cell('goals')+cell('assists')+
-    cell('preAssists')+cell('goalContributions')+'</tr>';
-  }).join(''):'<tr><td colspan="6">Player statistics are currently unavailable.</td></tr>';
+    cell('preAssists')+cell('goalContributions')+concededCell+'</tr>';
+  }).join(''):'<tr><td colspan="7">Player statistics are currently unavailable.</td></tr>';
   if(!SQUAD.data){
    text('squad-subtitle','Player statistics unavailable.');
    text('squad-status','Club-maintained season data could not be loaded.');
@@ -320,6 +327,10 @@
    if(json.players.some(p=>typeof p.name!=='string'||!p.name.trim()||
        metrics.some(k=>!Number.isInteger(p[k])||p[k]<0)||
        !['GK','DEF','MID','ATT'].includes(p.position)||
+       !Number.isInteger(p.goalsConcededTotal)||p.goalsConcededTotal<0||
+       (p.appearances===0?(p.goalsConceded!==null||p.goalsConcededTotal!==0):
+        (typeof p.goalsConceded!=='number'||!Number.isFinite(p.goalsConceded)||
+         p.goalsConceded<0||Math.abs(p.goalsConceded*p.appearances-p.goalsConcededTotal)>1e-6))||
        p.goalContributions!==p.goals+p.assists+p.preAssists||
        (p.status!=null&&p.status!=='Left')))throw new Error('Invalid player statistics');
    if(new Set(json.players.map(p=>p.name)).size!==json.players.length)

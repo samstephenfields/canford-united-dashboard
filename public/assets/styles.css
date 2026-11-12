@@ -374,3 +374,10 @@
  .matchweek-opposition-heading .scout-select-wrap{max-width:none;min-width:0}
  .squad-player-position{font-size:10px}
 }
+
+/* Average team goals conceded per squad appearance, rounded to one decimal. */
+.squad-table{min-width:730px}
+.squad-table th:last-child,.squad-table td:last-child{min-width:126px}
+.squad-table td.squad-conceded{font-weight:700;color:#2b4c3b}
+.squad-table td.squad-conceded.squad-active-metric{color:#0d7850;font-weight:850}
+@media(max-width:720px){.squad-table{min-width:670px}.squad-table th:last-child,.squad-table td:last-child{min-width:115px}}
