@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "season": "2026/27",
+  "team": "Canford United First",
+  "complete": false,
+  "appearanceScope": "league",
+  "sourceNote": "Partial list of players named as scorers in 2026/27 FA Dorset Senior League match reports. This is not the full 2026/27 squad. Appearance totals and overall goals are not verified; reportedGoals is a documented minimum only.",
+  "sourceUrl": "https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&teamID=208163315",
+  "sources": [
+    "https://fulltime.thefa.com/newsArticle.html?id=932342061&league=3520598",
+    "https://fulltime.thefa.com/newsArticle.html?id=340828058&league=3520598",
+    "https://fulltime.thefa.com/newsArticle.html?league=3520598&noticeID=765534085&noticePlacementID=796686832",
+    "https://fulltime.thefa.com/newsArticle.html?league=3520598&noticeID=396050232&noticePlacementID=938624598"
+  ],
+  "players": [
+    {
+      "name": "Cameron Corbin",
+      "appearances": null,
+      "goals": null,
+      "reportedGoals": 4
+    },
+    {
+      "name": "Dean Fields",
+      "appearances": null,
+      "goals": null,
+      "reportedGoals": 4
+    },
+    {
+      "name": "Riccardo Bruno",
+      "appearances": null,
+      "goals": null,
+      "reportedGoals": 2
+    },
+    {
+      "name": "Dominic Woodward",
+      "appearances": null,
+      "goals": null,
+      "reportedGoals": 2
+    },
+    {
+      "name": "Thomas Marsh",
+      "appearances": null,
+      "goals": null,
+      "reportedGoals": 2
+    },
+    {
+      "name": "Sam Fields",
+      "appearances": null,
+      "goals": null,
+      "reportedGoals": 1
+    }
+  ]
+}
