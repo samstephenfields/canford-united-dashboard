@@ -59,11 +59,11 @@
  th{font-size:9px;letter-spacing:.035em}
  th.pos-col,td:first-child{width:29px;padding-left:7px;padding-right:3px}
  th.club-col,td:nth-child(2){width:auto;overflow-wrap:anywhere;line-height:1.35}
- table:not(.projected-table) th:nth-child(4),table:not(.projected-table) th:nth-child(5),table:not(.projected-table) th:nth-child(6),
- table:not(.projected-table) td:nth-child(4),table:not(.projected-table) td:nth-child(5),table:not(.projected-table) td:nth-child(6){display:none}
- table:not(.projected-table) th:nth-child(3),table:not(.projected-table) td:nth-child(3){width:30px}
- table:not(.projected-table) th:nth-child(7),table:not(.projected-table) td:nth-child(7){width:42px}
- table:not(.projected-table) th:nth-child(8),table:not(.projected-table) td:nth-child(8){width:45px;padding-right:10px}
+ .table-card table th:nth-child(4),.table-card table th:nth-child(5),.table-card table th:nth-child(6),
+ .table-card table td:nth-child(4),.table-card table td:nth-child(5),.table-card table td:nth-child(6){display:none}
+ .table-card table th:nth-child(3),.table-card table td:nth-child(3){width:30px}
+ .table-card table th:nth-child(7),.table-card table td:nth-child(7){width:42px}
+ .table-card table th:nth-child(8),.table-card table td:nth-child(8){width:45px;padding-right:10px}
  .projected-table th:nth-child(3),.projected-table td:nth-child(3){width:31px}
  .projected-table th:nth-child(4),.projected-table td:nth-child(4){width:62px}
  .projected-table th:nth-child(5),.projected-table td:nth-child(5){width:60px;padding-right:9px}
@@ -356,3 +356,6 @@
 /* A single, wider matchweek briefing replaces the old target and prediction panels. */
 .planning-section .decision-grid{grid-template-columns:minmax(0,1fr);max-width:840px}
 @media(max-width:720px){.planning-section .decision-grid{grid-template-columns:minmax(0,1fr)}}
+
+/* No bottom forecast dock. Keep footer visible and restrict league-only mobile column hiding. */
+@media(max-width:720px){body{padding-bottom:0}}

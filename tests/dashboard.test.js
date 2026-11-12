@@ -17,6 +17,11 @@ assert(html.includes('<meta property="og:description"'));
 assert(html.includes('<meta property="og:url" content="'+canonical+'"'));
 assert(html.includes('property="og:image" content="'+canonical+'assets/whatsapp-preview.png'));
 assert(html.includes('name="twitter:card" content="summary_large_image"'));
+const previewBuilder=fs.readFileSync(path.join(root,'scripts/build_social_preview.py'),'utf8');
+assert(previewBuilder.includes('Results. Form. The next match.'),
+ 'Share preview must describe the fact-led site');
+assert(!previewBuilder.includes('Predict the run-in.'),
+ 'Share preview must not promote the removed predictor');
 const social=fs.readFileSync(path.join(root,'public/assets/whatsapp-preview.png'));
 assert(social.length>10000 && social.length<600000);
 assert.equal(social.subarray(0,8).toString('hex'),'89504e470d0a1a0a');
