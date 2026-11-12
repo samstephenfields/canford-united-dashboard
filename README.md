@@ -6,11 +6,10 @@ A mobile-first, fact-led 2026/27 Dorset Senior League dashboard for the club man
 
 ## What the dashboard shows
 
-1. **Opposition scouting:** The next opponent, current league position, goals and the chronological results available in the verified league snapshot. Select a W/D/L result to view match details.
-2. **Next match:** The next dated fixture and *What does the next result change?* Winning, drawing or losing shows Canford's immediate points and provisional league-table place. These examples assume a 1-0 win, 0-0 draw or 0-1 defeat, **with no other clubs playing**. They are not predictions for the season-end position.
-3. **League table:** Only recorded points, games played, wins, draws, losses and goal difference. There is no projected league table.
-4. **Season form:** Canford's completed league matches in chronological order. Select a result to see the date, opposition, score and venue, plus observed season averages.
-5. **Players & statistics:** Club-recorded squad appearances, goals, assists, pre-assists and total goal contributions with mobile-friendly sorting. Historical statistics remain for departed players, who are marked **Left**.
+1. **Matchweek briefing:** One combined section containing the next dated fixture, the immediate league-table implications of a win/draw/loss, the next opponent's current position, and chronological opponent form. Select a W/D/L result to view match details, or choose another remaining opponent. The comparison assumes a 1-0 win, 0-0 draw or 0-1 loss, with no other clubs playing. It is not a season-end prediction.
+2. **League table:** Recorded points, matches, wins, draws, losses and goal difference only.
+3. **Season form:** Canford's completed league matches in chronological order, with selected result detail and observed season averages.
+4. **Players & statistics:** Squad appearances, goals, assists, pre-assists and goal contributions, with positions in brackets beside names (e.g. Dean Fields (ATT)). Historical statistics remain for players marked Left.
 
 There is **no target-finish calculator**, season-long score predictor or shareable forecast. The page focuses on what has happened and what the next fixture could change immediately.
 

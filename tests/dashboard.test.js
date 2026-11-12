@@ -33,7 +33,7 @@ assert.equal(ids.length,new Set(ids).size,'HTML element IDs must be unique');
 for(const id of [
  'current-position','hero-points','hero-played','hero-left','hero-next-fixture',
  'data-status-text','official-fixtures','official-table',
- 'scouting','scout-opponent','scout-card','scout-form-badges','scout-form-summary',
+ 'scouting','scouting-details','scout-opponent','scout-card','scout-form-badges','scout-form-summary',
  'scout-match-detail','scout-results-coverage','briefing','briefing-match',
  'briefing-scenarios','league-body','table-note','form','form-badges',
  'form-summary','form-match-detail','stats-ppg','stats-gf','stats-ga','stats-gd',
@@ -48,10 +48,14 @@ assert(!html.includes('Predict the remaining fixtures'));
 assert(!html.includes('What would a target finish require?'));
 assert(!html.includes('Projected finish'));
 assert(html.includes('What does the next result change?'));
+assert(html.includes('Next match &amp; opposition'));
+assert.equal((html.match(/<section\\b/g)||[]).length,5,'There should be one matchweek section, plus other sections');
+assert(html.indexOf('id="briefing"')>html.indexOf('id="scouting"'));
+assert(html.indexOf('id="scouting-details"')>html.indexOf('id="briefing"'));
 assert(html.includes('This is not a season-end prediction.'));
 assert(html.includes('Recorded league standings'));
-const order=['01 / OPPOSITION SCOUTING','02 / NEXT MATCH','03 / LEAGUE TABLE',
- '04 / SEASON FORM','05 / CANFORD SQUAD'];
+const order=['01 / MATCHWEEK BRIEFING','02 / LEAGUE TABLE',
+ '03 / SEASON FORM','04 / CANFORD SQUAD'];
 let at=-1;
 for(const section of order){
  const next=html.indexOf(section);
@@ -88,6 +92,7 @@ for(const p of squad.players){
  }
  assert.equal(p.goalContributions,p.goals+p.assists+p.preAssists);
  assert(p.status==null||p.status==='Left');
+ assert(['GK','DEF','MID','ATT'].includes(p.position),'Missing squad position for '+p.name);
 }
 assert(html.includes('Apps</abbr>'));
 assert(html.includes('Goals + assists + pre-assists.'));
@@ -128,6 +133,9 @@ async function run(){
  assert(site.el('league-body').innerHTML.includes(data.team));
  assert.match(site.el('table-note').textContent,/Recorded league standings/);
  assert(site.el('squad-rows').innerHTML.includes(squad.players[0].name));
+ assert(site.el('squad-rows').innerHTML.includes('Dean Fields'));
+ assert(site.el('squad-rows').innerHTML.includes(' (ATT)'));
+ assert(site.el('squad-rows').innerHTML.includes('squad-player-position'));
  assert.equal((site.el('squad-rows').innerHTML.match(/<tr>/g)||[]).length,squad.players.length);
  assert.match(site.el('squad-subtitle').textContent,/club-recorded league statistics/);
  assert(site.el('form-badges').innerHTML.length>30);

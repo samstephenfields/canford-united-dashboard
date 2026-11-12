@@ -191,7 +191,7 @@
   STATE.scoutMatchIndex=null;
   $('scout-opponent').value=name;
   renderScoutingCard();
-  $('scouting').scrollIntoView({behavior:'smooth',block:'start'});
+  $('scouting-details').scrollIntoView({behavior:'smooth',block:'start'});
  }
  function renderTable(){
   const data=STATE.data;
@@ -292,6 +292,7 @@
   });
   $('squad-rows').innerHTML=sorted.length?sorted.map(p=>{
    const label='<span class="squad-player-name">'+esc(p.name)+'</span>'+
+    '<span class="squad-player-position"> ('+esc(p.position)+')</span>'+
     (p.status==='Left'?'<span class="squad-left">Left</span>':'');
    const cell=key=>'<td class="'+(SQUAD.sort===key?'squad-active-metric':'')+'">'+p[key]+'</td>';
    return '<tr><th scope="row" class="squad-player-cell">'+label+'</th>'+
@@ -318,6 +319,7 @@
     throw new Error('Invalid squad data');
    if(json.players.some(p=>typeof p.name!=='string'||!p.name.trim()||
        metrics.some(k=>!Number.isInteger(p[k])||p[k]<0)||
+       !['GK','DEF','MID','ATT'].includes(p.position)||
        p.goalContributions!==p.goals+p.assists+p.preAssists||
        (p.status!=null&&p.status!=='Left')))throw new Error('Invalid player statistics');
    if(new Set(json.players.map(p=>p.name)).size!==json.players.length)

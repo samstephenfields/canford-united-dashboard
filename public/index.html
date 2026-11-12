@@ -24,9 +24,9 @@
   <meta name="twitter:description" content="Recorded results, league standings, opposition form, player statistics and the next-match briefing.">
   <meta name="twitter:image" content="https://samstephenfields.github.io/canford-united-dashboard/assets/whatsapp-preview.png?v=20261109">
   <link rel="icon" type="image/png" href="assets/canford-crest.png">
-  <link rel="stylesheet" href="assets/styles.css?v=20261112-facts">
+  <link rel="stylesheet" href="assets/styles.css?v=20261112-matchweek">
   <script src="assets/forecast.js?v=20261109-2" defer></script>
-  <script src="assets/app.js?v=20261112-facts" defer></script>
+  <script src="assets/app.js?v=20261112-matchweek" defer></script>
 </head>
 <body>
   <div class="site-shell">
@@ -37,8 +37,7 @@
           <span><strong>CANFORD UNITED</strong><small>SEASON DASHBOARD</small></span>
         </a>
         <nav aria-label="Page sections">
-          <a href="#scouting">Opposition</a>
-          <a href="#briefing">Next match</a>
+          <a href="#scouting">Matchweek</a>
           <a href="#table">League table</a>
           <a href="#form">Season form</a>
           <a href="#squad">Squad</a>
@@ -56,7 +55,7 @@
             <h1>Results. Form.<br><em>The next match.</em></h1>
             <p>Follow Canford's recorded Dorset Senior League results, current position, opponent form and player statistics. Prepare for the next fixture using what has happened so far.</p>
             <div class="hero-actions">
-              <a href="#scouting" class="btn btn-primary">Know the opposition <span aria-hidden="true">→</span></a>
+              <a href="#scouting" class="btn btn-primary">Matchweek briefing <span aria-hidden="true">→</span></a>
               <a href="#table" class="btn btn-outline">View league table <span aria-hidden="true">↗</span></a>
             </div>
             <div class="hero-next"><span>NEXT LISTED LEAGUE FIXTURE</span><a href="#briefing" id="hero-next-fixture">Loading fixture details…</a></div>
@@ -82,12 +81,30 @@
           <a id="official-fixtures" class="data-fixtures-link" href="https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&amp;teamID=208163315" target="_blank" rel="noopener noreferrer">Fixtures ↗</a>
         </div>
 
-        <section class="section scouting-section" id="scouting" aria-labelledby="scouting-title">
-          <div class="section-topline"><span class="section-label">01 / OPPOSITION SCOUTING</span><span class="tiny-note">FROM THE VERIFIED LEAGUE SNAPSHOT</span></div>
+        <section class="section scouting-section matchweek-section" id="scouting" aria-labelledby="scouting-title">
+          <div class="section-topline"><span class="section-label">01 / MATCHWEEK BRIEFING</span><span class="tiny-note">LEAGUE ONLY · RECORDED FORM</span></div>
           <div class="section-heading-row">
-            <div><h2 id="scouting-title">Know the opposition</h2><p class="section-intro">Review the next opponent or choose another remaining fixture. Form is only shown when the results are available.</p></div>
-            <div class="scout-select-wrap"><label for="scout-opponent">Opponent</label><select id="scout-opponent" class="target-select"><option value="">Loading clubs…</option></select></div>
+            <div>
+              <h2 id="scouting-title">Next match &amp; opposition</h2>
+              <p class="section-intro">The next fixture, what its result could change in the table, and what the opposition's recorded form tells us.</p>
+            </div>
           </div>
+          <div class="matchweek-content">
+            <article class="decision-card briefing-card" id="briefing" aria-labelledby="briefing-title">
+              <div class="decision-kicker">NEXT MATCH · RESULT COMPARISON</div>
+              <h3 id="briefing-title">What does the next result change?</h3>
+              <div id="briefing-match" class="briefing-match"><div class="loading-state">Checking scheduled fixtures…</div></div>
+              <div id="briefing-scenarios" class="briefing-scenarios"></div>
+              <p class="decision-note">Illustrative 1–0 win, 0–0 draw or 0–1 defeat. Points and provisional position are calculated from the latest recorded standings, assuming no other teams play. This is not a season-end prediction.</p>
+            </article>
+            <div id="scouting-details" class="matchweek-opposition" aria-labelledby="opposition-title">
+              <div class="section-heading-row matchweek-opposition-heading">
+                <div>
+                  <h3 id="opposition-title">Opposition form &amp; context</h3>
+                  <p class="section-intro">Review the next opponent or choose another remaining league opponent. Select a result for match details.</p>
+                </div>
+                <div class="scout-select-wrap"><label for="scout-opponent">Opponent</label><select id="scout-opponent" class="target-select"><option value="">Loading clubs…</option></select></div>
+              </div>
           <div id="scout-card" class="scout-card"><div class="loading-state">Loading opponent statistics…</div></div>
           <div class="form-history-card scout-history-card" aria-labelledby="scout-history-title">
             <div class="form-history-top">
@@ -104,31 +121,18 @@
               <a href="https://www.nonleaguematters.co.uk/divisions/117/" target="_blank" rel="noopener noreferrer">Full verified match list ↗</a>
             </div>
           </div>
-        </section>
-
-        <section class="section planning-section" id="briefing" aria-labelledby="picture-title">
-          <div class="section-topline"><span class="section-label">02 / NEXT MATCH</span><span class="tiny-note">MATCHWEEK PLANNING · LEAGUE ONLY</span></div>
-          <h2 id="picture-title">Ahead of the next fixture</h2>
-          <p class="section-intro">The next scheduled opponent and the immediate league-table implications of the result.</p>
-          <div class="decision-grid">
-            <article class="decision-card briefing-card" aria-labelledby="briefing-title">
-              <div class="decision-kicker">NEXT MATCH · RESULT COMPARISON</div>
-              <h3 id="briefing-title">What does the next result change?</h3>
-              <div id="briefing-match" class="briefing-match"><div class="loading-state">Checking scheduled fixtures…</div></div>
-              <div id="briefing-scenarios" class="briefing-scenarios"></div>
-              <p class="decision-note">Illustrative 1–0 win, 0–0 draw or 0–1 defeat. Points and provisional position are calculated from the latest recorded standings, assuming no other teams play. This is not a season-end prediction.</p>
-            </article>
+            </div>
           </div>
         </section>
 
         <section class="section" id="table" aria-labelledby="table-title">
-          <div class="section-topline"><span class="section-label">03 / LEAGUE TABLE</span><a id="official-table" href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer" class="section-link">Official FA table ↗</a></div>
+          <div class="section-topline"><span class="section-label">02 / LEAGUE TABLE</span><a id="official-table" href="https://fulltime.thefa.com/index.html?league=3520598" target="_blank" rel="noopener noreferrer" class="section-link">Official FA table ↗</a></div>
           <div class="section-heading-row"><div><h2 id="table-title">The competition</h2><p class="section-intro">Recorded league standings based on results already played. Compare points, goal difference and games played.</p></div></div>
           <div class="table-card"><div class="table-scroll"><table><thead id="league-head"><tr><th class="pos-col">#</th><th class="club-col">CLUB</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>PTS</th></tr></thead><tbody id="league-body"><tr><td colspan="8">Loading league table…</td></tr></tbody></table></div><div class="table-footnote" id="table-note">Source: FA Full-Time · 2026/27</div></div>
         </section>
 
         <section class="section form-section" id="form" aria-labelledby="form-title">
-          <div class="section-topline"><span class="section-label">04 / SEASON FORM</span><span class="tiny-note">CANFORD LEAGUE MATCHES ONLY</span></div>
+          <div class="section-topline"><span class="section-label">03 / SEASON FORM</span><span class="tiny-note">CANFORD LEAGUE MATCHES ONLY</span></div>
           <h2 id="form-title">Results across the season</h2>
           <p class="section-intro form-intro">Every completed league match, in date order. Select a W, D or L to view that result.</p>
           <div class="form-history-card">
@@ -150,7 +154,7 @@
         </section>
 
         <section class="section squad-section" id="squad" aria-labelledby="squad-title">
-          <div class="section-topline"><span class="section-label">05 / CANFORD SQUAD</span><span class="tiny-note">2026 / 27 · LEAGUE ONLY</span></div>
+          <div class="section-topline"><span class="section-label">04 / CANFORD SQUAD</span><span class="tiny-note">2026 / 27 · LEAGUE ONLY</span></div>
           <div class="section-heading-row squad-heading">
             <div>
               <h2 id="squad-title">Players &amp; statistics</h2>

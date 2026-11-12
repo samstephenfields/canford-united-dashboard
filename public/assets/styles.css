@@ -359,3 +359,18 @@
 
 /* No bottom forecast dock. Keep footer visible and restrict league-only mobile column hiding. */
 @media(max-width:720px){body{padding-bottom:0}}
+
+/* One matchweek section for fixture, result implications, scouting and opposition form. */
+.matchweek-content{display:grid;grid-template-columns:minmax(0,1fr);gap:27px;margin-top:23px}
+.matchweek-content>.briefing-card{width:100%;max-width:none}
+.matchweek-opposition{min-width:0;scroll-margin-top:22px}
+.matchweek-opposition-heading{align-items:end;margin-bottom:17px;gap:14px}
+.matchweek-opposition-heading h3{font-size:clamp(20px,2.3vw,27px);line-height:1.2;letter-spacing:-.035em;color:#193b29;margin:0 0 7px}
+.matchweek-opposition-heading .section-intro{margin:0}
+.squad-player-position{font-weight:650;color:#758679;white-space:nowrap;font-size:11px}
+@media(max-width:720px){
+ .matchweek-content{gap:24px;margin-top:18px}
+ .matchweek-opposition-heading{align-items:stretch;flex-direction:column}
+ .matchweek-opposition-heading .scout-select-wrap{max-width:none;min-width:0}
+ .squad-player-position{font-size:10px}
+}
