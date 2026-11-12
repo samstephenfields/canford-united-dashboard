@@ -6,7 +6,7 @@ A mobile-first, fact-led 2026/27 Dorset Senior League dashboard for the club man
 
 ## What the dashboard shows
 
-1. **Matchweek briefing:** One combined section containing the next dated fixture, the immediate league-table implications of a win/draw/loss, the next opponent's current position, and chronological opponent form. Select a W/D/L result to view match details, or choose another remaining opponent. The comparison assumes a 1-0 win, 0-0 draw or 0-1 loss, with no other clubs playing. It is not a season-end prediction.
+1. **Matchweek briefing:** One combined section containing the next dated fixture, the immediate league-table implications of a win/draw/loss, the next opponent's current position, and chronological opponent form. Select a W/D/L result to view match details, or choose any league opponent. The selector lists clubs still to play first and completed opponents last, including Westland Sports Reserves. The comparison assumes a 1-0 win, 0-0 draw or 0-1 loss, with no other clubs playing. It is not a season-end prediction.
 2. **League table:** Recorded points, matches, wins, draws, losses and goal difference only.
 3. **Season form:** Canford's completed league matches in chronological order, with selected result detail and observed season averages.
 4. **Players & statistics:** Squad appearances, goals, assists, pre-assists, goal involvements and goals conceded per squad appearance, with positions in brackets beside names (e.g. Dean Fields (ATT)). Historical statistics remain for players marked Left.
@@ -19,7 +19,7 @@ There is **no target-finish calculator**, season-long score predictor or shareab
 - **G:** Goals scored by the player, excluding opposition own goals.
 - **A:** Final intentional pass or touch creating a goal.
 - **Pre:** Pass creating the assist.
-- **GI:** Goal involvements, calculated as G + A + Pre.
+- **Goal Involvements:** Goals + assists + pre-assists, displayed in full as the table heading.
 - **Goals Conceded:** Team opposition goals conceded in league matches for which the player was named in the squad, divided by appearances. Includes unused players and does not indicate individual on-pitch responsibility. Shown to **one decimal place** (17 conceded / 8 appearances = 2.1); blank for zero appearances. Lower is better.
 
 `public/data/squad.json` is a versioned public snapshot of the private club-maintained Google Sheet's **Season Totals**, supplemented only by the public-safe **Squad Status** value (Left). It never includes the private spreadsheet link, videos or notes. The JSON has schemaVersion 2 and numeric validation; no player's goal-involvement total may differ from G + A + Pre. Goals conceded is stored as a precise rate plus the matching integer team goals conceded across those appearances, and displayed to one decimal place.

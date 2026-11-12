@@ -381,3 +381,9 @@
 .squad-table td.squad-conceded{font-weight:700;color:#2b4c3b}
 .squad-table td.squad-conceded.squad-active-metric{color:#0d7850;font-weight:850}
 @media(max-width:720px){.squad-table{min-width:670px}.squad-table th:last-child,.squad-table td:last-child{min-width:115px}}
+
+/* Make the full Goal Involvements header readable on desktop and mobile. */
+.squad-table{min-width:875px}
+.squad-table th:nth-last-child(2),.squad-table td:nth-last-child(2){min-width:158px}
+.squad-table thead th:nth-last-child(2){white-space:nowrap}
+@media(max-width:720px){.squad-table{min-width:795px}.squad-table th:nth-last-child(2),.squad-table td:nth-last-child(2){min-width:150px}}

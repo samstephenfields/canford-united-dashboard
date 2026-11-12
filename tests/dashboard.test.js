@@ -105,6 +105,9 @@ for(const p of squad.players){
 assert(html.includes('Apps</abbr>'));
 assert(html.includes('Goals + assists + pre-assists.'));
 assert(html.includes('Goals Conceded'));
+assert(html.includes('>Goal Involvements</abbr>'));
+assert(!html.includes('>GI</abbr>'));
+assert(html.includes('Review any league opponent, including teams already played twice.'));
 assert(html.includes('A squad-level average, not individual defensive responsibility.'));
 assert.equal(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConcededTotal,17);
 assert(Math.abs(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConceded-2.125)<1e-9);
@@ -166,6 +169,28 @@ async function run(){
  const scout='Westland Sports Reserves';
  site.el('scout-opponent').listeners.change({target:{value:scout}});
  assert(site.el('scout-card').innerHTML.includes('Westland'));
+ const opponentMarkup=site.el('scout-opponent').innerHTML;
+ const allOpponents=data.standings.filter(t=>t.name!==data.team).map(t=>t.name);
+ const openOpponents=new Set(F.remainingFixtures(data).map(f=>f.opponent));
+ assert.equal((opponentMarkup.match(/<option /g)||[]).length,allOpponents.length,
+  'All league opponents, not just future opponents, must be selectable');
+ assert(opponentMarkup.includes('<optgroup label="Still to play">'));
+ assert(opponentMarkup.includes('<optgroup label="Fixtures completed">'));
+ assert(opponentMarkup.indexOf('Still to play')<opponentMarkup.indexOf('Fixtures completed'));
+ for(const opponent of allOpponents){
+  assert(opponentMarkup.includes('value="'+opponent.replace(/&/g,'&amp;')+'"'),
+   'Missing opponent '+opponent);
+ }
+ const completed=allOpponents.filter(x=>!openOpponents.has(x));
+ assert(completed.includes('Westland Sports Reserves'),
+  'Westlands are a completed opponent after the two recorded meetings');
+ for(const name of completed){
+  assert(opponentMarkup.indexOf(name)>opponentMarkup.indexOf('Fixtures completed'),
+   'Completed opponent should appear below the group label: '+name);
+ }
+ assert(site.el('scout-card').innerHTML.includes('League fixtures completed'),
+  'Completed opponent should not claim that another fixture is TBC');
+
  const scoutChips=site.el('scout-form-badges').innerHTML;
  const matchCount=data.results.filter(r=>r.home===scout||r.away===scout).length;
  assert.equal((scoutChips.match(/data-scout-match-index=/g)||[]).length,matchCount);

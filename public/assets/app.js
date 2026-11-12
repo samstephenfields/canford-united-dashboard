@@ -66,14 +66,21 @@
   }).join('');
  }
  function renderScoutingSelector(){
-  const remaining=F.remainingFixtures(STATE.data);
-  const names=[...new Set(remaining.map(f=>f.opponent))].sort((a,b)=>a.localeCompare(b));
+  const data=STATE.data;
+  const allOpponents=data.standings.map(row=>row.name).filter(name=>name!==data.team)
+   .sort((a,b)=>a.localeCompare(b));
+  const remaining=new Set(F.remainingFixtures(data).map(f=>f.opponent));
+  const stillToPlay=allOpponents.filter(name=>remaining.has(name));
+  const completed=allOpponents.filter(name=>!remaining.has(name));
   const next=nextScheduledFixture();
-  if(!STATE.scoutOpponent||!names.includes(STATE.scoutOpponent)){
-   STATE.scoutOpponent=next?F.opponent(next,STATE.data.team):(names[0]||null);
+  if(!STATE.scoutOpponent||!allOpponents.includes(STATE.scoutOpponent)){
+   STATE.scoutOpponent=next?F.opponent(next,data.team):(stillToPlay[0]||completed[0]||null);
   }
-  $('scout-opponent').innerHTML=names.length?names.map(name=>'<option value="'+esc(name)+'">'+esc(name)+'</option>').join('')
-   :'<option value="">No remaining opponents</option>';
+  const option=name=>'<option value="'+esc(name)+'">'+esc(name)+'</option>';
+  const group=(label,names)=>names.length?'<optgroup label="'+label+'">'+names.map(option).join('')+'</optgroup>':'';
+  $('scout-opponent').innerHTML=allOpponents.length?
+   group('Still to play',stillToPlay)+group('Fixtures completed',completed):
+   '<option value="">No opponents recorded</option>';
   $('scout-opponent').value=STATE.scoutOpponent||'';
   renderScoutingCard();
  }
@@ -151,7 +158,7 @@
   const name=STATE.scoutOpponent,data=STATE.data;
   const card=$('scout-card');
   if(!name){
-   card.innerHTML='<p class="form-empty">No remaining league opponents.</p>';
+   card.innerHTML='<p class="form-empty">No league opponents available.</p>';
    $('scout-form-badges').innerHTML='';
    $('scout-match-detail').innerHTML='';
    text('scout-form-summary','No results');
@@ -174,11 +181,12 @@
   const gf=Number.isFinite(row.gf)?row.gf:'—',ga=Number.isFinite(row.ga)?row.ga:'—';
   const fixtures=F.remainingFixtures(data).filter(f=>f.opponent===name);
   const nextFixture=fixtures.find(f=>f.date);
-  const nextText=nextFixture?shortDate(nextFixture.date)+' · '+(nextFixture.home===data.team?'Home':'Away'):
+  const nextText=!fixtures.length?'League fixtures completed':nextFixture?
+    shortDate(nextFixture.date)+' · '+(nextFixture.home===data.team?'Home':'Away'):
     'Remaining fixture date TBC';
   card.innerHTML='<div class="scout-card-head"><div><h3 class="scout-card-title">'+esc(name)+'</h3>'+
     '<div class="scout-card-meta">'+row.won+'W · '+row.drawn+'D · '+row.lost+'L · '+row.played+
-    ' played · Next meeting: '+esc(nextText)+'</div></div>'+
+    ' played · '+(fixtures.length?'Next meeting: ':'')+esc(nextText)+'</div></div>'+
     '<div class="scout-position"><strong>'+rankText(rank)+'</strong><span>Current place</span></div></div>'+
     '<div class="scout-metrics">'+
     [['Points',row.points],['Points / game',ppg],['Goals scored',gf],['Goals conceded',ga]].map(([label,value])=>

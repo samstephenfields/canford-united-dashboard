@@ -24,9 +24,9 @@
   <meta name="twitter:description" content="Recorded results, league standings, opposition form, player statistics and the next-match briefing.">
   <meta name="twitter:image" content="https://samstephenfields.github.io/canford-united-dashboard/assets/whatsapp-preview.png?v=20261109">
   <link rel="icon" type="image/png" href="assets/canford-crest.png">
-  <link rel="stylesheet" href="assets/styles.css?v=20261112-conceded">
+  <link rel="stylesheet" href="assets/styles.css?v=20261112-all-opponents">
   <script src="assets/forecast.js?v=20261109-2" defer></script>
-  <script src="assets/app.js?v=20261112-gi" defer></script>
+  <script src="assets/app.js?v=20261112-all-opponents" defer></script>
 </head>
 <body>
   <div class="site-shell">
@@ -101,7 +101,7 @@
               <div class="section-heading-row matchweek-opposition-heading">
                 <div>
                   <h3 id="opposition-title">Opposition form &amp; context</h3>
-                  <p class="section-intro">Review the next opponent or choose another remaining league opponent. Select a result for match details.</p>
+                  <p class="section-intro">Review any league opponent, including teams already played twice. Select a result for match details.</p>
                 </div>
                 <div class="scout-select-wrap"><label for="scout-opponent">Opponent</label><select id="scout-opponent" class="target-select"><option value="">Loading clubs…</option></select></div>
               </div>
@@ -181,7 +181,7 @@
                   <th scope="col"><abbr title="Goals scored">G</abbr></th>
                   <th scope="col"><abbr title="Assists">A</abbr></th>
                   <th scope="col"><abbr title="Pre-assists">Pre</abbr></th>
-                  <th scope="col"><abbr title="Goal involvements">GI</abbr></th>
+                  <th scope="col"><abbr title="Goals + assists + pre-assists">Goal Involvements</abbr></th>
                   <th scope="col"><abbr title="Average team goals conceded per squad appearance">Goals Conceded</abbr></th>
                 </tr></thead>
                 <tbody id="squad-rows"><tr><td colspan="7">Loading players…</td></tr></tbody>
