@@ -49,7 +49,7 @@ assert(!html.includes('What would a target finish require?'));
 assert(!html.includes('Projected finish'));
 assert(html.includes('What does the next result change?'));
 assert(html.includes('Next match &amp; opposition'));
-assert.equal((html.match(/<section\\b/g)||[]).length,5,'There should be one matchweek section, plus other sections');
+assert.equal((html.match(/<section\b/g)||[]).length,5,'There should be one matchweek section, plus other sections');
 assert(html.indexOf('id="briefing"')>html.indexOf('id="scouting"'));
 assert(html.indexOf('id="scouting-details"')>html.indexOf('id="briefing"'));
 assert(html.includes('This is not a season-end prediction.'));
