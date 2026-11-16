@@ -144,8 +144,8 @@ assert(html.includes('styles.css?v=20261112-mobile-landscape'),
 assert(!html.includes('>GI</abbr>'));
 assert(html.includes('Review any league opponent, including teams already played twice.'));
 assert(html.includes('A squad-level average, not individual defensive responsibility.'));
-assert.equal(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConcededTotal,17);
-assert(Math.abs(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConceded-2.125)<1e-9);
+assert.equal(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConcededTotal,19);
+assert(Math.abs(squad.players.find(p=>p.name==='Ethan Colebrook').goalsConceded-19/9)<1e-9);
 assert.equal(squad.players.find(p=>p.name==='Rob Coley').goalsConceded,null);
 assert(!html.includes('id="squad-source"'),'Private workbook link must not be published');
 
