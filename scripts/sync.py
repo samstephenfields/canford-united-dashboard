@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Refresh a 2026/27 Dorset Senior League snapshot from public FA Full-Time.
+"""Refresh a 2026/27 Dorset Senior League snapshot from NonLeagueMatters.
 
 Never publish unverified or partially parsed results. Keep the last verified
-snapshot when the FA source cannot be fetched or has changed its markup.
+snapshot when the source cannot be fetched or has changed its markup.
 """
 import copy
 import datetime as dt
@@ -177,30 +177,66 @@ def fixtures_from_api(raw,results,previous):
 
 def sync():
     previous=json.loads(DATA_PATH.read_text(encoding='utf-8'))
-    # Public official pages are the only default source. No third-party API.
-    from official_fulltime import fetch_official
-    table, results = fetch_official()
-    # Previously published fixture dates are preserved unless a match is
-    # completed; this results-only source does not claim to refresh fixtures.
-    fixtures=[]
-    next_data=copy.deepcopy(previous)
-    next_data['standings']=standings_from_api(table,previous)
-    next_data['results']=results_from_api(results,next_data['standings'],previous.get('results'))
-    expected_matches=sum(row['played'] for row in next_data['standings'])
-    if expected_matches%2 or len(next_data['results'])!=expected_matches//2:
-        raise ValueError(
-            f'Official results incomplete: {len(next_data["results"])} of '
-            f'{expected_matches//2} completed league matches supplied'
-        )
-    next_data['scheduledFixtures']=fixtures_from_api(fixtures,next_data['results'],previous)
-    current=next(r for r in next_data['standings'] if r['name']==TEAM)
-    older=next(r for r in previous['standings'] if r['name']==TEAM)
-    if current['played']<older['played']:
-        raise ValueError('Fetched season appears older than the saved snapshot')
-    if any(r['date']<'2026-07-01' or r['date']>'2027-07-01' for r in next_data['results']):
-        raise ValueError('Results appear to be from the wrong season')
-    latest=max((r['date'] for r in next_data['results']),default=previous['dataAsOf'])
-    next_data['dataAsOf']=latest
+    # NonLeagueMatters is the primary league-wide results source. It includes
+    # all clubs, unlike the private sheet which only tracks Canford matches.
+    from nonleague_matters import fetch_nonleague
+    incoming = fetch_nonleague()
+    next_data = copy.deepcopy(previous)
+    expected = {row["name"] for row in previous["standings"]}
+    old_results = {(r["home"], r["away"]): r for r in previous["results"]}
+    fresh = {(r["home"], r["away"]): r for r in incoming}
+    if not set(fresh).issuperset(old_results):
+        raise ValueError("NonLeagueMatters omitted previously verified results")
+    if len(incoming) < len(old_results):
+        raise ValueError("NonLeagueMatters returned fewer results than saved")
+    if any(r["home"] not in expected or r["away"] not in expected for r in incoming):
+        raise ValueError("Unexpected club in NonLeagueMatters results")
+    if any(r["date"] < "2026-07-01" or r["date"] > "2027-07-01" for r in incoming):
+        raise ValueError("Result outside current season")
+    # Never silently replace a previously verified score.
+    for pair, old in old_results.items():
+        if fresh[pair] != old:
+            raise ValueError("NonLeagueMatters disagrees with verified result: " + str(pair))
+    standings = {name: dict(name=name, played=0, won=0, drawn=0, lost=0,
+                            gf=0, ga=0, gd=0, points=0) for name in expected}
+    for r in incoming:
+        home, away = standings[r["home"]], standings[r["away"]]
+        hs, ass = r["homeScore"], r["awayScore"]
+        home["played"] += 1
+        away["played"] += 1
+        home["gf"] += hs
+        home["ga"] += ass
+        away["gf"] += ass
+        away["ga"] += hs
+        if hs > ass:
+            home["won"] += 1
+            away["lost"] += 1
+            home["points"] += 3
+        elif hs < ass:
+            away["won"] += 1
+            home["lost"] += 1
+            away["points"] += 3
+        else:
+            home["drawn"] += 1
+            away["drawn"] += 1
+            home["points"] += 1
+            away["points"] += 1
+    # Known FA disciplinary deduction for Poole Borough.
+    standings["Poole Borough"]["points"] -= 1
+    for row in standings.values():
+        row["gd"] = row["gf"] - row["ga"]
+        if row["played"] > 20:
+            raise ValueError("More than 20 games played: " + row["name"])
+    next_data["results"] = incoming
+    next_data["standings"] = sorted(standings.values(),
+                                   key=lambda r: (-r["points"], -r["gd"], r["name"]))
+    finished = set(fresh)
+    next_data["scheduledFixtures"] = [
+        f for f in previous["scheduledFixtures"]
+        if (f["home"], f["away"]) not in finished
+    ]
+    latest = max(r["date"] for r in incoming)
+    next_data["dataAsOf"] = latest
     # Record every successful check, even if scores have not changed.
     now=dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat().replace('+00:00','Z')
     ignored=('lastSuccessfulSync','sourceNote','lastCheckedAt','lastCheckStatus','lastCheckIssue')
@@ -212,7 +248,7 @@ def sync():
     next_data.pop('lastCheckIssue',None)
     if changed:
         next_data['lastSuccessfulSync']=now
-        next_data['sourceNote']='Public FA Full-Time Dorset Senior League table and results (fulltime.thefa.com).'
+        next_data['sourceNote']='League results refreshed from NonLeagueMatters (nonleaguematters.co.uk/divisions/117/17/); Poole Borough one-point deduction retained.'
     tmp=DATA_PATH.with_suffix('.tmp')
     tmp.write_text(json.dumps(next_data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     tmp.replace(DATA_PATH)
@@ -235,6 +271,6 @@ if __name__=='__main__':
             tmp.replace(DATA_PATH)
         except (OSError,ValueError,json.JSONDecodeError) as stamp_error:
             print('Could not record failure status: '+str(stamp_error),file=sys.stderr)
-        print('::warning::Upstream league data refresh failed; website is displaying last verified results.')
+        print('::warning::NonLeagueMatters league data refresh failed; website is displaying last verified results.')
         if '--strict' in sys.argv:
             sys.exit(1)
