@@ -4,9 +4,9 @@
   "league": "Dorset Senior League",
   "team": "Canford United",
   "totalMatchesPerTeam": 20,
-  "dataAsOf": "2026-11-07",
+  "dataAsOf": "2026-11-14",
   "lastSuccessfulSync": null,
-  "sourceNote": "All 37 Dorset Senior League results through 7 November 2026 transcribed from NonLeagueMatters and reconciled to the FA Full-Time league standings (including Poole Borough's one-point deduction). Automatic direct FA Full-Time refresh remains blocked (HTTP 403).",
+  "sourceNote": "Previously verified league-wide results through 7 November 2026, plus Canford United's 14 November 4–2 away win recorded in the club Matches sheet. Other clubs' newer matches may not yet be reflected.",
   "officialTableUrl": "https://fulltime.thefa.com/index.html?league=3520598",
   "officialTeamUrl": "https://fulltime.thefa.com/displayTeam.html?divisionseason=293688393&teamID=208163315",
   "standings": [
@@ -55,14 +55,25 @@
       "points": 13
     },
     {
+      "name": "Canford United",
+      "played": 9,
+      "won": 4,
+      "drawn": 1,
+      "lost": 4,
+      "gf": 24,
+      "ga": 19,
+      "gd": 5,
+      "points": 13
+    },
+    {
       "name": "Bournemouth Sports Reserves",
-      "played": 7,
+      "played": 8,
       "won": 4,
       "drawn": 0,
-      "lost": 3,
-      "gf": 13,
-      "ga": 17,
-      "gd": -4,
+      "lost": 4,
+      "gf": 15,
+      "ga": 21,
+      "gd": -6,
       "points": 12
     },
     {
@@ -85,17 +96,6 @@
       "gf": 15,
       "ga": 7,
       "gd": 8,
-      "points": 10
-    },
-    {
-      "name": "Canford United",
-      "played": 8,
-      "won": 3,
-      "drawn": 1,
-      "lost": 4,
-      "gf": 20,
-      "ga": 17,
-      "gd": 3,
       "points": 10
     },
     {
@@ -391,16 +391,16 @@
       "away": "Shaftesbury Reserves",
       "homeScore": 1,
       "awayScore": 0
+    },
+    {
+      "date": "2026-11-14",
+      "home": "Bournemouth Sports Reserves",
+      "away": "Canford United",
+      "homeScore": 2,
+      "awayScore": 4
     }
   ],
   "scheduledFixtures": [
-    {
-      "date": "2026-11-14",
-      "time": "14:00",
-      "home": "Bournemouth Sports Reserves",
-      "away": "Canford United",
-      "venue": "Chapel Gate"
-    },
     {
       "date": "2026-11-21",
       "time": "14:00",
@@ -418,7 +418,7 @@
   ],
   "lastCheckedAt": "2026-11-16T15:41:31Z",
   "lastCheckStatus": "failed",
-  "lastCheckIssue": "The latest data could not be verified; results may be out of date.",
+  "lastCheckIssue": "League-wide official refresh unavailable; club result for 14 November has been added, but other league results may be out of date.",
   "manualVerifiedAt": "2026-11-09",
   "resultsSourceUrl": "https://www.nonleaguematters.co.uk/divisions/117/",
   "officialResultsUrl": "https://fulltime.thefa.com/results/2/25.html?selectedSeason=242517082&selectedFixtureGroupAgeGroup=0&previousSelectedFixtureGroupAgeGroup=&selectedFixtureGroupKey=1_293688393&previousSelectedFixtureGroupKey=1_293688393&selectedDateCode=&selectedRelatedFixtureOption=3&selectedClub=&previousSelectedClub=&selectedTeam="
