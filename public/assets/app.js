@@ -211,7 +211,7 @@
     '<td>'+r.played+'</td><td>'+r.won+'</td><td>'+r.drawn+'</td><td>'+r.lost+'</td>'+
     '<td>'+(r.gd>0?'+':'')+r.gd+'</td><td>'+r.points+'</td></tr>';
   }).join('');
-  text('table-note','Recorded league standings as at '+shortDate(data.dataAsOf)+' · Official table linked above.');
+  text('table-note','Recorded league standings as at '+shortDate(data.dataAsOf)+' · Results source: NonLeagueMatters.');
  }
  function renderStats(){
   const data=STATE.data,cur=data.standings.find(t=>t.name===data.team),pos=currentPosition(data);
