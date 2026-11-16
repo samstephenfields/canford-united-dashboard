@@ -248,7 +248,7 @@ def sync():
     next_data.pop('lastCheckIssue',None)
     if changed:
         next_data['lastSuccessfulSync']=now
-        next_data['sourceNote']='League results refreshed from NonLeagueMatters (nonleaguematters.co.uk/divisions/117/17/); Poole Borough one-point deduction retained.'
+        next_data['sourceNote']='League results refreshed from NonLeagueMatters (nonleaguematters.co.uk/divisions/117/); Poole Borough one-point deduction retained.'
     tmp=DATA_PATH.with_suffix('.tmp')
     tmp.write_text(json.dumps(next_data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     tmp.replace(DATA_PATH)
