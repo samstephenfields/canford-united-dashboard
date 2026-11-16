@@ -11,7 +11,7 @@ import subprocess
 
 from bs4 import BeautifulSoup
 
-URL = "https://www.nonleaguematters.co.uk/divisions/117/17/"
+URL = "https://www.nonleaguematters.co.uk/divisions/117/"
 DATE_RE = re.compile(r"(?:Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\s+(\d{1,2})(?:st|nd|rd|th)?\s+(September|October|November|December|January|February|March|April|May|June|July|August)\s+(202[67])", re.I)
 SCORE_RE = re.compile(r"^\d{1,2}$")
 NAMES = {
