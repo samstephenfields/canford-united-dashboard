@@ -77,6 +77,33 @@ const matches=data.results.filter(r=>r.home===data.team||r.away===data.team);
 const own=data.standings.find(r=>r.name===data.team);
 assert(own,'The standings must include Canford United');
 assert.equal(matches.length,own.played,'Club results should match recorded games played');
+const orderedStandings=[...data.standings].sort((a,b)=>b.points-a.points||b.gd-a.gd||a.name.localeCompare(b.name));
+assert.deepEqual(data.standings.map(r=>r.name),orderedStandings.map(r=>r.name),
+ 'The published standings must be ordered by points then goal difference');
+const computed=new Map(data.standings.map(r=>[r.name,{
+ played:0,won:0,drawn:0,lost:0,gf:0,ga:0,points:0
+}]));
+for(const r of data.results){
+ const h=computed.get(r.home),a=computed.get(r.away);
+ assert(h&&a,'Result includes an unknown league team');
+ h.played++;a.played++;
+ h.gf+=r.homeScore;h.ga+=r.awayScore;
+ a.gf+=r.awayScore;a.ga+=r.homeScore;
+ if(r.homeScore>r.awayScore){h.won++;a.lost++;h.points+=3;}
+ else if(r.homeScore<r.awayScore){a.won++;h.lost++;a.points+=3;}
+ else{h.drawn++;a.drawn++;h.points++;a.points++;}
+}
+for(const row of data.standings){
+ const x=computed.get(row.name);
+ for(const field of ['played','won','drawn','lost','gf','ga'])
+  assert.equal(row[field],x[field],row.name+' '+field+' disagrees with published results');
+ assert.equal(row.gd,x.gf-x.ga,row.name+' goal difference disagrees with results');
+ assert.equal(row.points,x.points-(row.name==='Poole Borough'?1:0),
+  row.name+' points disagree with results');
+}
+assert(data.scheduledFixtures.every(f=>!data.results.some(r=>r.home===f.home&&r.away===f.away)),
+ 'A completed fixture must not remain upcoming');
+
 if(data.manualVerifiedAt){
  assert.equal(data.results.length,data.standings.reduce((sum,r)=>sum+r.played,0)/2);
 }
