@@ -444,9 +444,9 @@
       "venue": "West Parley Community Hub"
     }
   ],
-  "lastCheckedAt": "2026-11-16T15:54:57Z",
+  "lastCheckedAt": "2026-11-16T16:01:58Z",
   "lastCheckStatus": "failed",
-  "lastCheckIssue": "The 14 November league-wide results and standings are saved, but automatic refresh has not yet been verified.",
+  "lastCheckIssue": "The latest data could not be verified; results may be out of date.",
   "manualVerifiedAt": "2026-11-14",
   "resultsSourceUrl": "https://www.nonleaguematters.co.uk/divisions/117/",
   "officialResultsUrl": "https://fulltime.thefa.com/results/2/25.html?selectedSeason=242517082&selectedFixtureGroupAgeGroup=0&previousSelectedFixtureGroupAgeGroup=&selectedFixtureGroupKey=1_293688393&previousSelectedFixtureGroupKey=1_293688393&selectedDateCode=&selectedRelatedFixtureOption=3&selectedClub=&previousSelectedClub=&selectedTeam="
