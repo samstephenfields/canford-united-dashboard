@@ -195,8 +195,8 @@ def sync():
         raise ValueError("Result outside current season")
     # Never silently replace a previously verified score.
     for pair, old in old_results.items():
-        if fresh[pair] != old:
-            raise ValueError("NonLeagueMatters disagrees with verified result: " + str(pair))
+        if (fresh[pair]["homeScore"], fresh[pair]["awayScore"]) != (old["homeScore"], old["awayScore"]):
+            raise ValueError("NonLeagueMatters score differs from verified result: " + str(pair))
     standings = {name: dict(name=name, played=0, won=0, drawn=0, lost=0,
                             gf=0, ga=0, gd=0, points=0) for name in expected}
     for r in incoming:
