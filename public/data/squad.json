@@ -5,7 +5,7 @@
   "complete": true,
   "appearanceScope": "Named in a league matchday squad, including unused players; minutes are not tracked.",
   "sourceNote": "Club-maintained 2026/27 squad statistics refreshed from a private Google Sheet. Public data is a validated snapshot; deployment occurs separately on the scheduled GitHub Pages workflow.",
-  "sourceUpdatedAt": "2026-11-16",
+  "sourceUpdatedAt": "2026-11-24",
   "automaticSync": true,
   "players": [
     {
@@ -21,35 +21,35 @@
     },
     {
       "name": "Adam Wright",
-      "appearances": 3,
+      "appearances": 4,
       "goals": 0,
       "assists": 0,
       "preAssists": 0,
       "position": "DEF",
-      "goalsConceded": 2.6666666666666665,
-      "goalsConcededTotal": 8,
+      "goalsConceded": 2.25,
+      "goalsConcededTotal": 9,
       "goalInvolvements": 0
     },
     {
       "name": "Dom Leaver-Smith",
-      "appearances": 7,
+      "appearances": 8,
       "goals": 0,
       "assists": 0,
       "preAssists": 0,
       "position": "DEF",
-      "goalsConceded": 1.5714285714285714,
-      "goalsConcededTotal": 11,
+      "goalsConceded": 1.5,
+      "goalsConcededTotal": 12,
       "goalInvolvements": 0
     },
     {
       "name": "Jack Dunsmore",
-      "appearances": 3,
+      "appearances": 4,
       "goals": 0,
       "assists": 0,
       "preAssists": 0,
       "position": "DEF",
       "goalsConceded": 1,
-      "goalsConcededTotal": 3,
+      "goalsConcededTotal": 4,
       "goalInvolvements": 0
     },
     {
@@ -87,35 +87,35 @@
     },
     {
       "name": "Rob Coley",
-      "appearances": 1,
+      "appearances": 2,
       "goals": 0,
       "assists": 0,
       "preAssists": 0,
       "position": "DEF",
-      "goalsConceded": 2,
-      "goalsConcededTotal": 2,
+      "goalsConceded": 1.5,
+      "goalsConcededTotal": 3,
       "goalInvolvements": 0
     },
     {
       "name": "Ryan Andrew",
-      "appearances": 8,
+      "appearances": 9,
       "goals": 0,
       "assists": 0,
       "preAssists": 2,
       "position": "DEF",
-      "goalsConceded": 2.375,
-      "goalsConcededTotal": 19,
+      "goalsConceded": 2.2222222222222223,
+      "goalsConcededTotal": 20,
       "goalInvolvements": 2
     },
     {
       "name": "Tom Alner",
-      "appearances": 6,
+      "appearances": 7,
       "goals": 0,
       "assists": 0,
       "preAssists": 0,
       "position": "DEF",
-      "goalsConceded": 1.3333333333333333,
-      "goalsConcededTotal": 8,
+      "goalsConceded": 1.2857142857142858,
+      "goalsConcededTotal": 9,
       "goalInvolvements": 0
     },
     {
@@ -131,24 +131,24 @@
     },
     {
       "name": "Ben Butterworth",
-      "appearances": 5,
-      "goals": 0,
+      "appearances": 6,
+      "goals": 1,
       "assists": 0,
       "preAssists": 0,
       "position": "MID",
-      "goalsConceded": 1.8,
-      "goalsConcededTotal": 9,
-      "goalInvolvements": 0
+      "goalsConceded": 1.6666666666666667,
+      "goalsConcededTotal": 10,
+      "goalInvolvements": 1
     },
     {
       "name": "Ben Lees",
-      "appearances": 5,
+      "appearances": 6,
       "goals": 0,
       "assists": 0,
       "preAssists": 2,
       "position": "MID",
-      "goalsConceded": 1.6,
-      "goalsConcededTotal": 8,
+      "goalsConceded": 1.5,
+      "goalsConcededTotal": 9,
       "goalInvolvements": 2
     },
     {
@@ -187,25 +187,25 @@
     },
     {
       "name": "Tom Marsh",
-      "appearances": 8,
+      "appearances": 9,
       "goals": 2,
-      "assists": 1,
+      "assists": 2,
       "preAssists": 3,
       "position": "MID",
-      "goalsConceded": 2.25,
-      "goalsConcededTotal": 18,
-      "goalInvolvements": 6
+      "goalsConceded": 2.111111111111111,
+      "goalsConcededTotal": 19,
+      "goalInvolvements": 7
     },
     {
       "name": "Cam Corbin",
-      "appearances": 8,
-      "goals": 6,
+      "appearances": 9,
+      "goals": 7,
       "assists": 3,
       "preAssists": 1,
       "position": "ATT",
-      "goalsConceded": 1.875,
-      "goalsConcededTotal": 15,
-      "goalInvolvements": 10
+      "goalsConceded": 1.7777777777777777,
+      "goalsConcededTotal": 16,
+      "goalInvolvements": 11
     },
     {
       "name": "Charlie Dibben",
@@ -221,35 +221,35 @@
     },
     {
       "name": "Connor Wright",
-      "appearances": 5,
+      "appearances": 6,
       "goals": 0,
       "assists": 1,
       "preAssists": 0,
       "position": "ATT",
-      "goalsConceded": 1.6,
-      "goalsConcededTotal": 8,
+      "goalsConceded": 1.5,
+      "goalsConcededTotal": 9,
       "goalInvolvements": 1
     },
     {
       "name": "Dean Fields",
-      "appearances": 8,
+      "appearances": 9,
       "goals": 9,
       "assists": 3,
       "preAssists": 0,
       "position": "ATT",
-      "goalsConceded": 2.375,
-      "goalsConcededTotal": 19,
+      "goalsConceded": 2.2222222222222223,
+      "goalsConcededTotal": 20,
       "goalInvolvements": 12
     },
     {
       "name": "Dom Woodward",
-      "appearances": 8,
+      "appearances": 9,
       "goals": 4,
       "assists": 2,
       "preAssists": 2,
       "position": "ATT",
-      "goalsConceded": 1.875,
-      "goalsConcededTotal": 15,
+      "goalsConceded": 1.7777777777777777,
+      "goalsConcededTotal": 16,
       "goalInvolvements": 8
     },
     {
@@ -265,13 +265,13 @@
     },
     {
       "name": "Jayden Foote",
-      "appearances": 8,
+      "appearances": 9,
       "goals": 0,
       "assists": 1,
       "preAssists": 0,
       "position": "ATT",
-      "goalsConceded": 2.25,
-      "goalsConcededTotal": 18,
+      "goalsConceded": 2.111111111111111,
+      "goalsConcededTotal": 19,
       "goalInvolvements": 1
     },
     {
@@ -298,14 +298,25 @@
     },
     {
       "name": "Sam Fields",
-      "appearances": 8,
+      "appearances": 9,
       "goals": 1,
       "assists": 2,
       "preAssists": 4,
       "position": "ATT",
-      "goalsConceded": 1.875,
-      "goalsConcededTotal": 15,
+      "goalsConceded": 1.7777777777777777,
+      "goalsConcededTotal": 16,
       "goalInvolvements": 7
+    },
+    {
+      "name": "Owen Whines",
+      "appearances": 1,
+      "goals": 0,
+      "assists": 0,
+      "preAssists": 0,
+      "position": "GK",
+      "goalsConceded": 1,
+      "goalsConcededTotal": 1,
+      "goalInvolvements": 0
     }
   ],
   "refreshSchedule": "Sunday 22:00 GMT (UTC)"
